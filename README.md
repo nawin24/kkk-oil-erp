@@ -1,4 +1,4 @@
-# KKK Oil Factory ERP
+# kkk-oil-erp
 
 A Horizon-ERP–style management system for KKK Oil Factory (Dharmapuri) — purchase,
 production, inventory, sales, billing, logistics, GST reports and role-based access.
