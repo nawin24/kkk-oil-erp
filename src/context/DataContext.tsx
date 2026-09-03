@@ -381,8 +381,26 @@ export function DataProvider({ children }: { children: ReactNode }) {
     return labels.map((m, i) => ({ month: m, purchase: purchaseBase[i] * 1000, sales: salesBase[i] * 1000 }))
   }, [metrics.monthSales])
 
+  const sales = useMemo(() => {
+    let isNonGst = false
+    try {
+      const sess = localStorage.getItem('kkk_session_v2')
+      if (sess) {
+        const parsed = JSON.parse(sess)
+        if (parsed.activeMode === 'NON_GST' && (parsed.role === 'super_admin' || parsed.role === 'super_admin_nongst')) {
+          isNonGst = true
+        }
+      }
+    } catch { /* ignore */ }
+
+    if (isNonGst) return db.sales
+    return db.sales.filter((s: any) => (s.billingType || (s.id.startsWith('NG') ? 'NON_GST' : 'GST')) !== 'NON_GST')
+  }, [db.sales])
+
   const value = {
     ...db,
+    sales,
+    allSales: db.sales,
     priceHistory,
     auditLogs,
     ready,

@@ -95,6 +95,7 @@ interface InvoiceInput {
   gstTotal?: number
   ledgerEntries?: { ledgerName: string; amount: number }[]
   dispatchDetails?: any
+  billedBy?: string
 }
 
 export const invoiceNo = (id: string) => id
@@ -117,6 +118,7 @@ export function buildInvoiceHTML({
   gstTotal: forcedGst,
   ledgerEntries = [],
   dispatchDetails,
+  billedBy,
 }: InvoiceInput): string {
   const isGst = billingType === 'GST'
   const co = { ...COMPANY, ...(company || {}), bank: { ...COMPANY.bank, ...(company?.bank || {}) } }
@@ -235,7 +237,8 @@ export function buildInvoiceHTML({
         <div class="meta">
           <div><b>${esc(displayNo)}</b> ${statusTag}</div>
           <div>Date: ${esc(fmtDate(date))}</div>
-          <div>Mode: <b>${esc(billingType)}</b></div>
+          <div>Billing Type: <b>${esc(billingType)}</b></div>
+          ${billedBy ? `<div>Billed By: <b>${esc(billedBy)}</b></div>` : ''}
         </div>
       </div>
     </div>

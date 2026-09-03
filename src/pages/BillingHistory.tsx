@@ -50,6 +50,7 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
 
   const printBill = (i: any) => {
     const cust = customerMap[i.customerId] || { name: 'Walk-in / Cash Customer', address: i.address }
+    const billedByStr = i.billedBy || i.createdByName || i.userName || i.salesperson || 'Staff'
     printInvoice(
       buildInvoiceHTML({
         id: i.id,
@@ -66,6 +67,7 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
         gstTotal: i.gstTotal || i.tax,
         ledgerEntries: i.ledgerEntries || [],
         dispatchDetails: i.dispatchDetails,
+        billedBy: billedByStr,
       })
     )
   }
@@ -126,6 +128,7 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
                 subtotal: i.subtotal || i.sub || 0,
                 gstTotal: i.gstTotal || i.tax || 0,
                 grandTotal: i.grandTotal || i.total || 0,
+                billedBy: i.billedBy || i.createdByName || i.userName || i.salesperson || 'Staff',
                 payStatus: i.payStatus,
                 status: i.status || 'ACTIVE',
               }))
@@ -175,6 +178,7 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
               <th>Date</th>
               <th>Pricing</th>
               <th>Billing Type</th>
+              <th>Billed By</th>
               <th className="num">Taxable</th>
               <th className="num">GST</th>
               <th className="num">Grand Total</th>
@@ -192,13 +196,14 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
               const grand = i.grandTotal || i.total || 0
               const sub = i.subtotal || i.sub || 0
               const gstAmt = bType === 'GST' ? (i.gstTotal || i.tax || 0) : 0
+              const staffBilled = i.billedBy || i.createdByName || i.userName || i.salesperson || 'Staff'
 
               return (
                 <tr key={i.id} style={{ opacity: isCancelled ? 0.6 : 1 }}>
                   <td className="cell-strong" style={{ color: 'var(--gold)' }}>{vNo}</td>
                   <td>
                     <div className="cell-strong">{custName}</div>
-                    <div className="cell-sub">{i.salesperson ? `By ${i.salesperson}` : ''}</div>
+                    <div className="cell-sub">{i.salesperson ? `Sales: ${i.salesperson}` : ''}</div>
                   </td>
                   <td className="muted">{fmtDate(i.date)}</td>
                   <td><Badge tone="gold" noDot>{i.pricingType || 'RETAIL'}</Badge></td>
@@ -207,6 +212,7 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
                       {bType}
                     </Badge>
                   </td>
+                  <td><div className="cell-strong" style={{ fontSize: 12 }}>{staffBilled}</div></td>
                   <td className="num muted">{inr(sub)}</td>
                   <td className="num muted">{bType === 'GST' ? inr(gstAmt) : '₹0'}</td>
                   <td className="num cell-strong" style={{ fontSize: 14 }}>{inr(grand)}</td>

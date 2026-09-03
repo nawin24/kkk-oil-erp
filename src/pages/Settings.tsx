@@ -7,7 +7,7 @@ import { ROLES } from '../data/seed'
 import { isFirebaseConfigured } from '../firebase/config'
 import type { Company } from '../types'
 
-const ROLE_KEYS = Object.keys(ROLES)
+const ROLE_KEYS = ['super_admin', 'admin', 'manager', 'cashier']
 
 export default function Settings() {
   const { company, saveCompany, resetDemo, resetEmpty, seedToFirestore, demoMode } = useData()

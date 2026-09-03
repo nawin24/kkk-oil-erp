@@ -8,11 +8,11 @@ import { inr, num, csvExport, orderTotals, orderProfit } from '../utils/helpers'
 
 export default function Reports() {
   const { sales, customers, suppliers, products, production, brandMap, productMap, customerMap, metrics, monthlyTrend } = useData()
-  const { isSuperAdmin } = useAuth()
+  const { isSuperAdmin, isNonGstSession } = useAuth()
   const [active, setActive] = useState('sales')
 
   const REPORTS = useMemo(() => {
-    return [
+    const list = [
       { key: 'sales',      label: 'Sales Report',          icon: 'sales',     desc: 'Order-wise revenue & output tax' },
       { key: 'brand',      label: 'Brand-wise Sales',      icon: 'brands',    desc: 'Revenue share by brand' },
       { key: 'product',    label: 'Product-wise Sales',    icon: 'products',  desc: 'Top selling SKUs' },
@@ -22,7 +22,11 @@ export default function Reports() {
       { key: 'production', label: 'Production Report',      icon: 'production',desc: 'Batch output & yield' },
       { key: 'gst',        label: 'Tax Report',            icon: 'doc',       desc: 'Output tax breakdown' },
     ]
-  }, [])
+    if (isNonGstSession) {
+      list.push({ key: 'nongst', label: 'Non-GST Sales Report', icon: 'doc', desc: 'Restricted Non-GST Sales (Super Admin)' })
+    }
+    return list
+  }, [isNonGstSession])
 
   const brandPie = useMemo(() => Object.entries(metrics.brandSales).map(([name, value]) => ({ name, value: value as number })).sort((a, b) => b.value - a.value), [metrics.brandSales])
 

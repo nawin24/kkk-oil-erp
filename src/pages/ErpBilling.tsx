@@ -179,10 +179,13 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
     setIrnGenerated(false)
   }
 
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [lastSavedBill, setLastSavedBill] = useState<any>(null)
+
   // Validate bill before saving
   const validateBill = () => {
     if (!rawLines.length) {
-      setToastMsg('❌ Cannot save empty bill. Please add products.')
+      setToastMsg('❌ Please complete all required billing details. (Add at least one product)')
       return false
     }
     if (payMode === 'Credit' && !customerId) {
@@ -192,91 +195,108 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
     return true
   }
 
-  const saveBill = (andPrint: boolean = false) => {
+  const saveBill = async (andPrint: boolean = false) => {
+    if (isProcessing) return
     if (!validateBill()) return
 
-    const cust = customerMap[customerId]
-    const paid = payMode !== 'Credit'
+    setIsProcessing(true)
+    setToastMsg('💾 Saving bill to database…')
 
-    const invoiceRecord: any = {
-      id: voucherNo,
-      voucherNo,
-      voucherType: billingType === 'GST' ? voucherType : 'Non-GST Voucher',
-      billingType,
-      pricingType,
-      customerId: customerId || 'CASH-WALKIN',
-      date: entryDate,
-      time: currentTimeStr(),
-      salesperson: salesMan,
-      deliveryMan,
-      godown,
-      route,
-      address,
-      gstin: billingType === 'GST' ? gstin : '',
-      dispatch: 'Delivered',
-      payStatus: paid ? 'Paid' : 'Pending',
-      payMode,
-      userId: user?.id || 'cashier',
-      userName: user?.name || 'Cashier',
-      userRole: user?.role || 'cashier',
-      items: billCalc.items,
-      subtotal: billCalc.subtotal,
-      discountTotal: billCalc.totalDiscount,
-      gstTotal: billingType === 'GST' ? billCalc.totalGst : 0,
-      roundOff: billCalc.roundOff,
-      grandTotal: billCalc.grandTotal,
-      ledgerEntries: billingType === 'GST' ? billCalc.ledgerEntries : [],
-      dispatchDetails: { poNumber, poDate, dispatchThrough, vehicleNumber, driverName, deliveryNote, gatePassNo },
-      ewbDetails: billingType === 'GST' ? { supplyType, supplySubType, transportMode, transporterName, transporterId, transportDistance, ewbNo, ewbDate, validTill } : undefined,
-      eInvoiceDetails: billingType === 'GST' ? { irn, irnGenerated } : undefined,
-      status: 'ACTIVE',
-      createdAt: new Date().toISOString(),
-    }
+    try {
+      const cust = customerMap[customerId]
+      const paid = payMode !== 'Credit'
+      const billedByStr = `${user?.name || 'Cashier'} (${user?.roleLabel || 'Staff'})`
 
-    // 1. Save invoice
-    upsert('sales', invoiceRecord)
-
-    // 2. Update stock in Inventory
-    rawLines.forEach((it) => {
-      const p = productMap[it.productId]
-      if (p) {
-        const nextStock = Math.max(0, p.stock - it.qty)
-        upsert('products', { ...p, stock: nextStock })
+      const invoiceRecord: any = {
+        id: voucherNo,
+        voucherNo,
+        voucherType: billingType === 'GST' ? voucherType : 'Non-GST Voucher',
+        billingType,
+        pricingType,
+        customerId: customerId || 'CASH-WALKIN',
+        date: entryDate,
+        time: currentTimeStr(),
+        salesperson: salesMan,
+        deliveryMan,
+        godown,
+        route,
+        address,
+        gstin: billingType === 'GST' ? gstin : '',
+        dispatch: 'Delivered',
+        payStatus: paid ? 'Paid' : 'Pending',
+        payMode,
+        userId: user?.id || 'cashier',
+        userName: user?.name || 'Cashier',
+        userRole: user?.role || 'cashier',
+        createdBy: user?.id || 'cashier',
+        createdByRole: user?.role || 'cashier',
+        createdByName: user?.name || 'Cashier',
+        billedBy: billedByStr,
+        items: billCalc.items,
+        subtotal: billCalc.subtotal,
+        discountTotal: billCalc.totalDiscount,
+        gstTotal: billingType === 'GST' ? billCalc.totalGst : 0,
+        roundOff: billCalc.roundOff,
+        grandTotal: billCalc.grandTotal,
+        ledgerEntries: billingType === 'GST' ? billCalc.ledgerEntries : [],
+        dispatchDetails: { poNumber, poDate, dispatchThrough, vehicleNumber, driverName, deliveryNote, gatePassNo },
+        ewbDetails: billingType === 'GST' ? { supplyType, supplySubType, transportMode, transporterName, transporterId, transportDistance, ewbNo, ewbDate, validTill } : undefined,
+        eInvoiceDetails: billingType === 'GST' ? { irn, irnGenerated } : undefined,
+        status: 'ACTIVE',
+        createdAt: new Date().toISOString(),
       }
-    })
 
-    // 3. Update customer outstanding if credit bill
-    if (!paid && customerId && cust) {
-      upsert('customers', { ...cust, outstanding: (cust.outstanding || 0) + billCalc.grandTotal })
+      // 1. Save invoice to database FIRST
+      upsert('sales', invoiceRecord)
+
+      // 2. Update stock in Inventory
+      rawLines.forEach((it) => {
+        const p = productMap[it.productId]
+        if (p) {
+          const nextStock = Math.max(0, p.stock - it.qty)
+          upsert('products', { ...p, stock: nextStock })
+        }
+      })
+
+      // 3. Update customer outstanding if credit bill
+      if (!paid && customerId && cust) {
+        upsert('customers', { ...cust, outstanding: (cust.outstanding || 0) + billCalc.grandTotal })
+      }
+
+      // 4. Audit Log
+      addAuditLog(user, 'BILL_CREATED', billingType === 'GST' ? 'GST_BILLING' : 'NON_GST_BILLING', undefined, `${voucherNo} — Total ₹${billCalc.grandTotal} by ${billedByStr}`)
+
+      // 5. Generate & Print SECOND (only after DB save success)
+      if (andPrint) {
+        printInvoice(
+          buildInvoiceHTML({
+            id: voucherNo,
+            date: entryDate,
+            payStatus: invoiceRecord.payStatus,
+            items: invoiceRecord.items,
+            customer: cust || { name: 'Walk-in / Cash Customer', address },
+            productMap,
+            company: { ...company, gstin: billingType === 'GST' ? company.gstin : '' },
+            billingType,
+            voucherNo,
+            grandTotal: billCalc.grandTotal,
+            subtotal: billCalc.subtotal,
+            gstTotal: billCalc.totalGst,
+            ledgerEntries: invoiceRecord.ledgerEntries,
+            dispatchDetails: invoiceRecord.dispatchDetails,
+            billedBy: billedByStr,
+          })
+        )
+      }
+
+      setLastSavedBill(invoiceRecord)
+      setToastMsg(`✅ ${billingType} Invoice ${voucherNo} saved successfully! Total: ${inr(billCalc.grandTotal)}`)
+      clearForm()
+    } catch (e) {
+      setToastMsg('❌ Unable to save the bill. Please try again.')
+    } finally {
+      setIsProcessing(false)
     }
-
-    // 4. Audit Log
-    addAuditLog(user, 'BILL_CREATED', billingType === 'GST' ? 'GST_BILLING' : 'NON_GST_BILLING', undefined, `${voucherNo} — Total ₹${billCalc.grandTotal}`)
-
-    setToastMsg(`✅ ${billingType} Invoice ${voucherNo} saved! Total: ${inr(billCalc.grandTotal)}`)
-
-    if (andPrint) {
-      printInvoice(
-        buildInvoiceHTML({
-          id: voucherNo,
-          date: entryDate,
-          payStatus: invoiceRecord.payStatus,
-          items: invoiceRecord.items,
-          customer: cust || { name: 'Walk-in / Cash Customer', address },
-          productMap,
-          company: { ...company, gstin: billingType === 'GST' ? company.gstin : '' },
-          billingType,
-          voucherNo,
-          grandTotal: billCalc.grandTotal,
-          subtotal: billCalc.subtotal,
-          gstTotal: billCalc.totalGst,
-          ledgerEntries: invoiceRecord.ledgerEntries,
-          dispatchDetails: invoiceRecord.dispatchDetails,
-        })
-      )
-    }
-
-    clearForm()
   }
 
   // Search product list
@@ -307,11 +327,11 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
             {company?.name || 'KKK OIL FACTORY'} ERP
           </div>
           <div>
-            <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0, color: '#fff', letterSpacing: '.5px' }}>
-              {billingType === 'GST' ? 'SALES TAX INVOICE VOUCHER' : 'NON-GST SALES VOUCHER'}
+            <h2 style={{ fontSize: 18, fontWeight: 800, margin: 0, color: '#834006', letterSpacing: '.5px' }}>
+              {billingType === 'GST' ? 'SALES INVOICE VOUCHER' : 'NON-GST SALES VOUCHER'}
             </h2>
-            <span style={{ fontSize: 12, color: 'var(--gold-soft)', opacity: 0.9 }}>
-              {billingType === 'GST' ? 'Official GST Tax Ledger Billing Station' : 'Private Non-GST Voucher Station (Super Admin)'}
+            <span style={{ fontSize: 12, color: '#c86d1e', opacity: 0.9 }}>
+              {billingType === 'GST' ? 'Ledger Billing Station' : 'Private Non-GST Voucher Station (Super Admin)'}
             </span>
           </div>
         </div>
@@ -320,26 +340,6 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
           <Badge tone={billingType === 'GST' ? 'gold' : 'purple'} noDot>
             VOUCHER: {voucherNo}
           </Badge>
-          {!forcedBillingType && isNonGstSession && (
-            <div style={{ display: 'flex', gap: 4, background: 'rgba(0,0,0,.3)', padding: 3, borderRadius: 6 }}>
-              <button
-                type="button"
-                className={`btn btn-sm ${billingType === 'GST' ? 'btn-gold' : ''}`}
-                onClick={() => setBillingType('GST')}
-                style={{ fontSize: 11, padding: '4px 8px' }}
-              >
-                GST Mode
-              </button>
-              <button
-                type="button"
-                className={`btn btn-sm ${billingType === 'NON_GST' ? 'btn-primary' : ''}`}
-                onClick={() => setBillingType('NON_GST')}
-                style={{ fontSize: 11, padding: '4px 8px' }}
-              >
-                Non-GST Mode
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
@@ -691,16 +691,80 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
 
             {/* Horizon ERP Action Station Buttons */}
             <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
-              <button className="btn" style={{ flex: '1 1 80px', fontSize: 12, justifyContent: 'center' }} onClick={clearForm}>
+              <button
+                className="btn"
+                disabled={isProcessing}
+                style={{ flex: '1 1 80px', fontSize: 12, justifyContent: 'center' }}
+                onClick={clearForm}
+              >
                 <Icon name="trash" size={14} /> Clear
               </button>
-              <button className="btn btn-primary" style={{ flex: '1 1 80px', fontSize: 12, justifyContent: 'center' }} onClick={() => saveBill(false)}>
-                <Icon name="check" size={14} /> Save (F2)
+              <button
+                className="btn btn-primary"
+                disabled={isProcessing}
+                style={{ flex: '1 1 80px', fontSize: 12, justifyContent: 'center' }}
+                onClick={() => saveBill(false)}
+              >
+                <Icon name="check" size={14} /> {isProcessing ? 'Processing…' : 'Save (F2)'}
               </button>
-              <button className="btn btn-gold" style={{ flex: '1.5 1 130px', fontSize: 12, fontWeight: 800, justifyContent: 'center' }} onClick={() => saveBill(true)}>
-                <Icon name="download" size={14} /> Save &amp; Print
+              <button
+                className="btn btn-gold"
+                disabled={isProcessing}
+                style={{ flex: '1.5 1 130px', fontSize: 12, fontWeight: 800, justifyContent: 'center' }}
+                onClick={() => saveBill(true)}
+              >
+                <Icon name="download" size={14} /> {isProcessing ? 'Saving & Printing…' : 'Save & Print'}
               </button>
             </div>
+
+            {/* Post-Save Quick Actions Bar */}
+            {lastSavedBill && (
+              <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px dashed var(--border)', display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                <span style={{ width: '100%', fontSize: 11, fontWeight: 700, color: 'var(--green)' }}>
+                  ✅ Saved Bill: {lastSavedBill.voucherNo} ({inr(lastSavedBill.grandTotal)})
+                </span>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-gold"
+                  style={{ fontSize: 11, flex: 1, justifyContent: 'center' }}
+                  onClick={() => {
+                    const cust = customerMap[lastSavedBill.customerId]
+                    printInvoice(
+                      buildInvoiceHTML({
+                        id: lastSavedBill.voucherNo,
+                        date: lastSavedBill.date,
+                        payStatus: lastSavedBill.payStatus,
+                        items: lastSavedBill.items,
+                        customer: cust || { name: 'Walk-in / Cash Customer', address: lastSavedBill.address },
+                        productMap,
+                        company: { ...company, gstin: lastSavedBill.billingType === 'GST' ? company.gstin : '' },
+                        billingType: lastSavedBill.billingType,
+                        voucherNo: lastSavedBill.voucherNo,
+                        grandTotal: lastSavedBill.grandTotal,
+                        subtotal: lastSavedBill.subtotal,
+                        gstTotal: lastSavedBill.gstTotal,
+                        ledgerEntries: lastSavedBill.ledgerEntries,
+                        dispatchDetails: lastSavedBill.dispatchDetails,
+                        billedBy: lastSavedBill.billedBy,
+                      })
+                    )
+                  }}
+                >
+                  <Icon name="download" size={12} /> Print Again
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-sm"
+                  style={{ fontSize: 11, flex: 1, justifyContent: 'center' }}
+                  onClick={() => {
+                    setLastSavedBill(null)
+                    clearForm()
+                  }}
+                >
+                  + New Bill
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

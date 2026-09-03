@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import Icon from './Icon'
+import { Modal } from './ui'
 import { useAuth } from '../context/AuthContext'
 import { useData } from '../context/DataContext'
 
@@ -94,10 +95,11 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
 }
 
 function Topbar({ onMenu }: { onMenu: () => void }) {
-  const { user, logout } = useAuth()
+  const { user, isSuperAdmin, isNonGstSession, logout } = useAuth()
   const { metrics, company } = useData()
   const loc = useLocation()
   const alerts = metrics.lowStock.length + metrics.lowRaw.length + metrics.pendingDispatch.length
+
   return (
     <header className="topbar">
       <button className="icon-btn menu-btn" onClick={onMenu}><Icon name="menu" size={18} /></button>
@@ -109,6 +111,7 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
         <Icon name="search" size={16} />
         <input placeholder="Search orders, products, customers…" />
       </div>
+
       <div className="top-actions">
         <button className="icon-btn" title={`${alerts} alerts`}>
           <Icon name="bell" size={18} />
@@ -118,7 +121,7 @@ function Topbar({ onMenu }: { onMenu: () => void }) {
           <div className="avatar">{(user?.name || 'User').split(' ').map((w: string) => w[0]).slice(0, 2).join('')}</div>
           <div>
             <div className="nm">{user?.name}</div>
-            <div className="rl">{user?.roleLabel}</div>
+            <div className="rl">{isNonGstSession ? 'Super Admin (Non-GST)' : user?.roleLabel}</div>
           </div>
         </div>
       </div>

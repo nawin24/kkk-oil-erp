@@ -86,8 +86,11 @@ export default function Login() {
               Quick Role Test Logins
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-              <button type="button" className="btn btn-sm btn-gold" onClick={() => quickLogin('admin', 'admin123')} style={{ fontSize: 11, justifyContent: 'center' }}>
-                👑 Super Admin
+              <button type="button" className="btn btn-sm btn-gold" onClick={() => quickLogin('admin', 'ERP@2026G')} style={{ fontSize: 11, justifyContent: 'center' }}>
+                👑 Super Admin (GST Login)
+              </button>
+              <button type="button" className="btn btn-sm btn-primary" onClick={() => quickLogin('admin', 'ERP@2026N')} style={{ fontSize: 11, justifyContent: 'center' }}>
+                🔒 Super Admin (Non-GST Login)
               </button>
               <button type="button" className="btn btn-sm" onClick={() => quickLogin('admin_staff', 'admin123')} style={{ fontSize: 11, justifyContent: 'center' }}>
                 🛡️ Admin
@@ -95,8 +98,8 @@ export default function Login() {
               <button type="button" className="btn btn-sm" onClick={() => quickLogin('mgr', 'mgr123')} style={{ fontSize: 11, justifyContent: 'center' }}>
                 📊 Manager
               </button>
-              <button type="button" className="btn btn-sm" onClick={() => quickLogin('cashier', 'cashier123')} style={{ fontSize: 11, justifyContent: 'center' }}>
-                💳 Cashier ERP Billing
+              <button type="button" className="btn btn-sm" onClick={() => quickLogin('cashier', 'cashier123')} style={{ fontSize: 11, justifyContent: 'center', gridColumn: 'span 2' }}>
+                💳 Cashier ERP Billing (Save &amp; Print)
               </button>
             </div>
           </div>

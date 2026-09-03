@@ -273,6 +273,10 @@ export interface SalesOrder {
   userId?: string
   userName?: string
   userRole?: string
+  createdBy?: string
+  createdByRole?: string
+  createdByName?: string
+  billedBy?: string
   items: InvoiceItem[] | SalesItem[]
   subtotal?: number
   discountTotal?: number

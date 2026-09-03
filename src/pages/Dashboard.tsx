@@ -58,7 +58,7 @@ export default function Dashboard() {
         title={`Welcome back, ${user?.name ? user.name.split(' ')[0] : 'Admin'} 👋`}
         subtitle={isNonGstSession ? "Non-GST Executive Control & Billing Analytics" : isSuperAdmin ? "Super Admin Executive Control & Billing Analytics" : isManager ? "Manager Overview & Cashier Sales Performance Center" : "Here's what's happening across KKK Oil Factory today."}
       >
-        <Badge tone={isNonGstSession ? "purple" : isSuperAdmin ? "gold" : "green"}>{user?.roleLabel || 'Factory'} Mode</Badge>
+        <Badge tone={isSuperAdmin ? "gold" : "green"}>{user?.roleLabel || 'Factory'}</Badge>
       </PageHeader>
 
       {/* SUPER ADMIN EXECUTIVE SECTION */}

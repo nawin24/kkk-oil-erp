@@ -68,6 +68,7 @@ export default function App() {
         <Route path="/billing-history" element={<ProtectedRoute module="billing"><BillingHistory forcedBillingType="GST" /></ProtectedRoute>} />
 
         {/* Non-GST Billing & History (Exclusive to Super Admin) */}
+        <Route path="/non-gst" element={<SuperAdminRoute><ErpBilling forcedBillingType="NON_GST" /></SuperAdminRoute>} />
         <Route path="/non-gst-billing" element={<SuperAdminRoute><ErpBilling forcedBillingType="NON_GST" /></SuperAdminRoute>} />
         <Route path="/non-gst-history" element={<SuperAdminRoute><BillingHistory forcedBillingType="NON_GST" /></SuperAdminRoute>} />
 
