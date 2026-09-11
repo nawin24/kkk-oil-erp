@@ -205,9 +205,7 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
     try {
       const cust = customerMap[customerId]
       const paid = payMode !== 'Credit'
-      const billedByStr = isNonGstSession
-        ? `${user?.name || 'Super Admin'} (Super Admin Non-GST)`
-        : isSuperAdmin
+      const billedByStr = isSuperAdmin
         ? `${user?.name || 'Super Admin'} (Super Admin)`
         : `${user?.name || 'Staff'} (${user?.roleLabel || 'Staff'})`
 

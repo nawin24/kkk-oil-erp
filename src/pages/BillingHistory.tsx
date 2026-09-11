@@ -196,7 +196,8 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
               const grand = i.grandTotal || i.total || 0
               const sub = i.subtotal || i.sub || 0
               const gstAmt = bType === 'GST' ? (i.gstTotal || i.tax || 0) : 0
-              const staffBilled = i.billedBy || i.createdByName || i.userName || i.salesperson || 'Staff'
+              const rawStaffBilled = i.billedBy || i.createdByName || i.userName || i.salesperson || 'Staff'
+              const staffBilled = rawStaffBilled.replace('Super Admin Non-GST', 'Super Admin').replace('(Non-GST)', '(Super Admin)')
 
               return (
                 <tr key={i.id} style={{ opacity: isCancelled ? 0.6 : 1 }}>
