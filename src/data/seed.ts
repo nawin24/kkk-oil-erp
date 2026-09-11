@@ -6,9 +6,9 @@ import type { Product, SalesOrder } from '../types'
 // ============================================================
 
 export const ROLES = {
-  super_admin:        { label: 'Super Admin (GST)',       access: '*' },
+  super_admin:        { label: 'Super Admin',             access: '*' },
   super_admin_nongst: { label: 'Super Admin (Non-GST)',   access: '*' },
-  admin:              { label: 'Admin / Owner',           access: ['dashboard','products','price_management','price_history','inventory','customers','suppliers','purchase','production','sales','logistics','billing','reports','settings'] },
+  admin:              { label: 'Admin',                   access: ['dashboard','products','price_management','price_history','inventory','customers','suppliers','purchase','production','sales','logistics','billing','reports','settings'] },
   manager:            { label: 'Manager',                 access: ['dashboard','products','price_history','inventory','customers','suppliers','purchase','production','sales','logistics','billing','reports'] },
   cashier:            { label: 'Cashier',                 access: ['billing','inventory','customers'] },
 }

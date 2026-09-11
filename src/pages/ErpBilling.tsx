@@ -205,7 +205,11 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
     try {
       const cust = customerMap[customerId]
       const paid = payMode !== 'Credit'
-      const billedByStr = `${user?.name || 'Cashier'} (${user?.roleLabel || 'Staff'})`
+      const billedByStr = isNonGstSession
+        ? `${user?.name || 'Super Admin'} (Super Admin Non-GST)`
+        : isSuperAdmin
+        ? `${user?.name || 'Super Admin'} (Super Admin)`
+        : `${user?.name || 'Staff'} (${user?.roleLabel || 'Staff'})`
 
       const invoiceRecord: any = {
         id: voucherNo,

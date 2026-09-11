@@ -177,7 +177,7 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
               <th>Customer</th>
               <th>Date</th>
               <th>Pricing</th>
-              <th>Billing Type</th>
+              <th>Voucher Type</th>
               <th>Billed By</th>
               <th className="num">Taxable</th>
               <th className="num">GST</th>
@@ -209,7 +209,7 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
                   <td><Badge tone="gold" noDot>{i.pricingType || 'RETAIL'}</Badge></td>
                   <td>
                     <Badge tone={bType === 'GST' ? 'green' : 'purple'} noDot>
-                      {bType}
+                      {bType === 'GST' ? 'Tax Invoice' : 'Non-GST'}
                     </Badge>
                   </td>
                   <td><div className="cell-strong" style={{ fontSize: 12 }}>{staffBilled}</div></td>

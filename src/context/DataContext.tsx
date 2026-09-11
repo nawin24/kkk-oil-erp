@@ -382,19 +382,53 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }, [metrics.monthSales])
 
   const sales = useMemo(() => {
-    let isNonGst = false
+    let sessRole = 'super_admin'
+    let sessUserId = ''
+    let isNonGstSession = false
+
     try {
       const sess = localStorage.getItem('kkk_session_v2')
       if (sess) {
         const parsed = JSON.parse(sess)
-        if (parsed.activeMode === 'NON_GST' && (parsed.role === 'super_admin' || parsed.role === 'super_admin_nongst')) {
-          isNonGst = true
+        sessRole = parsed.role || 'super_admin'
+        sessUserId = parsed.id || ''
+        if (parsed.activeMode === 'NON_GST' && (sessRole === 'super_admin' || sessRole === 'super_admin_nongst')) {
+          isNonGstSession = true
         }
       }
     } catch { /* ignore */ }
 
-    if (isNonGst) return db.sales
-    return db.sales.filter((s: any) => (s.billingType || (s.id.startsWith('NG') ? 'NON_GST' : 'GST')) !== 'NON_GST')
+    return db.sales.filter((s: any) => {
+      const bType = s.billingType || (s.id?.startsWith('NG') ? 'NON_GST' : 'GST')
+      const creatorRole = s.createdByRole || s.userRole || (s.userId === 'U-super' ? 'super_admin' : s.userId === 'U-admin' ? 'admin' : s.userId === 'U-mgr' ? 'manager' : 'cashier')
+      const creatorId = s.createdBy || s.userId
+
+      // 1. NON-GST Data Isolation:
+      // NON-GST bills are ONLY visible to Super Admin in a NON-GST session.
+      if (bType === 'NON_GST' && !isNonGstSession) {
+        return false
+      }
+
+      // 2. Role Hierarchy Data Isolation (Subordinates cannot see Superiors' bills):
+      if (sessRole === 'super_admin' || sessRole === 'super_admin_nongst') {
+        // Super Admin sees ALL bills from everyone below them (and their own)
+        return true
+      } else if (sessRole === 'admin') {
+        // Admin sees bills created by Admin, Manager, and Cashier. CANNOT see Super Admin bills.
+        if (creatorRole === 'super_admin' || creatorRole === 'super_admin_nongst') return false
+        return true
+      } else if (sessRole === 'manager') {
+        // Manager sees bills created by Manager and Cashier. CANNOT see Admin or Super Admin bills.
+        if (creatorRole === 'super_admin' || creatorRole === 'super_admin_nongst' || creatorRole === 'admin') return false
+        return true
+      } else if (sessRole === 'cashier') {
+        // Cashier sees ONLY bills created by Cashiers (or their own bills)
+        if (creatorRole !== 'cashier' && creatorId !== sessUserId) return false
+        return true
+      }
+
+      return true
+    })
   }, [db.sales])
 
   const value = {
