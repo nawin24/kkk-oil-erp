@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
+import { flushSync } from 'react-dom'
 import { useData } from '../context/DataContext'
 import { useAuth } from '../context/AuthContext'
 import { PageHeader, Badge, Modal } from '../components/ui'
@@ -297,8 +298,10 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
       // 4. Audit Log
       addAuditLog(user, 'BILL_CREATED', billingType === 'GST' ? 'GST_BILLING' : 'NON_GST_BILLING', undefined, `${voucherNo} — Total ₹${billCalc.grandTotal} by ${billedByStr}`)
 
-      // IMMEDIATELY RESET FORM ON SPOT TO ZERO & CLEAR TABLE ROWS
-      clearForm()
+      // IMMEDIATELY FLUSH & RESET FORM ON SPOT TO ZERO & CLEAR TABLE ROWS
+      flushSync(() => {
+        clearForm()
+      })
 
       setToastMsg(`✅ ${billingType === 'GST' ? 'GST Invoice' : 'Non-GST Voucher'} ${voucherNo} saved successfully! Total: ${inr(invoiceRecord.grandTotal)}`)
 
