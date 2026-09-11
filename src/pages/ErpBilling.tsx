@@ -174,9 +174,16 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
     setPoNumber('')
     setVehicleNumber('')
     setDriverName('')
+    setDeliveryNote('')
+    setGatePassNo('')
+    setDispatchThrough('')
     setEwbNo('')
     setIrn('')
     setIrnGenerated(false)
+    setProdSearch('')
+    setSelectedProduct(null)
+    setInputQty(1)
+    setInputDisc(0)
   }
 
   const [isProcessing, setIsProcessing] = useState(false)
@@ -199,7 +206,11 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
   const saveBill = async (andPrint: boolean = false) => {
     if (isProcessing) return
     if (!rawLines.length) return
-    if (submittedVouchersRef.current.has(voucherNo)) return // Block duplicate submission of identical voucher
+    if (submittedVouchersRef.current.has(voucherNo)) {
+      setToastMsg(`⚠️ Voucher ${voucherNo} was already saved. Clearing form…`)
+      clearForm()
+      return
+    }
 
     if (!validateBill()) return
 
@@ -274,32 +285,35 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
       addAuditLog(user, 'BILL_CREATED', billingType === 'GST' ? 'GST_BILLING' : 'NON_GST_BILLING', undefined, `${voucherNo} — Total ₹${billCalc.grandTotal} by ${billedByStr}`)
 
       setLastSavedBill(invoiceRecord)
-      setToastMsg(`✅ ${billingType} Voucher ${voucherNo} saved successfully! Total: ${inr(billCalc.grandTotal)}`)
 
-      // Immediately reset billing form & totals to zero BEFORE opening print window
+      // Immediately reset billing form & totals to zero synchronously in React
       clearForm()
 
-      // 5. Generate & Print SECOND (using immutable invoiceRecord copy)
+      setToastMsg(`✅ ${billingType === 'GST' ? 'GST Invoice' : 'Non-GST Voucher'} ${voucherNo} saved! Form reset to ₹0 for next bill.`)
+
+      // 5. Defer print window by 100ms so React finishes re-rendering the cleared UI state on screen first
       if (andPrint) {
-        printInvoice(
-          buildInvoiceHTML({
-            id: voucherNo,
-            date: entryDate,
-            payStatus: invoiceRecord.payStatus,
-            items: invoiceRecord.items,
-            customer: cust || { name: 'Walk-in / Cash Customer', address },
-            productMap,
-            company: { ...company, gstin: billingType === 'GST' ? company.gstin : '' },
-            billingType,
-            voucherNo,
-            grandTotal: invoiceRecord.grandTotal,
-            subtotal: invoiceRecord.subtotal,
-            gstTotal: invoiceRecord.gstTotal,
-            ledgerEntries: invoiceRecord.ledgerEntries,
-            dispatchDetails: invoiceRecord.dispatchDetails,
-            billedBy: billedByStr,
-          })
-        )
+        setTimeout(() => {
+          printInvoice(
+            buildInvoiceHTML({
+              id: invoiceRecord.voucherNo,
+              date: invoiceRecord.date,
+              payStatus: invoiceRecord.payStatus,
+              items: invoiceRecord.items,
+              customer: cust || { name: 'Walk-in / Cash Customer', address: invoiceRecord.address },
+              productMap,
+              company: { ...company, gstin: billingType === 'GST' ? company.gstin : '' },
+              billingType,
+              voucherNo: invoiceRecord.voucherNo,
+              grandTotal: invoiceRecord.grandTotal,
+              subtotal: invoiceRecord.subtotal,
+              gstTotal: invoiceRecord.gstTotal,
+              ledgerEntries: invoiceRecord.ledgerEntries,
+              dispatchDetails: invoiceRecord.dispatchDetails,
+              billedBy: billedByStr,
+            })
+          )
+        }, 100)
       }
     } catch (e) {
       setToastMsg('❌ Unable to save the bill. Please try again.')
@@ -748,7 +762,7 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
 
               <button
                 className="btn btn-primary"
-                disabled={isProcessing}
+                disabled={isProcessing || !rawLines.length}
                 style={{ flex: '1 1 80px', fontSize: 12, justifyContent: 'center' }}
                 onClick={() => saveBill(false)}
               >
@@ -757,8 +771,8 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
 
               <button
                 className="btn btn-gold"
-                disabled={isProcessing}
-                style={{ flex: '1.5 1 140px', fontSize: 12, fontWeight: 800, justifyContent: 'center', opacity: isProcessing ? 0.75 : 1 }}
+                disabled={isProcessing || !rawLines.length}
+                style={{ flex: '1.5 1 140px', fontSize: 12, fontWeight: 800, justifyContent: 'center', opacity: (isProcessing || !rawLines.length) ? 0.6 : 1 }}
                 onClick={() => saveBill(true)}
               >
                 <Icon name="download" size={14} /> {isProcessing ? '⏳ Saving & Printing…' : '🖨️ Save & Print'}

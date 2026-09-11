@@ -91,16 +91,19 @@ export default function Counter() {
 
   const save = (andPrint: boolean) => {
     if (!validate()) return
+    const cust = customerMap[customerId]
     const record = buildRecord()
     commit(record)
+    clear()
     if (andPrint) {
-      printInvoice(buildInvoiceHTML({
-        id: record.id, date: record.date, payStatus: record.payStatus,
-        items: record.items, customer: customerMap[customerId], productMap, company,
-      }))
+      setTimeout(() => {
+        printInvoice(buildInvoiceHTML({
+          id: record.id, date: record.date, payStatus: record.payStatus,
+          items: record.items, customer: cust, productMap, company,
+        }))
+      }, 100)
     }
     setToast(`Bill ${invoiceNo(record.id)} saved${andPrint ? ' — opening print…' : ''} · ${inr(payable)}`)
-    clear()
   }
 
   return (
