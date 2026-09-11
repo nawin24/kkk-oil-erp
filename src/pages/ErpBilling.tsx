@@ -115,14 +115,18 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
 
   // Re-calculate line rates whenever pricingType, entryDate, or product list changes
   useEffect(() => {
-    setRawLines((prevLines) =>
-      prevLines.map((line) => {
+    setRawLines((prevLines) => {
+      if (!prevLines || !prevLines.length) return []
+      let changed = false
+      const nextLines = prevLines.map((line) => {
         const p = productMap[line.productId]
         if (!p) return line
         const activeRate = getEffectiveProductRate(p, pricingType, entryDate, priceHistory)
+        if (activeRate !== line.appliedRate) changed = true
         return { ...line, appliedRate: activeRate }
       })
-    )
+      return changed ? nextLines : prevLines
+    })
   }, [pricingType, entryDate, productMap, priceHistory])
 
   // Calculate live Horizon ERP bill totals
