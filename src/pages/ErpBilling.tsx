@@ -696,26 +696,65 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
               <button
                 className="btn"
                 disabled={isProcessing}
-                style={{ flex: '1 1 80px', fontSize: 12, justifyContent: 'center' }}
+                style={{ flex: '1 1 70px', fontSize: 12, justifyContent: 'center' }}
                 onClick={clearForm}
               >
                 <Icon name="trash" size={14} /> Clear
               </button>
+
+              {/* Direct Print Preview Button */}
+              <button
+                type="button"
+                className="btn"
+                disabled={isProcessing || !rawLines.length}
+                style={{ flex: '1 1 110px', fontSize: 12, justifyContent: 'center' }}
+                title="Preview & print bill anytime"
+                onClick={() => {
+                  const cust = customerMap[customerId]
+                  const billedByStr = isSuperAdmin
+                    ? `${user?.name || 'Super Admin'} (Super Admin)`
+                    : `${user?.name || 'Staff'} (${user?.roleLabel || 'Staff'})`
+
+                  printInvoice(
+                    buildInvoiceHTML({
+                      id: voucherNo,
+                      date: entryDate,
+                      payStatus: payMode === 'Credit' ? 'Pending' : 'Paid',
+                      items: billCalc.items,
+                      customer: cust || { name: 'Walk-in / Cash Customer', address },
+                      productMap,
+                      company: { ...company, gstin: billingType === 'GST' ? company.gstin : '' },
+                      billingType,
+                      voucherNo,
+                      grandTotal: billCalc.grandTotal,
+                      subtotal: billCalc.subtotal,
+                      gstTotal: billCalc.totalGst,
+                      ledgerEntries: billCalc.ledgerEntries,
+                      dispatchDetails: { poNumber, poDate, dispatchThrough, vehicleNumber, driverName, deliveryNote, gatePassNo },
+                      billedBy: billedByStr,
+                    })
+                  )
+                }}
+              >
+                <Icon name="download" size={14} /> Print Bill
+              </button>
+
               <button
                 className="btn btn-primary"
                 disabled={isProcessing}
                 style={{ flex: '1 1 80px', fontSize: 12, justifyContent: 'center' }}
                 onClick={() => saveBill(false)}
               >
-                <Icon name="check" size={14} /> {isProcessing ? 'Processing…' : 'Save (F2)'}
+                <Icon name="check" size={14} /> {isProcessing ? 'Saving…' : 'Save (F2)'}
               </button>
+
               <button
                 className="btn btn-gold"
                 disabled={isProcessing}
-                style={{ flex: '1.5 1 130px', fontSize: 12, fontWeight: 800, justifyContent: 'center' }}
+                style={{ flex: '1.5 1 140px', fontSize: 12, fontWeight: 800, justifyContent: 'center', opacity: isProcessing ? 0.75 : 1 }}
                 onClick={() => saveBill(true)}
               >
-                <Icon name="download" size={14} /> {isProcessing ? 'Saving & Printing…' : 'Save & Print'}
+                <Icon name="download" size={14} /> {isProcessing ? '⏳ Saving & Printing…' : '🖨️ Save & Print'}
               </button>
             </div>
 
@@ -752,7 +791,7 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
                     )
                   }}
                 >
-                  <Icon name="download" size={12} /> Print Again
+                  <Icon name="download" size={12} /> Print Bill Again
                 </button>
                 <button
                   type="button"
@@ -763,7 +802,7 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
                     clearForm()
                   }}
                 >
-                  + New Bill
+                  + Create New Bill
                 </button>
               </div>
             )}

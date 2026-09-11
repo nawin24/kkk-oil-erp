@@ -15,6 +15,12 @@ export default function Products() {
   const [edit, setEdit] = useState<any>(null)
   const [formErr, setFormErr] = useState('')
 
+  // Import Modal State
+  const [showImportModal, setShowImportModal] = useState(false)
+  const [importPreview, setImportPreview] = useState<any[]>([])
+  const [importError, setImportError] = useState('')
+  const [importSuccessMsg, setImportSuccessMsg] = useState('')
+
   const rows = useMemo(() => products.filter((p: any) => {
     if (brand !== 'all' && p.brandId !== brand) return false
     if (oil !== 'all' && p.oilType !== oil) return false
@@ -100,11 +106,236 @@ export default function Products() {
     setEdit(null)
   }
 
+  // Template Download Handler
+  const downloadTemplate = () => {
+    const templateRows = [
+      {
+        'Code*': 'PRD-101',
+        'Name*': 'KKK Gold Groundnut Oil 1L',
+        'Brand*': 'KKK Gold',
+        'Category': 'Edible Oils',
+        'Oil Type': 'Groundnut Oil',
+        'Pack Size': '1 L',
+        'Unit Type': 'Bottle',
+        'SKU': 'KKK-GN-1L',
+        'HSN Code': '1508',
+        'GST Rate %': 5,
+        'Cost Price (₹)*': 165,
+        'Agency Rate (₹)*': 180,
+        'Wholesale Rate (₹)*': 190,
+        'Retail Rate (₹)*': 198,
+        'MRP (₹)*': 215,
+        'Min Stock': 20,
+        'Initial Stock': 100
+      },
+      {
+        'Code*': 'PRD-102',
+        'Name*': 'Anjali Gingelly Oil 500ml',
+        'Brand*': 'Anjali Oils',
+        'Category': 'Edible Oils',
+        'Oil Type': 'Gingelly Oil',
+        'Pack Size': '500 ml',
+        'Unit Type': 'Bottle',
+        'SKU': 'ANJ-GG-500ML',
+        'HSN Code': '1508',
+        'GST Rate %': 5,
+        'Cost Price (₹)*': 90,
+        'Agency Rate (₹)*': 105,
+        'Wholesale Rate (₹)*': 112,
+        'Retail Rate (₹)*': 118,
+        'MRP (₹)*': 125,
+        'Min Stock': 15,
+        'Initial Stock': 80
+      }
+    ]
+    csvExport('product_import_template.csv', templateRows)
+  }
+
+  // CSV / Excel File Parser
+  const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setImportError('')
+    setImportSuccessMsg('')
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      try {
+        const text = String(event.target?.result || '')
+        const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0)
+        if (lines.length < 2) {
+          setImportError('The uploaded file is empty or missing data rows.')
+          return
+        }
+
+        const parseLine = (line: string) => {
+          const result = []
+          let insideQuote = false
+          let entry = ''
+          for (let i = 0; i < line.length; i++) {
+            const char = line[i]
+            if (char === '"') {
+              insideQuote = !insideQuote
+            } else if (char === ',' && !insideQuote) {
+              result.push(entry.trim().replace(/^"|"$/g, ''))
+              entry = ''
+            } else {
+              entry += char
+            }
+          }
+          result.push(entry.trim().replace(/^"|"$/g, ''))
+          return result
+        }
+
+        const headers = parseLine(lines[0]).map((h) => h.toLowerCase().replace(/[*"₹()]/g, '').trim())
+        const parsedRecords: any[] = []
+
+        for (let i = 1; i < lines.length; i++) {
+          const values = parseLine(lines[i])
+          if (values.length < 2) continue
+
+          const rowObj: Record<string, string> = {}
+          headers.forEach((h, idx) => {
+            rowObj[h] = values[idx] || ''
+          })
+
+          const code = rowObj['code'] || rowObj['product code'] || rowObj['sku'] || `PRD-${Math.floor(100 + Math.random() * 900)}`
+          const name = rowObj['name'] || rowObj['product name'] || ''
+          const brandName = rowObj['brand'] || rowObj['brand name'] || ''
+          const cost = Number(rowObj['cost price'] || rowObj['cost'] || rowObj['purchase rate'] || 0)
+          const agencyRate = Number(rowObj['agency rate'] || rowObj['agency'] || 0)
+          const wholesaleRate = Number(rowObj['wholesale rate'] || rowObj['wholesale'] || 0)
+          const retailRate = Number(rowObj['retail rate'] || rowObj['retail'] || rowObj['price'] || 0)
+          const mrp = Number(rowObj['mrp'] || 0)
+          const initialStock = Number(rowObj['initial stock'] || rowObj['stock'] || 0)
+
+          let brandId = brands.find((b: any) => b.name.toLowerCase() === brandName.toLowerCase())?.id || brands[0]?.id || 'B1'
+
+          const isValid = Boolean(code && name && cost >= 0 && (agencyRate > 0 || wholesaleRate > 0 || retailRate > 0))
+
+          parsedRecords.push({
+            id: uid('P'),
+            code,
+            name,
+            brandId,
+            brandName: brandMap[brandId]?.name || brandName || 'KKK Gold',
+            category: rowObj['category'] || 'Edible Oils',
+            oilType: rowObj['oil type'] || OIL_TYPES[0],
+            pack: rowObj['pack size'] || rowObj['pack'] || '1 L',
+            unit: rowObj['unit type'] || rowObj['unit'] || 'Bottle',
+            sku: rowObj['sku'] || code,
+            hsn: rowObj['hsn code'] || rowObj['hsn'] || '1508',
+            gst: Number(rowObj['gst rate %'] || rowObj['gst'] || 5),
+            cost,
+            agencyRate: agencyRate || retailRate,
+            wholesaleRate: wholesaleRate || retailRate,
+            retailRate: retailRate || wholesaleRate || agencyRate,
+            price: retailRate || wholesaleRate || agencyRate,
+            mrp: mrp || (retailRate * 1.1),
+            minStock: Number(rowObj['min stock'] || 10),
+            stock: initialStock,
+            status: 'Active',
+            isValid,
+            rowNum: i + 1,
+          })
+        }
+
+        setImportPreview(parsedRecords)
+      } catch (err) {
+        setImportError('Failed to parse file. Please ensure it is a valid CSV or Excel file.')
+      }
+    }
+    reader.readAsText(file)
+  }
+
+  const confirmImport = () => {
+    const validRows = importPreview.filter((r) => r.isValid)
+    if (!validRows.length) {
+      setImportError('No valid rows found to import.')
+      return
+    }
+
+    validRows.forEach((r) => {
+      const record = {
+        id: r.id,
+        code: r.code,
+        name: r.name,
+        brandId: r.brandId,
+        category: r.category,
+        oilType: r.oilType,
+        pack: r.pack,
+        unit: r.unit,
+        sku: r.sku,
+        hsn: r.hsn,
+        gst: r.gst,
+        cost: r.cost,
+        agencyRate: r.agencyRate,
+        wholesaleRate: r.wholesaleRate,
+        retailRate: r.retailRate,
+        price: r.retailRate,
+        mrp: r.mrp,
+        minStock: r.minStock,
+        stock: r.stock,
+        status: 'Active',
+        createdDate: todayISO(),
+        updatedDate: todayISO(),
+      }
+      upsert('products', record)
+    })
+
+    addAuditLog(null, 'PRODUCTS_IMPORTED', 'PRODUCTS', undefined, `Imported ${validRows.length} products via Excel/CSV`)
+    setImportSuccessMsg(`✅ Successfully imported ${validRows.length} products! Saved to database & Firestore.`)
+    setImportPreview([])
+    setTimeout(() => setShowImportModal(false), 1200)
+  }
+
   return (
     <div className="page">
       <PageHeader title="Product Master" subtitle={`${products.length} Central Master Products — manage SKUs, AWR rates, HSN codes, and inventory levels.`}>
-        <button className="btn" onClick={() => csvExport('products.csv', rows.map((p) => ({ ...p, brand: brandMap[p.brandId]?.name })))}><Icon name="download" /> Export</button>
-        <button className="btn btn-gold" onClick={() => { setFormErr(''); setEdit(blank) }}><Icon name="plus" /> Add Product</button>
+        <button
+          className="btn"
+          onClick={() =>
+            csvExport(
+              'products_master_export.csv',
+              rows.map((p) => ({
+                Code: p.code,
+                Name: p.name,
+                Brand: brandMap[p.brandId]?.name || 'KKK Gold',
+                Category: p.category,
+                'Oil Type': p.oilType,
+                Pack: p.pack,
+                Unit: p.unit,
+                SKU: p.sku,
+                HSN: p.hsn,
+                'GST %': p.gst,
+                'Cost Rate (₹)': p.cost,
+                'Agency Rate (₹)': p.agencyRate,
+                'Wholesale Rate (₹)': p.wholesaleRate,
+                'Retail Rate (₹)': p.retailRate,
+                'MRP (₹)': p.mrp,
+                Stock: p.stock,
+                MinStock: p.minStock,
+                Status: p.status || 'Active',
+              }))
+            )
+          }
+        >
+          <Icon name="download" /> Export Excel
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            setImportError('')
+            setImportSuccessMsg('')
+            setImportPreview([])
+            setShowImportModal(true)
+          }}
+        >
+          <Icon name="download" size={14} /> Import Products
+        </button>
+        <button className="btn btn-gold" onClick={() => { setFormErr(''); setEdit(blank) }}>
+          <Icon name="plus" /> Add Product
+        </button>
       </PageHeader>
 
       <Toolbar search={q} onSearch={setQ} placeholder="Search product name, code, SKU…">
@@ -160,19 +391,22 @@ export default function Products() {
               <th>SKU / HSN</th>
               <th>Pack &amp; Unit</th>
               <th className="num">Cost</th>
-              <th className="num" style={{ color: 'var(--gold)' }}>{pricingType} Rate</th>
+              <th style={{ minWidth: 200 }}>AWR Rates (Agency / Wholesale / Retail)</th>
               <th className="num">MRP</th>
               <th className="num">Stock</th>
               <th>GST</th>
               <th>Status</th>
-              <th></th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((p: any) => {
               const low = p.stock <= p.minStock
               const b = brandMap[p.brandId]
-              const rate = getDisplayedRate(p)
+              const agency = p.agencyRate ?? p.price ?? 0
+              const wholesale = p.wholesaleRate ?? p.price ?? 0
+              const retail = p.retailRate ?? p.price ?? 0
+
               return (
                 <tr key={p.id}>
                   <td>
@@ -194,7 +428,20 @@ export default function Products() {
                   </td>
                   <td>{p.pack} ({p.unit})</td>
                   <td className="num muted">{inr(p.cost)}</td>
-                  <td className="num cell-strong" style={{ color: 'var(--gold)', fontSize: 14 }}>{inr(rate)}</td>
+                  {/* 3-Tier Differentiated AWR Selling Rates */}
+                  <td>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                      <span className={`badge ${pricingType === 'AGENCY' ? 'gold' : 'gray'}`} style={{ fontSize: 11, fontWeight: pricingType === 'AGENCY' ? 800 : 500 }} title="Agency / Distributor Rate">
+                        A: {inr(agency)}
+                      </span>
+                      <span className={`badge ${pricingType === 'WHOLESALE' ? 'blue' : 'gray'}`} style={{ fontSize: 11, fontWeight: pricingType === 'WHOLESALE' ? 800 : 500 }} title="Wholesale / Dealer Rate">
+                        W: {inr(wholesale)}
+                      </span>
+                      <span className={`badge ${pricingType === 'RETAIL' ? 'green' : 'gray'}`} style={{ fontSize: 11, fontWeight: pricingType === 'RETAIL' ? 800 : 500 }} title="Retail / Counter Rate">
+                        R: {inr(retail)}
+                      </span>
+                    </div>
+                  </td>
                   <td className="num muted">{inr(p.mrp)}</td>
                   <td className="num">
                     <span style={{ fontWeight: 600, color: low ? 'var(--red)' : 'inherit' }}>{num(p.stock)}</span>
@@ -209,7 +456,7 @@ export default function Products() {
                   <td>
                     <div className="row-actions">
                       <button onClick={() => { setFormErr(''); setEdit(p) }} title="Edit Product & Rates"><Icon name="edit" size={15} /></button>
-                      <button className="del" onClick={() => window.confirm('Delete product?') && remove('products', p.id)} title="Delete"><Icon name="trash" size={15} /></button>
+                      <button className="del" onClick={() => window.confirm(`Delete product "${p.name}"?`) && remove('products', p.id)} title="Delete"><Icon name="trash" size={15} /></button>
                     </div>
                   </td>
                 </tr>
@@ -220,16 +467,17 @@ export default function Products() {
         {!rows.length && <EmptyState icon="products" text="No products match your filters" />}
       </div>
 
+      {/* Add / Edit Product Modal */}
       {edit && (
         <Modal lg title={products.some((p: any) => p.id === edit.id) ? `Edit Product · ${edit.name}` : 'Add Product'} onClose={() => setEdit(null)}
           footer={<><button className="btn" onClick={() => setEdit(null)}>Cancel</button><button className="btn btn-primary" form="prodForm">Save Product</button></>}>
           <form id="prodForm" onSubmit={save} className="form-grid">
             {formErr && <div style={{ gridColumn: '1/-1', color: 'var(--red)', background: 'var(--red-soft)', padding: '8px 12px', borderRadius: 6, fontSize: 13, fontWeight: 600 }}>{formErr}</div>}
 
-            <Field label="Product Code"><input className="inp" name="code" defaultValue={edit.code || edit.sku} required placeholder="e.g. PRD-101" /></Field>
-            <Field label="Product Name" full><input className="inp" name="name" defaultValue={edit.name} required placeholder="e.g. KKK Gold Groundnut Oil 1L" /></Field>
+            <Field label="Product Code *"><input className="inp" name="code" defaultValue={edit.code || edit.sku} required placeholder="e.g. PRD-101" /></Field>
+            <Field label="Product Name *" full><input className="inp" name="name" defaultValue={edit.name} required placeholder="e.g. KKK Gold Groundnut Oil 1L" /></Field>
 
-            <Field label="Brand"><select className="sel" name="brandId" defaultValue={edit.brandId}>{brands.map((b: any) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></Field>
+            <Field label="Brand *"><select className="sel" name="brandId" defaultValue={edit.brandId}>{brands.map((b: any) => <option key={b.id} value={b.id}>{b.name}</option>)}</select></Field>
             <Field label="Category"><input className="inp" name="category" defaultValue={edit.category || 'Edible Oils'} required /></Field>
             <Field label="Oil Type"><select className="sel" name="oilType" defaultValue={edit.oilType}>{OIL_TYPES.map((o) => <option key={o}>{o}</option>)}</select></Field>
             <Field label="Pack Size"><select className="sel" name="pack" defaultValue={edit.pack}>{PACK_SIZES.map((o) => <option key={o}>{o}</option>)}</select></Field>
@@ -237,8 +485,8 @@ export default function Products() {
             <Field label="SKU / Barcode"><input className="inp" name="sku" defaultValue={edit.sku || edit.code} required /></Field>
             <Field label="HSN Code"><input className="inp" name="hsn" defaultValue={edit.hsn} required /></Field>
             <Field label="GST Rate (%)"><input className="inp" type="number" min="0" step="0.01" name="gst" defaultValue={edit.gst} required /></Field>
-            <Field label="MRP (₹)"><input className="inp" type="number" min="0" step="0.01" name="mrp" defaultValue={edit.mrp} required /></Field>
-            <Field label="Purchase / Cost Rate (₹)"><input className="inp" type="number" min="0" step="0.01" name="cost" defaultValue={edit.cost} required /></Field>
+            <Field label="MRP (₹) *"><input className="inp" type="number" min="0" step="0.01" name="mrp" defaultValue={edit.mrp} required /></Field>
+            <Field label="Purchase / Cost Rate (₹) *"><input className="inp" type="number" min="0" step="0.01" name="cost" defaultValue={edit.cost} required /></Field>
 
             {/* AWR Selling Rates */}
             <div style={{ gridColumn: '1/-1', borderTop: '1px solid var(--border)', paddingTop: 12, marginTop: 6 }}>
@@ -246,14 +494,14 @@ export default function Products() {
                 Three Selling Rates (AWR Pricing Model)
               </h4>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
-                <Field label="1. Agency Rate (₹)">
-                  <input className="inp" type="number" min="0" step="0.01" name="agencyRate" defaultValue={edit.agencyRate ?? edit.price} required />
+                <Field label="1. Agency Rate (₹) *">
+                  <input className="inp" type="number" min="0" step="0.01" name="agencyRate" defaultValue={edit.agencyRate ?? edit.price} required style={{ borderLeft: '3px solid var(--gold)' }} />
                 </Field>
-                <Field label="2. Wholesale Rate (₹)">
-                  <input className="inp" type="number" min="0" step="0.01" name="wholesaleRate" defaultValue={edit.wholesaleRate ?? edit.price} required />
+                <Field label="2. Wholesale Rate (₹) *">
+                  <input className="inp" type="number" min="0" step="0.01" name="wholesaleRate" defaultValue={edit.wholesaleRate ?? edit.price} required style={{ borderLeft: '3px solid var(--blue)' }} />
                 </Field>
-                <Field label="3. Retail Rate (₹)">
-                  <input className="inp" type="number" min="0" step="0.01" name="retailRate" defaultValue={edit.retailRate ?? edit.price} required />
+                <Field label="3. Retail Rate (₹) *">
+                  <input className="inp" type="number" min="0" step="0.01" name="retailRate" defaultValue={edit.retailRate ?? edit.price} required style={{ borderLeft: '3px solid var(--green)' }} />
                 </Field>
               </div>
             </div>
@@ -264,7 +512,110 @@ export default function Products() {
           </form>
         </Modal>
       )}
+
+      {/* Import Products via Excel / CSV Modal */}
+      {showImportModal && (
+        <Modal
+          lg
+          title="📥 Import Products via Excel / CSV"
+          onClose={() => setShowImportModal(false)}
+          footer={
+            <>
+              <button className="btn" onClick={() => setShowImportModal(false)}>Cancel</button>
+              <button
+                className="btn btn-primary"
+                disabled={!importPreview.some((r) => r.isValid)}
+                onClick={confirmImport}
+              >
+                Confirm &amp; Import Products ({importPreview.filter((r) => r.isValid).length})
+              </button>
+            </>
+          }
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ background: 'var(--surface-2)', padding: 14, borderRadius: 8, border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h4 style={{ fontSize: 14, fontWeight: 700, margin: 0, color: 'var(--text)' }}>Download Pre-formatted Excel Template</h4>
+                <p className="tiny" style={{ margin: '4px 0 0 0', color: 'var(--text-2)' }}>
+                  Contains mandatory fields marked with (*): Code*, Name*, Brand*, Cost*, Agency*, Wholesale*, Retail*, MRP*.
+                </p>
+              </div>
+              <button className="btn btn-sm btn-gold" onClick={downloadTemplate}>
+                <Icon name="download" size={14} /> Download Template (.csv)
+              </button>
+            </div>
+
+            <div className="field">
+              <label style={{ fontWeight: 700 }}>Select Excel or CSV File to Upload</label>
+              <input
+                type="file"
+                accept=".csv, .xlsx, .xls, .txt"
+                className="inp"
+                style={{ padding: 10 }}
+                onChange={handleFileImport}
+              />
+            </div>
+
+            {importError && (
+              <div style={{ background: 'var(--red-soft)', color: 'var(--red)', padding: '10px 14px', borderRadius: 6, fontWeight: 600, fontSize: 13 }}>
+                {importError}
+              </div>
+            )}
+
+            {importSuccessMsg && (
+              <div style={{ background: 'var(--green-soft)', color: 'var(--green)', padding: '10px 14px', borderRadius: 6, fontWeight: 600, fontSize: 13 }}>
+                {importSuccessMsg}
+              </div>
+            )}
+
+            {importPreview.length > 0 && (
+              <div>
+                <h4 style={{ fontSize: 13, fontWeight: 700, textTransform: 'uppercase', marginBottom: 8, color: 'var(--gold)' }}>
+                  Import Preview ({importPreview.filter((r) => r.isValid).length} Valid / {importPreview.length} Total Rows)
+                </h4>
+                <div className="table-wrap" style={{ maxHeight: 250, overflowY: 'auto' }}>
+                  <table className="tbl" style={{ fontSize: 12 }}>
+                    <thead>
+                      <tr>
+                        <th>Row</th>
+                        <th>Code</th>
+                        <th>Product Name</th>
+                        <th>Brand</th>
+                        <th className="num">Cost</th>
+                        <th className="num">Agency</th>
+                        <th className="num">Wholesale</th>
+                        <th className="num">Retail</th>
+                        <th className="num">MRP</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {importPreview.map((r, i) => (
+                        <tr key={i} style={{ background: r.isValid ? 'transparent' : 'var(--red-soft)' }}>
+                          <td>#{r.rowNum}</td>
+                          <td className="cell-strong">{r.code}</td>
+                          <td>{r.name}</td>
+                          <td>{r.brandName}</td>
+                          <td className="num">{inr(r.cost)}</td>
+                          <td className="num">{inr(r.agencyRate)}</td>
+                          <td className="num">{inr(r.wholesaleRate)}</td>
+                          <td className="num">{inr(r.retailRate)}</td>
+                          <td className="num">{inr(r.mrp)}</td>
+                          <td>
+                            <Badge tone={r.isValid ? 'green' : 'red'} noDot>
+                              {r.isValid ? 'Valid' : 'Invalid Data'}
+                            </Badge>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }
-
