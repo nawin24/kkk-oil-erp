@@ -4,6 +4,7 @@ import { PageHeader, Badge, Modal, Field, Toolbar, LogoPill, EmptyState } from '
 import Icon from '../components/Icon'
 import { OIL_TYPES, PACK_SIZES, UNIT_TYPES } from '../data/seed'
 import { inr, num, csvExport, uid, todayISO } from '../utils/helpers'
+import { exportToExcel, parseExcelOrCsv } from '../utils/excel'
 import type { PricingType } from '../types'
 
 export default function Products() {
@@ -106,8 +107,8 @@ export default function Products() {
     setEdit(null)
   }
 
-  // Template Download Handler
-  const downloadTemplate = () => {
+  // Template Download Handler (.xlsx Excel & .csv)
+  const downloadTemplate = (format: 'xlsx' | 'csv' = 'xlsx') => {
     const templateRows = [
       {
         'Code*': 'PRD-101',
@@ -148,104 +149,84 @@ export default function Products() {
         'Initial Stock': 80
       }
     ]
-    csvExport('product_import_template.csv', templateRows)
+    if (format === 'csv') {
+      csvExport('product_import_template.csv', templateRows)
+    } else {
+      exportToExcel('product_import_template.xlsx', templateRows, 'Template')
+    }
   }
 
-  // CSV / Excel File Parser
-  const handleFileImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Native Excel (.xlsx, .xls) and CSV (.csv) Parser
+  const handleFileImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     setImportError('')
     setImportSuccessMsg('')
 
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      try {
-        const text = String(event.target?.result || '')
-        const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0)
-        if (lines.length < 2) {
-          setImportError('The uploaded file is empty or missing data rows.')
-          return
-        }
+    try {
+      const rawRows = await parseExcelOrCsv(file)
+      if (!rawRows || !rawRows.length) {
+        setImportError('The uploaded file is empty or missing data rows.')
+        return
+      }
 
-        const parseLine = (line: string) => {
-          const result = []
-          let insideQuote = false
-          let entry = ''
-          for (let i = 0; i < line.length; i++) {
-            const char = line[i]
-            if (char === '"') {
-              insideQuote = !insideQuote
-            } else if (char === ',' && !insideQuote) {
-              result.push(entry.trim().replace(/^"|"$/g, ''))
-              entry = ''
-            } else {
-              entry += char
+      const parsedRecords: any[] = rawRows.map((rowObj: any, index: number) => {
+        const findVal = (...keys: string[]) => {
+          for (const k of keys) {
+            const keyFound = Object.keys(rowObj).find(
+              (rk) => rk.toLowerCase().replace(/[*"₹()]/g, '').trim() === k.toLowerCase().trim()
+            )
+            if (keyFound && rowObj[keyFound] !== undefined && rowObj[keyFound] !== '') {
+              return String(rowObj[keyFound]).trim()
             }
           }
-          result.push(entry.trim().replace(/^"|"$/g, ''))
-          return result
+          return ''
         }
 
-        const headers = parseLine(lines[0]).map((h) => h.toLowerCase().replace(/[*"₹()]/g, '').trim())
-        const parsedRecords: any[] = []
+        const code = findVal('code', 'product code', 'sku') || `PRD-${Math.floor(100 + Math.random() * 900)}`
+        const name = findVal('name', 'product name')
+        const brandName = findVal('brand', 'brand name')
+        const cost = Number(findVal('cost price', 'cost', 'purchase rate') || 0)
+        const agencyRate = Number(findVal('agency rate', 'agency') || 0)
+        const wholesaleRate = Number(findVal('wholesale rate', 'wholesale') || 0)
+        const retailRate = Number(findVal('retail rate', 'retail', 'price') || 0)
+        const mrp = Number(findVal('mrp') || 0)
+        const initialStock = Number(findVal('initial stock', 'stock') || 0)
 
-        for (let i = 1; i < lines.length; i++) {
-          const values = parseLine(lines[i])
-          if (values.length < 2) continue
+        let brandId = brands.find((b: any) => b.name.toLowerCase() === brandName.toLowerCase())?.id || brands[0]?.id || 'B1'
+        const isValid = Boolean(code && name && cost >= 0 && (agencyRate > 0 || wholesaleRate > 0 || retailRate > 0))
 
-          const rowObj: Record<string, string> = {}
-          headers.forEach((h, idx) => {
-            rowObj[h] = values[idx] || ''
-          })
-
-          const code = rowObj['code'] || rowObj['product code'] || rowObj['sku'] || `PRD-${Math.floor(100 + Math.random() * 900)}`
-          const name = rowObj['name'] || rowObj['product name'] || ''
-          const brandName = rowObj['brand'] || rowObj['brand name'] || ''
-          const cost = Number(rowObj['cost price'] || rowObj['cost'] || rowObj['purchase rate'] || 0)
-          const agencyRate = Number(rowObj['agency rate'] || rowObj['agency'] || 0)
-          const wholesaleRate = Number(rowObj['wholesale rate'] || rowObj['wholesale'] || 0)
-          const retailRate = Number(rowObj['retail rate'] || rowObj['retail'] || rowObj['price'] || 0)
-          const mrp = Number(rowObj['mrp'] || 0)
-          const initialStock = Number(rowObj['initial stock'] || rowObj['stock'] || 0)
-
-          let brandId = brands.find((b: any) => b.name.toLowerCase() === brandName.toLowerCase())?.id || brands[0]?.id || 'B1'
-
-          const isValid = Boolean(code && name && cost >= 0 && (agencyRate > 0 || wholesaleRate > 0 || retailRate > 0))
-
-          parsedRecords.push({
-            id: uid('P'),
-            code,
-            name,
-            brandId,
-            brandName: brandMap[brandId]?.name || brandName || 'KKK Gold',
-            category: rowObj['category'] || 'Edible Oils',
-            oilType: rowObj['oil type'] || OIL_TYPES[0],
-            pack: rowObj['pack size'] || rowObj['pack'] || '1 L',
-            unit: rowObj['unit type'] || rowObj['unit'] || 'Bottle',
-            sku: rowObj['sku'] || code,
-            hsn: rowObj['hsn code'] || rowObj['hsn'] || '1508',
-            gst: Number(rowObj['gst rate %'] || rowObj['gst'] || 5),
-            cost,
-            agencyRate: agencyRate || retailRate,
-            wholesaleRate: wholesaleRate || retailRate,
-            retailRate: retailRate || wholesaleRate || agencyRate,
-            price: retailRate || wholesaleRate || agencyRate,
-            mrp: mrp || (retailRate * 1.1),
-            minStock: Number(rowObj['min stock'] || 10),
-            stock: initialStock,
-            status: 'Active',
-            isValid,
-            rowNum: i + 1,
-          })
+        return {
+          id: uid('P'),
+          code,
+          name,
+          brandId,
+          brandName: brandMap[brandId]?.name || brandName || 'KKK Gold',
+          category: findVal('category') || 'Edible Oils',
+          oilType: findVal('oil type') || OIL_TYPES[0],
+          pack: findVal('pack size', 'pack') || '1 L',
+          unit: findVal('unit type', 'unit') || 'Bottle',
+          sku: findVal('sku') || code,
+          hsn: findVal('hsn code', 'hsn') || '1508',
+          gst: Number(findVal('gst rate %', 'gst') || 5),
+          cost,
+          agencyRate: agencyRate || retailRate,
+          wholesaleRate: wholesaleRate || retailRate,
+          retailRate: retailRate || wholesaleRate || agencyRate,
+          price: retailRate || wholesaleRate || agencyRate,
+          mrp: mrp || (retailRate * 1.1),
+          minStock: Number(findVal('min stock') || 10),
+          stock: initialStock,
+          status: 'Active',
+          isValid,
+          rowNum: index + 2,
         }
+      })
 
-        setImportPreview(parsedRecords)
-      } catch (err) {
-        setImportError('Failed to parse file. Please ensure it is a valid CSV or Excel file.')
-      }
+      setImportPreview(parsedRecords)
+    } catch (err) {
+      setImportError('Failed to parse file. Please upload a valid Excel (.xlsx, .xls) or CSV (.csv) file.')
     }
-    reader.readAsText(file)
   }
 
   const confirmImport = () => {
@@ -295,8 +276,8 @@ export default function Products() {
         <button
           className="btn"
           onClick={() =>
-            csvExport(
-              'products_master_export.csv',
+            exportToExcel(
+              'products_master_export.xlsx',
               rows.map((p) => ({
                 Code: p.code,
                 Name: p.name,
@@ -316,11 +297,12 @@ export default function Products() {
                 Stock: p.stock,
                 MinStock: p.minStock,
                 Status: p.status || 'Active',
-              }))
+              })),
+              'Products'
             )
           }
         >
-          <Icon name="download" /> Export Excel
+          <Icon name="download" /> Export Excel (.xlsx)
         </button>
         <button
           className="btn btn-primary"
@@ -535,14 +517,19 @@ export default function Products() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div style={{ background: 'var(--surface-2)', padding: 14, borderRadius: 8, border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <h4 style={{ fontSize: 14, fontWeight: 700, margin: 0, color: 'var(--text)' }}>Download Pre-formatted Excel Template</h4>
+                <h4 style={{ fontSize: 14, fontWeight: 700, margin: 0, color: 'var(--text)' }}>Download Pre-formatted Template</h4>
                 <p className="tiny" style={{ margin: '4px 0 0 0', color: 'var(--text-2)' }}>
                   Contains mandatory fields marked with (*): Code*, Name*, Brand*, Cost*, Agency*, Wholesale*, Retail*, MRP*.
                 </p>
               </div>
-              <button className="btn btn-sm btn-gold" onClick={downloadTemplate}>
-                <Icon name="download" size={14} /> Download Template (.csv)
-              </button>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button className="btn btn-sm btn-gold" onClick={() => downloadTemplate('xlsx')}>
+                  <Icon name="download" size={14} /> Excel (.xlsx)
+                </button>
+                <button className="btn btn-sm" onClick={() => downloadTemplate('csv')}>
+                  <Icon name="download" size={14} /> CSV (.csv)
+                </button>
+              </div>
             </div>
 
             <div className="field">
