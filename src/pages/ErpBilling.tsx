@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useData } from '../context/DataContext'
 import { useAuth } from '../context/AuthContext'
 import { PageHeader, Badge, Modal } from '../components/ui'
@@ -181,6 +181,7 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
 
   const [isProcessing, setIsProcessing] = useState(false)
   const [lastSavedBill, setLastSavedBill] = useState<any>(null)
+  const submittedVouchersRef = useRef<Set<string>>(new Set())
 
   // Validate bill before saving
   const validateBill = () => {
@@ -197,10 +198,14 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
 
   const saveBill = async (andPrint: boolean = false) => {
     if (isProcessing) return
+    if (!rawLines.length) return
+    if (submittedVouchersRef.current.has(voucherNo)) return // Block duplicate submission of identical voucher
+
     if (!validateBill()) return
 
+    submittedVouchersRef.current.add(voucherNo)
     setIsProcessing(true)
-    setToastMsg('💾 Saving bill to database…')
+    setToastMsg(`💾 Saving ${billingType} Voucher ${voucherNo} to database…`)
 
     try {
       const cust = customerMap[customerId]
