@@ -210,6 +210,10 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
       setToastMsg('❌ Please complete all required billing details. (Add at least one product)')
       return false
     }
+    if (billCalc.grandTotal <= 0) {
+      setToastMsg('❌ Cannot save a bill with ₹0 grand total. Please enter valid items.')
+      return false
+    }
     if (payMode === 'Credit' && !customerId) {
       setToastMsg('❌ Credit bills require a selected customer.')
       return false
@@ -219,12 +223,7 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
 
   const saveBill = async (andPrint: boolean = false) => {
     if (isProcessing) return
-    if (!rawLines.length) return
-    if (submittedVouchersRef.current.has(voucherNo)) {
-      setToastMsg(`⚠️ Voucher ${voucherNo} was already saved. Clearing form…`)
-      clearForm()
-      return
-    }
+    if (!rawLines.length || billCalc.grandTotal <= 0) return
 
     if (!validateBill()) return
 
@@ -298,36 +297,36 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
       // 4. Audit Log
       addAuditLog(user, 'BILL_CREATED', billingType === 'GST' ? 'GST_BILLING' : 'NON_GST_BILLING', undefined, `${voucherNo} — Total ₹${billCalc.grandTotal} by ${billedByStr}`)
 
-      setLastSavedBill(invoiceRecord)
-
-      // Immediately reset billing form & totals to zero synchronously in React
+      // IMMEDIATELY RESET FORM ON SPOT TO ZERO & CLEAR TABLE ROWS
       clearForm()
 
       setToastMsg(`✅ ${billingType === 'GST' ? 'GST Invoice' : 'Non-GST Voucher'} ${voucherNo} saved successfully! Total: ${inr(invoiceRecord.grandTotal)}`)
 
-      // 5. Defer print window by 100ms so React finishes re-rendering the cleared UI state on screen first
+      // 5. Open print dialog AFTER React has painted the cleared empty form on screen
       if (andPrint) {
-        setTimeout(() => {
-          printInvoice(
-            buildInvoiceHTML({
-              id: invoiceRecord.voucherNo,
-              date: invoiceRecord.date,
-              payStatus: invoiceRecord.payStatus,
-              items: invoiceRecord.items,
-              customer: cust || { name: 'Walk-in / Cash Customer', address: invoiceRecord.address },
-              productMap,
-              company: { ...company, gstin: billingType === 'GST' ? company.gstin : '' },
-              billingType,
-              voucherNo: invoiceRecord.voucherNo,
-              grandTotal: invoiceRecord.grandTotal,
-              subtotal: invoiceRecord.subtotal,
-              gstTotal: invoiceRecord.gstTotal,
-              ledgerEntries: invoiceRecord.ledgerEntries,
-              dispatchDetails: invoiceRecord.dispatchDetails,
-              billedBy: billedByStr,
-            })
-          )
-        }, 100)
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            printInvoice(
+              buildInvoiceHTML({
+                id: invoiceRecord.voucherNo,
+                date: invoiceRecord.date,
+                payStatus: invoiceRecord.payStatus,
+                items: invoiceRecord.items,
+                customer: cust || { name: 'Walk-in / Cash Customer', address: invoiceRecord.address },
+                productMap,
+                company: { ...company, gstin: billingType === 'GST' ? company.gstin : '' },
+                billingType,
+                voucherNo: invoiceRecord.voucherNo,
+                grandTotal: invoiceRecord.grandTotal,
+                subtotal: invoiceRecord.subtotal,
+                gstTotal: invoiceRecord.gstTotal,
+                ledgerEntries: invoiceRecord.ledgerEntries,
+                dispatchDetails: invoiceRecord.dispatchDetails,
+                billedBy: billedByStr,
+              })
+            )
+          }, 300)
+        })
       }
     } catch (e) {
       setToastMsg('❌ Unable to save the bill. Please try again.')

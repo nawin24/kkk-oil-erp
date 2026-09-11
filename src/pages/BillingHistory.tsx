@@ -27,6 +27,9 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
 
   const invoices = useMemo(() => {
     return (sales || []).filter((s: any) => {
+      // EXCLUDE ZERO / EMPTY INVALID BILLS
+      if ((s.grandTotal || s.total || 0) <= 0 && (!s.items || s.items.length === 0)) return false
+
       const bType = s.billingType || (s.id.startsWith('NG') ? 'NON_GST' : 'GST')
 
       // STRICT ISOLATION: Non-GST history MUST NOT be shown to non-Super Admin users
