@@ -116,27 +116,27 @@ export function DataProvider({ children }: { children: ReactNode }) {
         if (cancelled) return
 
         const local = loadLocal()
-        const mergedProducts = [...(next.products || [])]
-        const existingProdIds = new Set(mergedProducts.map((p: any) => p.id))
-        local.products.forEach((lp) => {
-          if (!existingProdIds.has(lp.id)) mergedProducts.push(lp)
-        })
+        const mergedDb: Dataset = { ...local }
 
-        const mergedBrands = [...(next.brands || [])]
-        const existingBrandIds = new Set(mergedBrands.map((b: any) => b.id))
-        local.brands.forEach((lb) => {
-          if (!existingBrandIds.has(lb.id)) mergedBrands.push(lb)
-        })
-
-        const finalDb = {
-          ...local,
-          ...next,
-          products: mergedProducts,
-          brands: mergedBrands,
+        const mergeById = (remoteRows: any[] = [], localRows: any[] = []) => {
+          const merged = [...remoteRows]
+          const existingIds = new Set(remoteRows.map((r: any) => r.id))
+          localRows.forEach((lr: any) => {
+            if (lr && lr.id && !existingIds.has(lr.id)) {
+              merged.push(lr)
+            }
+          })
+          return merged
         }
 
-        setDb(finalDb)
-        localStorage.setItem(LS_KEY, JSON.stringify(finalDb))
+        COLLECTIONS.forEach((key) => {
+          const remoteList = (next as any)[key] || []
+          const localList = (local as any)[key] || []
+          ;(mergedDb as any)[key] = mergeById(remoteList, localList)
+        })
+
+        setDb(mergedDb)
+        localStorage.setItem(LS_KEY, JSON.stringify(mergedDb))
         setReady(true)
       } catch (e) {
         console.error('Firestore load failed, using seed & local data:', e)
