@@ -30,8 +30,8 @@ function ProtectedRoute({ module, children }: { module: string; children: JSX.El
 }
 
 function SuperAdminRoute({ children }: { children: JSX.Element }) {
-  const { isSuperAdmin, isNonGstSession } = useAuth()
-  if (!isSuperAdmin || !isNonGstSession) {
+  const { isSuperAdmin } = useAuth()
+  if (!isSuperAdmin) {
     return <Navigate to="/" replace />
   }
   return children

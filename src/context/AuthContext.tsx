@@ -250,23 +250,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const isSuperAdmin = user?.role === 'super_admin' || user?.role === 'super_admin_nongst'
-  const isNonGstAdmin = (user?.role === 'super_admin_nongst' || user?.activeMode === 'NON_GST') && isSuperAdmin
+  const isNonGstAdmin = isSuperAdmin
   const isAdmin = user?.role === 'admin' || isSuperAdmin
   const isManager = user?.role === 'manager'
   const isCashier = user?.role === 'cashier'
 
-  const isNonGstSession = isNonGstAdmin
-  const canAccessNonGst = isNonGstAdmin
+  const isNonGstSession = isSuperAdmin
+  const canAccessNonGst = isSuperAdmin
   const canEditPrices = isSuperAdmin || isAdmin
 
   const can = useCallback((module: string) => {
     if (!user) return false
     if (module === 'non_gst_billing' || module === 'non_gst_history' || module === 'non_gst_reports') {
-      return isNonGstSession // Only true when logged in with Non-GST password
+      return isSuperAdmin // Exclusive to Super Admin account
     }
     if (module === 'price_management') return canEditPrices
     return user.access === '*' || (Array.isArray(user.access) && user.access.includes(module))
-  }, [user, isNonGstSession, canEditPrices])
+  }, [user, isSuperAdmin, canEditPrices])
 
   const addUser = useCallback(async (u: { username: string; name: string; role: string; password: string; phone?: string }) => {
     const uname = u.username.trim().toLowerCase()

@@ -289,7 +289,7 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
       // Immediately reset billing form & totals to zero synchronously in React
       clearForm()
 
-      setToastMsg(`✅ ${billingType === 'GST' ? 'GST Invoice' : 'Non-GST Voucher'} ${voucherNo} saved! Form reset to ₹0 for next bill.`)
+      setToastMsg(`✅ ${billingType === 'GST' ? 'GST Invoice' : 'Non-GST Voucher'} ${voucherNo} saved successfully! Total: ${inr(invoiceRecord.grandTotal)}`)
 
       // 5. Defer print window by 100ms so React finishes re-rendering the cleared UI state on screen first
       if (andPrint) {

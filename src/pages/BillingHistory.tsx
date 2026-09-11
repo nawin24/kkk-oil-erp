@@ -29,8 +29,8 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
     return (sales || []).filter((s: any) => {
       const bType = s.billingType || (s.id.startsWith('NG') ? 'NON_GST' : 'GST')
 
-      // STRICT ISOLATION: Non-GST history MUST NOT be shown in standard GST login or any other role
-      if (bType === 'NON_GST' && !isNonGstSession) return false
+      // STRICT ISOLATION: Non-GST history MUST NOT be shown to non-Super Admin users
+      if (bType === 'NON_GST' && !isSuperAdmin) return false
 
       if (billingFilter === 'GST' && bType === 'NON_GST') return false
       if (billingFilter === 'NON_GST' && bType === 'GST') return false
@@ -46,7 +46,7 @@ export default function BillingHistory({ forcedBillingType }: { forcedBillingTyp
       }
       return true
     })
-  }, [sales, billingFilter, isNonGstSession, statusFilter, pricingFilter, q, customerMap])
+  }, [sales, billingFilter, isSuperAdmin, statusFilter, pricingFilter, q, customerMap])
 
   const printBill = (i: any) => {
     const cust = customerMap[i.customerId] || { name: 'Walk-in / Cash Customer', address: i.address }
