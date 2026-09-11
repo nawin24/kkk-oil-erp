@@ -273,7 +273,13 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
       // 4. Audit Log
       addAuditLog(user, 'BILL_CREATED', billingType === 'GST' ? 'GST_BILLING' : 'NON_GST_BILLING', undefined, `${voucherNo} — Total ₹${billCalc.grandTotal} by ${billedByStr}`)
 
-      // 5. Generate & Print SECOND (only after DB save success)
+      setLastSavedBill(invoiceRecord)
+      setToastMsg(`✅ ${billingType} Voucher ${voucherNo} saved successfully! Total: ${inr(billCalc.grandTotal)}`)
+
+      // Immediately reset billing form & totals to zero BEFORE opening print window
+      clearForm()
+
+      // 5. Generate & Print SECOND (using immutable invoiceRecord copy)
       if (andPrint) {
         printInvoice(
           buildInvoiceHTML({
@@ -286,19 +292,15 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
             company: { ...company, gstin: billingType === 'GST' ? company.gstin : '' },
             billingType,
             voucherNo,
-            grandTotal: billCalc.grandTotal,
-            subtotal: billCalc.subtotal,
-            gstTotal: billCalc.totalGst,
+            grandTotal: invoiceRecord.grandTotal,
+            subtotal: invoiceRecord.subtotal,
+            gstTotal: invoiceRecord.gstTotal,
             ledgerEntries: invoiceRecord.ledgerEntries,
             dispatchDetails: invoiceRecord.dispatchDetails,
             billedBy: billedByStr,
           })
         )
       }
-
-      setLastSavedBill(invoiceRecord)
-      setToastMsg(`✅ ${billingType} Invoice ${voucherNo} saved successfully! Total: ${inr(billCalc.grandTotal)}`)
-      clearForm()
     } catch (e) {
       setToastMsg('❌ Unable to save the bill. Please try again.')
     } finally {
