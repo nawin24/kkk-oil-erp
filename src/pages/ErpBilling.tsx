@@ -76,8 +76,21 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
   // Auto-generate Voucher Number with separate numbering series
   const voucherNo = useMemo(() => {
     const prefix = billingType === 'GST' ? 'GST' : 'NG'
-    const matchingCount = (sales || []).filter((s: any) => (s.billingType || (s.id.startsWith('NG') ? 'NON_GST' : 'GST')) === billingType).length
-    const numStr = String(matchingCount + 1).padStart(6, '0')
+    const matchingSales = (sales || []).filter((s: any) => {
+      const bType = s.billingType || (s.id && s.id.startsWith('NG') ? 'NON_GST' : 'GST')
+      return bType === billingType
+    })
+
+    let maxNum = 0
+    matchingSales.forEach((s: any) => {
+      const numPart = parseInt(String(s.voucherNo || s.id || '').replace(/^[A-Za-z]+-/, ''), 10)
+      if (!isNaN(numPart) && numPart > maxNum) {
+        maxNum = numPart
+      }
+    })
+
+    const nextNum = Math.max(matchingSales.length + 1, maxNum + 1)
+    const numStr = String(nextNum).padStart(6, '0')
     return `${prefix}-${numStr}`
   }, [sales, billingType])
 
@@ -184,6 +197,7 @@ export default function ErpBilling({ forcedBillingType }: { forcedBillingType?: 
     setSelectedProduct(null)
     setInputQty(1)
     setInputDisc(0)
+    setLastSavedBill(null)
   }
 
   const [isProcessing, setIsProcessing] = useState(false)
