@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { useData } from '../context/DataContext'
 import { useAuth } from '../context/AuthContext'
 import { StatCard, Card, Badge, PageHeader } from '../components/ui'
@@ -89,8 +90,8 @@ export default function Dashboard() {
                   👑 Super Admin Monthly Sales &amp; Bills Summary (As of Now)
                 </h4>
                 <div style={{ display: 'flex', gap: 6 }}>
-                  <a href="/gst-history" className="btn btn-sm btn-gold">GST History</a>
-                  <a href="/non-gst-history" className="btn btn-sm btn-primary">Non-GST History</a>
+                  <Link to="/gst-history" className="btn btn-sm btn-gold">GST History</Link>
+                  <Link to="/non-gst-history" className="btn btn-sm btn-primary">Non-GST History</Link>
                 </div>
               </div>
               <div className="table-wrap">
@@ -110,14 +111,14 @@ export default function Dashboard() {
                       <td className="num cell-strong">{metrics.gstMonthBillsCount || 0} bills</td>
                       <td className="num cell-strong" style={{ color: 'var(--gold)' }}>{inr(metrics.gstMonthSales || metrics.monthSales)}</td>
                       <td><span className="tiny muted">Shared Products Stock</span></td>
-                      <td><a href="/gst-billing" className="btn btn-sm">Open GST Billing</a></td>
+                      <td><Link to="/gst-billing" className="btn btn-sm">Open GST Billing</Link></td>
                     </tr>
                     <tr>
                       <td className="cell-strong"><Badge tone="purple" noDot>Non-GST Billing</Badge></td>
                       <td className="num cell-strong">{metrics.nonGstMonthBillsCount || 0} bills</td>
                       <td className="num cell-strong" style={{ color: 'var(--purple)' }}>{inr(metrics.nonGstMonthSales || 0)}</td>
                       <td><span className="tiny muted">Shared Products Stock</span></td>
-                      <td><a href="/non-gst-billing" className="btn btn-sm btn-primary">Open Non-GST Billing</a></td>
+                      <td><Link to="/non-gst-billing" className="btn btn-sm btn-primary">Open Non-GST Billing</Link></td>
                     </tr>
                     <tr style={{ background: 'var(--gold-soft)', fontWeight: 800 }}>
                       <td style={{ color: 'var(--gold-deep)' }}>TOTAL COMBINED (AS OF NOW)</td>
@@ -145,11 +146,14 @@ export default function Dashboard() {
               Monitor cashier sales performance, inspect live bills, verify product inventory levels, and manage sales orders.
             </p>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <a href="/erp-billing" className="btn btn-sm btn-gold"><Icon name="rupee" size={14} /> Open ERP Billing</a>
-              <a href="/billing-history" className="btn btn-sm"><Icon name="billing" size={14} /> Billing History</a>
-              <a href="/products" className="btn btn-sm"><Icon name="products" size={14} /> Product Master</a>
-              <a href="/inventory" className="btn btn-sm"><Icon name="inventory" size={14} /> Inventory Stock</a>
-              <a href="/reports" className="btn btn-sm"><Icon name="reports" size={14} /> Sales Reports</a>
+              <Link to="/gst-billing" className="btn btn-sm btn-gold"><Icon name="rupee" size={14} /> Open ERP Billing</Link>
+              <Link to="/billing-history" className="btn btn-sm"><Icon name="billing" size={14} /> Billing History</Link>
+              <Link to="/products" className="btn btn-sm"><Icon name="products" size={14} /> Product Master</Link>
+              <Link to="/inventory" className="btn btn-sm"><Icon name="inventory" size={14} /> Inventory Stock</Link>
+              <Link to="/purchase" className="btn btn-sm"><Icon name="purchase" size={14} /> Purchase</Link>
+              <Link to="/production" className="btn btn-sm"><Icon name="production" size={14} /> Production</Link>
+              <Link to="/customers" className="btn btn-sm"><Icon name="customers" size={14} /> Customers</Link>
+              <Link to="/reports" className="btn btn-sm"><Icon name="reports" size={14} /> Sales Reports</Link>
             </div>
           </div>
 
