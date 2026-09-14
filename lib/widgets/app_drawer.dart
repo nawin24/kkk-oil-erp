@@ -87,9 +87,9 @@ class AppDrawer extends StatelessWidget {
                       ),
                       const SizedBox(height: 1),
                       Text(
-                        isNonGst ? 'Non-GST Station · ERP' : '${data.company.state.isNotEmpty ? data.company.state : "Tamil Nadu"} · ERP',
-                        style: TextStyle(
-                          color: isNonGst ? AppColors.gold : const Color(0xFF8FA298),
+                        '${data.company.state.isNotEmpty ? data.company.state : "Tamil Nadu"} · ERP',
+                        style: const TextStyle(
+                          color: Color(0xFF8FA298),
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
                         ),
@@ -112,11 +112,24 @@ class AppDrawer extends StatelessWidget {
                 if (auth.can('dashboard') && !auth.isCashier)
                   _buildNavItem(context, 'dashboard', 'Dashboard', Icons.dashboard_outlined),
 
-                _buildSectionHeader('GST BILLING & OPERATIONS'),
-                if (auth.can('billing')) ...[
-                  _buildNavItem(context, 'erp_billing', 'GST Billing Voucher', Icons.receipt_long_outlined),
-                  _buildNavItem(context, 'billing_history', 'GST Invoices History', Icons.history_outlined),
+                if (isNonGst && auth.isSuperAdmin) ...[
+                  _buildSectionHeader('GST BILLING & INVOICES'),
+                  if (auth.can('billing')) ...[
+                    _buildNavItem(context, 'erp_billing', 'GST Billing Voucher', Icons.receipt_long_outlined),
+                    _buildNavItem(context, 'billing_history', 'GST Invoices History', Icons.history_outlined),
+                  ],
+                  _buildSectionHeader('NON-GST BILLING STATION'),
+                  _buildNavItem(context, 'nongst_billing', 'Non-GST Billing Voucher', Icons.receipt_outlined, isSpecial: true),
+                  _buildNavItem(context, 'nongst_history', 'Non-GST History', Icons.manage_history_outlined, isSpecial: true),
+                  _buildSectionHeader('OPERATIONS & MASTERS'),
+                ] else ...[
+                  _buildSectionHeader('GST BILLING & OPERATIONS'),
+                  if (auth.can('billing')) ...[
+                    _buildNavItem(context, 'erp_billing', 'GST Billing Voucher', Icons.receipt_long_outlined),
+                    _buildNavItem(context, 'billing_history', 'GST Invoices History', Icons.history_outlined),
+                  ],
                 ],
+
                 if (auth.can('products'))
                   _buildNavItem(context, 'products', 'Product Master', Icons.inventory_2_outlined),
                 if (auth.can('price_management'))
@@ -130,24 +143,17 @@ class AppDrawer extends StatelessWidget {
                 if (auth.can('production'))
                   _buildNavItem(context, 'production', 'Production', Icons.precision_manufacturing_outlined),
 
-                // Non-GST billing strictly shown to Super Admin only in active Non-GST session
-                if (isNonGst && auth.isSuperAdmin) ...[
-                  _buildSectionHeader('NON-GST BILLING (SUPER ADMIN)'),
-                  _buildNavItem(context, 'nongst_billing', 'Non-GST Billing Voucher', Icons.receipt_outlined, isSpecial: true),
-                  _buildNavItem(context, 'nongst_history', 'Non-GST History', Icons.manage_history_outlined, isSpecial: true),
-                ],
-
                 _buildSectionHeader('PEOPLE & SETTINGS'),
-                if (auth.can('customers'))
-                  _buildNavItem(context, 'customers', 'Customers Directory', Icons.people_outline),
-                if (auth.can('suppliers'))
-                  _buildNavItem(context, 'suppliers', 'Suppliers Directory', Icons.business_outlined),
-                if (auth.can('reports'))
-                  _buildNavItem(context, 'reports', 'Reports & Analytics', Icons.bar_chart_outlined),
                 if (auth.can('employees'))
-                  _buildNavItem(context, 'employees', 'Employees & Roles', Icons.badge_outlined),
+                  _buildNavItem(context, 'employees', 'Employees', Icons.badge_outlined),
+                if (auth.can('customers'))
+                  _buildNavItem(context, 'customers', 'Customers', Icons.people_outline),
+                if (auth.can('suppliers'))
+                  _buildNavItem(context, 'suppliers', 'Suppliers', Icons.business_outlined),
+                if (auth.can('reports'))
+                  _buildNavItem(context, 'reports', 'Reports', Icons.bar_chart_outlined),
                 if (auth.can('settings'))
-                  _buildNavItem(context, 'settings', 'Company Settings', Icons.settings_outlined),
+                  _buildNavItem(context, 'settings', 'Settings', Icons.settings_outlined),
               ],
             ),
           ),
@@ -258,10 +264,10 @@ class AppDrawer extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: isSelected
             ? (isSpecial
-                ? LinearGradient(
+                ? const LinearGradient(
                     colors: [
-                      AppColors.gold.withOpacity(0.28),
-                      AppColors.gold.withOpacity(0.10),
+                      Color(0xFFB45309),
+                      Color(0xFF92400E),
                     ],
                   )
                 : AppColors.activeNavGradient)
@@ -283,7 +289,7 @@ class AppDrawer extends StatelessWidget {
                   size: 18,
                   color: isSelected
                       ? AppColors.gold
-                      : (isSpecial ? AppColors.gold.withOpacity(0.7) : const Color(0xFFB6C4BA)),
+                      : (isSpecial ? AppColors.gold.withOpacity(0.85) : const Color(0xFFB6C4BA)),
                 ),
                 const SizedBox(width: 11),
                 Expanded(
@@ -299,22 +305,6 @@ class AppDrawer extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                if (isSpecial)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
-                    decoration: BoxDecoration(
-                      color: AppColors.gold.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      'PRO',
-                      style: TextStyle(
-                        color: AppColors.gold,
-                        fontSize: 9,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),

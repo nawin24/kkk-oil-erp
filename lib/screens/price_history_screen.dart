@@ -84,147 +84,249 @@ class _PriceHistoryScreenState extends State<PriceHistoryScreen> {
                         ],
                       ),
                     )
-                  : ListView.separated(
-                      padding: EdgeInsets.all(isMobile ? 8 : 12),
-                      itemCount: history.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
-                      itemBuilder: (context, idx) {
-                        final h = history[idx];
-                        final isIncrease = h.newRate > h.oldRate;
+                  : isMobile
+                      ? ListView.separated(
+                          padding: const EdgeInsets.all(8),
+                          itemCount: history.length,
+                          separatorBuilder: (_, _) => const Divider(height: 1),
+                          itemBuilder: (context, idx) {
+                            final h = history[idx];
+                            final isIncrease = h.newRate > h.oldRate;
 
-                        if (isMobile) {
-                          return Container(
-                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: isIncrease ? AppColors.successBg : AppColors.dangerBg,
-                                        borderRadius: BorderRadius.circular(8),
+                            return Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: isIncrease ? AppColors.successBg : AppColors.dangerBg,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Icon(
+                                          isIncrease ? Icons.trending_up : Icons.trending_down,
+                                          color: isIncrease ? AppColors.success : AppColors.danger,
+                                          size: 18,
+                                        ),
                                       ),
-                                      child: Icon(
-                                        isIncrease ? Icons.trending_up : Icons.trending_down,
-                                        color: isIncrease ? AppColors.success : AppColors.danger,
-                                        size: 18,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(h.productName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5)),
-                                          const SizedBox(height: 2),
-                                          Text('${h.pricingType.label} • By: ${h.updatedBy}',
-                                              style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary)),
-                                        ],
-                                      ),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              '₹${h.oldRate.toStringAsFixed(0)}',
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                color: AppColors.textMuted,
-                                                decoration: TextDecoration.lineThrough,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            const Icon(Icons.arrow_forward, size: 12, color: AppColors.textMuted),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              '₹${h.newRate.toStringAsFixed(0)}',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w800,
-                                                color: isIncrease ? AppColors.success : AppColors.danger,
-                                              ),
-                                            ),
+                                            Text(h.productName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13.5)),
+                                            const SizedBox(height: 2),
+                                            Text('${h.pricingType.label} • By: ${h.updatedBy}',
+                                                style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary)),
                                           ],
                                         ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          AppFormatters.formatDateTime(h.updatedAt),
-                                          style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-
-                        return ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          leading: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: isIncrease ? AppColors.successBg : AppColors.dangerBg,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              isIncrease ? Icons.trending_up : Icons.trending_down,
-                              color: isIncrease ? AppColors.success : AppColors.danger,
-                              size: 20,
-                            ),
-                          ),
-                          title: Text(h.productName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                          subtitle: Text(
-                            '${h.pricingType.label} • Effective: ${AppFormatters.formatDate(h.effectiveDate)} • By: ${h.updatedBy}',
-                            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                          ),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    '₹${h.oldRate.toStringAsFixed(0)}',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: AppColors.textMuted,
-                                      decoration: TextDecoration.lineThrough,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  const Icon(Icons.arrow_forward, size: 14, color: AppColors.textMuted),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    '₹${h.newRate.toStringAsFixed(0)}',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800,
-                                      color: isIncrease ? AppColors.success : AppColors.danger,
-                                    ),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                '₹${h.oldRate.toStringAsFixed(0)}',
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppColors.textMuted,
+                                                  decoration: TextDecoration.lineThrough,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              const Icon(Icons.arrow_forward, size: 12, color: AppColors.textMuted),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                '₹${h.newRate.toStringAsFixed(0)}',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w800,
+                                                  color: isIncrease ? AppColors.success : AppColors.danger,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            AppFormatters.formatDateTime(h.updatedAt),
+                                            style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                AppFormatters.formatDateTime(h.updatedAt),
-                                style: const TextStyle(fontSize: 10.5, color: AppColors.textMuted),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                            );
+                          },
+                        )
+                      : _buildDesktopPriceHistoryTable(history),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopPriceHistoryTable(List<PriceHistoryRecord> history) {
+    return SingleChildScrollView(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          headingRowHeight: 36,
+          dataRowMinHeight: 40,
+          dataRowMaxHeight: 46,
+          columnSpacing: 18,
+          horizontalMargin: 12,
+          headingRowColor: WidgetStateProperty.all(const Color(0xFFFAFBF9)),
+          border: const TableBorder(
+            horizontalInside: BorderSide(color: Color(0xFFF0F2EF), width: 1),
+          ),
+          columns: const [
+            DataColumn(label: Text('PRODUCT NAME', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+            DataColumn(label: Text('PRICING TIER', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+            DataColumn(label: Text('OLD RATE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+            DataColumn(label: Text('NEW RATE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+            DataColumn(label: Text('CHANGE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+            DataColumn(label: Text('EFFECTIVE DATE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+            DataColumn(label: Text('UPDATED BY', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+            DataColumn(label: Text('AUDIT TIMESTAMP', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+          ],
+          rows: history.map((h) {
+            final isIncrease = h.newRate > h.oldRate;
+            final diff = h.newRate - h.oldRate;
+            final diffStr = diff > 0 ? '+₹${diff.toStringAsFixed(0)}' : (diff < 0 ? '-₹${(-diff).toStringAsFixed(0)}' : '₹0');
+
+            return DataRow(
+              cells: [
+                // PRODUCT NAME
+                DataCell(
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 22,
+                        height: 22,
+                        decoration: BoxDecoration(
+                          color: isIncrease ? AppColors.successBg : AppColors.dangerBg,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Icon(
+                          isIncrease ? Icons.trending_up : Icons.trending_down,
+                          color: isIncrease ? AppColors.success : AppColors.danger,
+                          size: 13,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        h.productName,
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.text),
+                      ),
+                    ],
+                  ),
+                ),
+                // PRICING TIER
+                DataCell(
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFEF3C7),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      h.pricingType.label.toUpperCase(),
+                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFFB45309)),
+                    ),
+                  ),
+                ),
+                // OLD RATE
+                DataCell(
+                  Text(
+                    '₹${h.oldRate.toStringAsFixed(0)}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textMuted,
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                  ),
+                ),
+                // NEW RATE
+                DataCell(
+                  Text(
+                    '₹${h.newRate.toStringAsFixed(0)}',
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w800,
+                      color: isIncrease ? AppColors.success : AppColors.danger,
+                    ),
+                  ),
+                ),
+                // CHANGE
+                DataCell(
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                    decoration: BoxDecoration(
+                      color: isIncrease ? AppColors.successBg : AppColors.dangerBg,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isIncrease ? Icons.arrow_upward : Icons.arrow_downward,
+                          size: 11,
+                          color: isIncrease ? AppColors.success : AppColors.danger,
+                        ),
+                        const SizedBox(width: 2),
+                        Text(
+                          diffStr,
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            color: isIncrease ? AppColors.success : AppColors.danger,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                // EFFECTIVE DATE
+                DataCell(
+                  Text(
+                    AppFormatters.formatDate(h.effectiveDate),
+                    style: const TextStyle(fontSize: 11.5, color: AppColors.text),
+                  ),
+                ),
+                // UPDATED BY
+                DataCell(
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      h.updatedBy,
+                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.text2),
+                    ),
+                  ),
+                ),
+                // AUDIT TIMESTAMP
+                DataCell(
+                  Text(
+                    AppFormatters.formatDateTime(h.updatedAt),
+                    style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                  ),
+                ),
+              ],
+            );
+          }).toList(),
+        ),
       ),
     );
   }

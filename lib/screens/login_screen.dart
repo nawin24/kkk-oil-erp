@@ -464,32 +464,50 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
+              Column(
                 children: [
-                  _buildQuickBtn(
-                    label: '👑 Super Admin (GST Login)',
-                    u: 'admin',
-                    p: 'ERP@2026G',
-                    isGold: true,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildQuickBtn(
+                          label: '🔑 Super Admin (GST Login)',
+                          u: 'admin',
+                          p: 'admin123',
+                          isGold: true,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _buildQuickBtn(
+                          label: '🔒 Super Admin (Non-GST Login)',
+                          u: 'admin',
+                          p: 'admin123n',
+                          isPrimary: true,
+                        ),
+                      ),
+                    ],
                   ),
-                  _buildQuickBtn(
-                    label: '🔒 Super Admin (Non-GST Login)',
-                    u: 'admin',
-                    p: 'ERP@2026N',
-                    isPrimary: true,
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildQuickBtn(
+                          label: '👤 Admin',
+                          u: 'admin_staff',
+                          p: 'admin123',
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _buildQuickBtn(
+                          label: '📊 Manager',
+                          u: 'mgr',
+                          p: 'mgr123',
+                        ),
+                      ),
+                    ],
                   ),
-                  _buildQuickBtn(
-                    label: '🛡️ Admin',
-                    u: 'admin_staff',
-                    p: 'admin123',
-                  ),
-                  _buildQuickBtn(
-                    label: '📊 Manager',
-                    u: 'mgr',
-                    p: 'mgr123',
-                  ),
+                  const SizedBox(height: 8),
                   _buildQuickBtn(
                     label: '💳 Cashier ERP Billing (Save & Print)',
                     u: 'cashier',
@@ -513,17 +531,16 @@ class _LoginScreenState extends State<LoginScreen> {
     bool isPrimary = false,
     bool isFullWidth = false,
   }) {
-    Color bg = AppColors.surface;
+    Color bg = Colors.white;
     Color fg = AppColors.text;
-    Border? border = Border.all(color: AppColors.borderStrong);
-    Gradient? grad;
+    Border? border = Border.all(color: const Color(0xFFE5E7EB));
 
     if (isGold) {
-      grad = AppColors.goldGradient;
-      fg = AppColors.forest;
+      bg = const Color(0xFFD97706);
+      fg = Colors.black;
       border = null;
     } else if (isPrimary) {
-      bg = AppColors.forest;
+      bg = const Color(0xFF10231B);
       fg = Colors.white;
       border = null;
     }
@@ -532,22 +549,34 @@ class _LoginScreenState extends State<LoginScreen> {
       width: isFullWidth ? double.infinity : null,
       decoration: BoxDecoration(
         color: bg,
-        gradient: grad,
         borderRadius: BorderRadius.circular(8),
         border: border,
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x0A000000),
+            blurRadius: 2,
+            offset: Offset(0, 1),
+          ),
+        ],
       ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () => _quickLogin(u, p),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7.5),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 11.5,
-              fontWeight: FontWeight.w600,
-              color: fg,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () => _quickLogin(u, p),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: fg,
+                height: 1.2,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),

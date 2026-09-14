@@ -212,374 +212,340 @@ class _ProductsScreenState extends State<ProductsScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 700;
 
-    return Padding(
-      padding: EdgeInsets.all(isMobile ? 12 : 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Page Header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+    final pageHeader = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Product Master',
-                      style: TextStyle(
-                        fontSize: isMobile ? 18 : 22,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textPrimary,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${data.products.length} Central Master Products — manage SKUs, AWR rates, HSN codes, and inventory levels.',
-                      style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
-                    ),
-                  ],
+              Text(
+                'Product Master',
+                style: TextStyle(
+                  fontSize: isMobile ? 18 : 22,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textPrimary,
+                  letterSpacing: -0.3,
                 ),
               ),
-              GoldButton(
-                icon: Icons.add,
-                label: 'Add Product',
-                height: 40,
-                onPressed: () => _showAddEditDialog(context),
+              const SizedBox(height: 2),
+              Text(
+                '${data.products.length} Central Master Products — manage SKUs, AWR rates, HSN codes, and inventory levels.',
+                style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
               ),
             ],
           ),
-          const SizedBox(height: 14),
+        ),
+        GoldButton(
+          icon: Icons.add,
+          label: 'Add Product',
+          height: isMobile ? 38 : 40,
+          onPressed: () => _showAddEditDialog(context),
+        ),
+      ],
+    );
 
-          // Toolbar with Search, Rate switch pills, Brand filter, and Oil filter
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.border),
-            ),
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 10,
-              runSpacing: 8,
-              children: [
-                // Search Input
-                SizedBox(
-                  width: isMobile ? double.infinity : 240,
-                  height: 38,
-                  child: TextField(
-                    controller: _searchCtrl,
-                    style: const TextStyle(fontSize: 13),
-                    decoration: InputDecoration(
-                      hintText: 'Search product, SKU, code…',
-                      hintStyle: const TextStyle(fontSize: 12.5, color: AppColors.textMuted),
-                      prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.textMuted),
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 8),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: AppColors.border)),
-                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: AppColors.border)),
-                      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: AppColors.gold)),
-                    ),
-                    onChanged: (val) => setState(() => _searchQuery = val),
-                  ),
-                ),
+    final kpiCards = _buildStockKpiCards(
+      totalCount: totalCount,
+      inStockCount: inStockCount,
+      lowStockCount: lowStockCount,
+      outOfStockCount: outOfStockCount,
+      isMobile: isMobile,
+    );
 
-                // Rate Selector Pills
-                Container(
-                  padding: const EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceWarm,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 6),
-                        child: Text('RATE:', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.textMuted)),
-                      ),
-                      ...['AGENCY', 'WHOLESALE', 'RETAIL'].map((rt) {
-                        final isSel = _selectedRateType == rt;
-                        return InkWell(
-                          onTap: () => setState(() => _selectedRateType = rt),
-                          borderRadius: BorderRadius.circular(6),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: isSel ? AppColors.gold : Colors.transparent,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              rt,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: isSel ? AppColors.forestDark : AppColors.textSecondary,
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-
-                // Brand Selector Dropdown
-                Container(
-                  height: 38,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _selectedBrandId,
-                      style: const TextStyle(fontSize: 12.5, color: AppColors.textPrimary),
-                      items: [
-                        const DropdownMenuItem(value: 'All', child: Text('All Brands')),
-                        ...data.brands.map((b) => DropdownMenuItem(value: b.id, child: Text(b.name))),
-                      ],
-                      onChanged: (val) {
-                        if (val != null) setState(() => _selectedBrandId = val);
-                      },
-                    ),
-                  ),
-                ),
-
-                // Oil Type Selector Dropdown
-                Container(
-                  height: 38,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _selectedOilType,
-                      style: const TextStyle(fontSize: 12.5, color: AppColors.textPrimary),
-                      items: [
-                        const DropdownMenuItem(value: 'All', child: Text('All Oil Types')),
-                        ...AppConstants.oilTypes.map((ot) => DropdownMenuItem(value: ot, child: Text(ot))),
-                      ],
-                      onChanged: (val) {
-                        if (val != null) setState(() => _selectedOilType = val);
-                      },
-                    ),
-                  ),
-                ),
-
-                // Stock Status Selector Dropdown
-                Container(
-                  height: 38,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: _stockFilter,
-                      style: const TextStyle(fontSize: 12.5, color: AppColors.textPrimary),
-                      items: const [
-                        DropdownMenuItem(value: 'ALL', child: Text('All Stock')),
-                        DropdownMenuItem(value: 'IN_STOCK', child: Text('In Stock')),
-                        DropdownMenuItem(value: 'LOW_STOCK', child: Text('Low Stock Alert')),
-                        DropdownMenuItem(value: 'OUT_OF_STOCK', child: Text('Out of Stock')),
-                      ],
-                      onChanged: (val) {
-                        if (val != null) setState(() => _stockFilter = val);
-                      },
-                    ),
-                  ),
-                ),
-
-                Text(
-                  '${products.length} shown',
-                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
-                ),
-              ],
+    final toolbar = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 10,
+        runSpacing: 8,
+        children: [
+          // Search Input
+          SizedBox(
+            width: isMobile ? double.infinity : 240,
+            height: 38,
+            child: TextField(
+              controller: _searchCtrl,
+              style: const TextStyle(fontSize: 13),
+              decoration: InputDecoration(
+                hintText: 'Search product, SKU, code…',
+                hintStyle: const TextStyle(fontSize: 12.5, color: AppColors.textMuted),
+                prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.textMuted),
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: AppColors.border)),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: AppColors.border)),
+                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: const BorderSide(color: AppColors.gold)),
+              ),
+              onChanged: (val) => setState(() => _searchQuery = val),
             ),
           ),
-          const SizedBox(height: 14),
 
-          // Products List / Table
+          // Rate Selector Pills
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceWarm,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Text('RATE:', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.textMuted)),
+                  ),
+                  ...['AGENCY', 'WHOLESALE', 'RETAIL'].map((rt) {
+                    final isSel = _selectedRateType == rt;
+                    return InkWell(
+                      onTap: () => setState(() => _selectedRateType = rt),
+                      borderRadius: BorderRadius.circular(6),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: isSel ? AppColors.gold : Colors.transparent,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          rt,
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: isSel ? AppColors.forestDark : AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+          ),
+
+          // Brand Selector Dropdown
+          Container(
+            height: 38,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _selectedBrandId,
+                style: const TextStyle(fontSize: 12.5, color: AppColors.textPrimary),
+                items: [
+                  const DropdownMenuItem(value: 'All', child: Text('All Brands')),
+                  ...data.brands.map((b) => DropdownMenuItem(value: b.id, child: Text(b.name))),
+                ],
+                onChanged: (val) {
+                  if (val != null) setState(() => _selectedBrandId = val);
+                },
+              ),
+            ),
+          ),
+
+          // Oil Type Dropdown
+          Container(
+            height: 38,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _selectedOilType,
+                style: const TextStyle(fontSize: 12.5, color: AppColors.textPrimary),
+                items: [
+                  const DropdownMenuItem(value: 'All', child: Text('All Oil Types')),
+                  ...['Groundnut', 'Gingelly', 'Coconut', 'Castor', 'Sunflower'].map((t) => DropdownMenuItem(value: t, child: Text(t))),
+                ],
+                onChanged: (val) {
+                  if (val != null) setState(() => _selectedOilType = val);
+                },
+              ),
+            ),
+          ),
+
+          // Stock Status Filter Dropdown
+          Container(
+            height: 38,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _stockFilter,
+                style: const TextStyle(fontSize: 12.5, color: AppColors.textPrimary),
+                items: const [
+                  DropdownMenuItem(value: 'ALL', child: Text('All Stock')),
+                  DropdownMenuItem(value: 'IN_STOCK', child: Text('In Stock')),
+                  DropdownMenuItem(value: 'LOW_STOCK', child: Text('Low Stock Alert')),
+                  DropdownMenuItem(value: 'OUT_OF_STOCK', child: Text('Out of Stock')),
+                ],
+                onChanged: (val) {
+                  if (val != null) setState(() => _stockFilter = val);
+                },
+              ),
+            ),
+          ),
+
+          Text(
+            '${products.length} shown',
+            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+    );
+
+    if (isMobile) {
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            pageHeader,
+            const SizedBox(height: 14),
+            kpiCards,
+            const SizedBox(height: 14),
+            toolbar,
+            const SizedBox(height: 14),
+            if (products.isEmpty)
+              Container(
+                padding: const EdgeInsets.all(24),
+                alignment: Alignment.center,
+                child: const Text('No products found matching criteria.', style: TextStyle(color: AppColors.textSecondary)),
+              )
+            else
+              ...products.map((p) => Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _buildMobileProductCard(p, brandMap, data),
+                  )),
+          ],
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          pageHeader,
+          const SizedBox(height: 14),
+          kpiCards,
+          const SizedBox(height: 14),
+          toolbar,
+          const SizedBox(height: 14),
+          // Products Desktop Table
           Expanded(
             child: Card(
               child: products.isEmpty
                   ? const Center(child: Text('No products found matching criteria.', style: TextStyle(color: AppColors.textSecondary)))
-                  : isMobile
-                      ? ListView.separated(
-                          padding: const EdgeInsets.all(12),
-                          itemCount: products.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 10),
-                          itemBuilder: (context, idx) {
+                  : SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          headingRowHeight: 36,
+                          dataRowMinHeight: 38,
+                          dataRowMaxHeight: 44,
+                          horizontalMargin: 12,
+                          columnSpacing: 14,
+                          headingRowColor: WidgetStateProperty.all(AppColors.surfaceAlt),
+                          columns: const [
+                            DataColumn(label: Text('#', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Code', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Product Name', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Brand', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Pack / Unit', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Cost (₹)', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Selling Rates (AWR)', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: AppColors.goldDeep))),
+                            DataColumn(label: Text('MRP (₹)', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Stock', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('GST', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Actions', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                          ],
+                          rows: List.generate(products.length, (idx) {
                             final p = products[idx];
                             final isLow = p.stock <= p.minStock;
-                            final curRate = _getEffectiveRate(p, _selectedRateType);
 
-                            return Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: AppColors.border),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                            return DataRow(
+                              cells: [
+                                DataCell(Text('${idx + 1}', style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600))),
+                                DataCell(
+                                  Text(
+                                    p.code,
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5, color: AppColors.goldDeep),
+                                  ),
+                                ),
+                                DataCell(Text(p.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12))),
+                                DataCell(Text(brandMap[p.brandId] ?? '-', style: const TextStyle(fontSize: 11.5))),
+                                DataCell(Text('${p.pack} (${p.unit})', style: const TextStyle(fontSize: 11.5))),
+                                DataCell(Text('₹${p.cost.toStringAsFixed(0)}', style: const TextStyle(fontSize: 11.5))),
+                                DataCell(
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              p.name,
-                                              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
-                                            ),
-                                            const SizedBox(height: 2),
-                                            Text(
-                                              '${p.code} · ${brandMap[p.brandId] ?? ""} · ${p.pack}',
-                                              style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      StatusBadge(
-                                        label: '${p.stock.toInt()} ${p.unit}s',
-                                        tone: isLow ? BadgeTone.danger : BadgeTone.success,
-                                      ),
+                                      _buildRatePill('A', p.agencyRate, _selectedRateType == 'AGENCY', const Color(0xFFD97706)),
+                                      const SizedBox(width: 4),
+                                      _buildRatePill('W', p.wholesaleRate, _selectedRateType == 'WHOLESALE', const Color(0xFF2563EB)),
+                                      const SizedBox(width: 4),
+                                      _buildRatePill('R', p.retailRate, _selectedRateType == 'RETAIL', const Color(0xFF1F8A5B)),
                                     ],
                                   ),
-                                  const SizedBox(height: 10),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.surfaceWarm,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('Cost: ₹${p.cost.toStringAsFixed(0)}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                                        Text(
-                                          '$_selectedRateType: ₹${curRate.toStringAsFixed(0)}',
-                                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: AppColors.goldDeep),
-                                        ),
-                                        Text('MRP: ₹${p.mrp.toStringAsFixed(0)}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                                      ],
-                                    ),
+                                ),
+                                DataCell(Text('₹${p.mrp.toStringAsFixed(0)}', style: const TextStyle(fontSize: 11.5))),
+                                DataCell(
+                                  StatusBadge(
+                                    label: '${p.stock.toInt()} ${p.unit}',
+                                    tone: isLow ? BadgeTone.danger : BadgeTone.success,
                                   ),
-                                  const SizedBox(height: 8),
+                                ),
+                                DataCell(Text('${p.gst.toStringAsFixed(0)}%', style: const TextStyle(fontSize: 11.5))),
+                                DataCell(
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       IconButton(
-                                        icon: const Icon(Icons.edit_outlined, size: 18, color: AppColors.forestLight),
+                                        icon: const Icon(Icons.edit_outlined, size: 16, color: AppColors.forestLight),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
                                         onPressed: () => _showAddEditDialog(context, p),
                                       ),
+                                      const SizedBox(width: 8),
                                       IconButton(
-                                        icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.danger),
+                                        icon: const Icon(Icons.delete_outline, size: 16, color: AppColors.danger),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
                                         onPressed: () async {
                                           await data.deleteProduct(p.id);
                                         },
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            );
-                          },
-                        )
-                      : SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: DataTable(
-                              headingRowColor: WidgetStateProperty.all(AppColors.surfaceAlt),
-                              columns: [
-                                const DataColumn(label: Text('#', style: TextStyle(fontWeight: FontWeight.bold))),
-                                const DataColumn(label: Text('Code', style: TextStyle(fontWeight: FontWeight.bold))),
-                                const DataColumn(label: Text('Product Name', style: TextStyle(fontWeight: FontWeight.bold))),
-                                const DataColumn(label: Text('Brand', style: TextStyle(fontWeight: FontWeight.bold))),
-                                const DataColumn(label: Text('Pack / Unit', style: TextStyle(fontWeight: FontWeight.bold))),
-                                const DataColumn(label: Text('Cost (₹)', style: TextStyle(fontWeight: FontWeight.bold))),
-                                DataColumn(
-                                  label: Text(
-                                    '$_selectedRateType Rate (₹)',
-                                    style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.goldDeep),
-                                  ),
                                 ),
-                                const DataColumn(label: Text('MRP (₹)', style: TextStyle(fontWeight: FontWeight.bold))),
-                                const DataColumn(label: Text('Stock', style: TextStyle(fontWeight: FontWeight.bold))),
-                                const DataColumn(label: Text('GST', style: TextStyle(fontWeight: FontWeight.bold))),
-                                const DataColumn(label: Text('Actions', style: TextStyle(fontWeight: FontWeight.bold))),
                               ],
-                              rows: List.generate(products.length, (idx) {
-                                final p = products[idx];
-                                final isLow = p.stock <= p.minStock;
-                                final curRate = _getEffectiveRate(p, _selectedRateType);
-
-                                return DataRow(
-                                  cells: [
-                                    DataCell(Text('${idx + 1}')),
-                                    DataCell(
-                                      Text(
-                                        p.code,
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: AppColors.goldDeep),
-                                      ),
-                                    ),
-                                    DataCell(Text(p.name, style: const TextStyle(fontWeight: FontWeight.w600))),
-                                    DataCell(Text(brandMap[p.brandId] ?? '-')),
-                                    DataCell(Text('${p.pack} (${p.unit})')),
-                                    DataCell(Text('₹${p.cost.toStringAsFixed(0)}')),
-                                    DataCell(
-                                      Text(
-                                        '₹${curRate.toStringAsFixed(0)}',
-                                        style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.goldDeep, fontSize: 13.5),
-                                      ),
-                                    ),
-                                    DataCell(Text('₹${p.mrp.toStringAsFixed(0)}')),
-                                    DataCell(
-                                      StatusBadge(
-                                        label: '${p.stock.toInt()} ${p.unit}',
-                                        tone: isLow ? BadgeTone.danger : BadgeTone.success,
-                                      ),
-                                    ),
-                                    DataCell(Text('${p.gst.toStringAsFixed(0)}%')),
-                                    DataCell(
-                                      Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(Icons.edit_outlined, size: 18, color: AppColors.forestLight),
-                                            onPressed: () => _showAddEditDialog(context, p),
-                                          ),
-                                          IconButton(
-                                            icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.danger),
-                                            onPressed: () async {
-                                              await data.deleteProduct(p.id);
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }),
-                            ),
-                          ),
+                            );
+                          }),
                         ),
+                      ),
+                    ),
             ),
           ),
         ],
@@ -587,15 +553,292 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  double _getEffectiveRate(Product p, String rateType) {
-    switch (rateType) {
-      case 'AGENCY':
-        return p.agencyRate > 0 ? p.agencyRate : p.price;
-      case 'WHOLESALE':
-        return p.wholesaleRate > 0 ? p.wholesaleRate : p.price;
-      case 'RETAIL':
-      default:
-        return p.retailRate > 0 ? p.retailRate : p.price;
-    }
+  Widget _buildMobileProductCard(Product p, Map<String, String> brandMap, DataProvider data) {
+    final isLow = p.stock <= p.minStock;
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      p.name,
+                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${p.code} · ${brandMap[p.brandId] ?? ""} · ${p.pack}',
+                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                    ),
+                  ],
+                ),
+              ),
+              StatusBadge(
+                label: '${p.stock.toInt()} ${p.unit}s',
+                tone: isLow ? BadgeTone.danger : BadgeTone.success,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceWarm,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Cost: ₹${p.cost.toStringAsFixed(0)}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                    Text('MRP: ₹${p.mrp.toStringAsFixed(0)}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildRatePill('A', p.agencyRate, _selectedRateType == 'AGENCY', const Color(0xFFD97706)),
+                      const SizedBox(width: 8),
+                      _buildRatePill('W', p.wholesaleRate, _selectedRateType == 'WHOLESALE', const Color(0xFF2563EB)),
+                      const SizedBox(width: 8),
+                      _buildRatePill('R', p.retailRate, _selectedRateType == 'RETAIL', const Color(0xFF1F8A5B)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.edit_outlined, size: 18, color: AppColors.forestLight),
+                onPressed: () => _showAddEditDialog(context, p),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.danger),
+                onPressed: () async {
+                  await data.deleteProduct(p.id);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
+
+  Widget _buildRatePill(String prefix, double rate, bool isSelected, Color activeColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: isSelected ? activeColor.withValues(alpha: 0.12) : const Color(0xFFF5F6F4),
+        border: Border.all(color: isSelected ? activeColor : const Color(0xFFE7E9E5)),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        '$prefix: ₹${rate.toStringAsFixed(0)}',
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+          color: isSelected ? activeColor : AppColors.textSecondary,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStockKpiCards({
+    required int totalCount,
+    required int inStockCount,
+    required int lowStockCount,
+    required int outOfStockCount,
+    required bool isMobile,
+  }) {
+    final cards = [
+      _buildSingleKpiCard(
+        title: 'Total Stock / SKUs',
+        count: totalCount,
+        label: 'Central Master Catalog',
+        icon: Icons.inventory_2_outlined,
+        filterKey: 'ALL',
+        color: const Color(0xFF4B5563),
+        bgColor: const Color(0xFFF9FAFB),
+        activeBorder: const Color(0xFFD97706),
+        isMobile: isMobile,
+      ),
+      _buildSingleKpiCard(
+        title: 'Available / In Stock',
+        count: inStockCount,
+        label: 'Healthy Warehouses',
+        icon: Icons.check_circle_outline,
+        filterKey: 'IN_STOCK',
+        color: const Color(0xFF16A34A),
+        bgColor: const Color(0xFFF0FDF4),
+        activeBorder: const Color(0xFF16A34A),
+        isMobile: isMobile,
+      ),
+      _buildSingleKpiCard(
+        title: 'Low Stock Alerts',
+        count: lowStockCount,
+        label: 'Immediate Reorder Due',
+        icon: Icons.warning_amber_rounded,
+        filterKey: 'LOW_STOCK',
+        color: const Color(0xFFD97706),
+        bgColor: const Color(0xFFFFFBEB),
+        activeBorder: const Color(0xFFD97706),
+        isMobile: isMobile,
+      ),
+      _buildSingleKpiCard(
+        title: 'Out of Stock',
+        count: outOfStockCount,
+        label: 'Zero Available Units',
+        icon: Icons.remove_circle_outline,
+        filterKey: 'OUT_OF_STOCK',
+        color: const Color(0xFFDC2626),
+        bgColor: const Color(0xFFFEF2F2),
+        activeBorder: const Color(0xFFDC2626),
+        isMobile: isMobile,
+      ),
+    ];
+
+    if (isMobile) {
+      return GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+        childAspectRatio: 1.7,
+        children: cards,
+      );
+    }
+
+    return Row(
+      children: cards.map((c) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: c))).toList(),
+    );
+  }
+
+  Widget _buildSingleKpiCard({
+    required String title,
+    required int count,
+    required String label,
+    required IconData icon,
+    required String filterKey,
+    required Color color,
+    required Color bgColor,
+    required Color activeBorder,
+    required bool isMobile,
+  }) {
+    final isSelected = _stockFilter == filterKey;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _stockFilter = isSelected && filterKey != 'ALL' ? 'ALL' : filterKey;
+          });
+        },
+        borderRadius: BorderRadius.circular(10),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 10 : 14,
+            vertical: isMobile ? 8 : 12,
+          ),
+          decoration: BoxDecoration(
+            color: isSelected ? bgColor : Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isSelected ? activeBorder : AppColors.border,
+              width: isSelected ? 2 : 1,
+            ),
+            boxShadow: [
+              if (isSelected)
+                BoxShadow(
+                  color: color.withValues(alpha: 0.18),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                )
+              else
+                const BoxShadow(
+                  color: Color(0x08000000),
+                  blurRadius: 3,
+                  offset: Offset(0, 1),
+                ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: isMobile ? 32 : 38,
+                height: isMobile ? 32 : 38,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: color, size: isMobile ? 17 : 20),
+              ),
+              SizedBox(width: isMobile ? 8 : 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '$count',
+                      style: TextStyle(
+                        fontSize: isMobile ? 16 : 18,
+                        fontWeight: FontWeight.w900,
+                        color: isSelected ? color : AppColors.textPrimary,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 1),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: isMobile ? 11 : 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: isSelected ? color : AppColors.textSecondary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: isMobile ? 9 : 10,
+                        color: AppColors.textMuted,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
 }

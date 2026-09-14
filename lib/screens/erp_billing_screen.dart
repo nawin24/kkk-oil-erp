@@ -9,7 +9,6 @@ import '../theme/app_theme.dart';
 import '../utils/constants.dart';
 import '../utils/formatters.dart';
 import '../widgets/invoice_print_dialog.dart';
-import '../widgets/ui_components.dart';
 
 class ErpBillingScreen extends StatefulWidget {
   final String forcedBillingType; // 'GST' or 'NON_GST'
@@ -34,6 +33,8 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
 
   // Dispatch & E-Way Details
   final _poNumberCtrl = TextEditingController();
+  final _poDateCtrl = TextEditingController(text: '13/09/2026');
+  final _dispatchThroughCtrl = TextEditingController();
   final _vehicleNumberCtrl = TextEditingController();
   final _driverNameCtrl = TextEditingController();
   final _deliveryNoteCtrl = TextEditingController();
@@ -75,6 +76,8 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
     _addressCtrl.dispose();
     _gstinCtrl.dispose();
     _poNumberCtrl.dispose();
+    _poDateCtrl.dispose();
+    _dispatchThroughCtrl.dispose();
     _vehicleNumberCtrl.dispose();
     _driverNameCtrl.dispose();
     _deliveryNoteCtrl.dispose();
@@ -263,6 +266,8 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
       _addressCtrl.clear();
       _gstinCtrl.clear();
       _poNumberCtrl.clear();
+      _poDateCtrl.text = '13/09/2026';
+      _dispatchThroughCtrl.clear();
       _vehicleNumberCtrl.clear();
       _driverNameCtrl.clear();
       _deliveryNoteCtrl.clear();
@@ -295,11 +300,13 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
     final user = auth.currentUser!;
 
     double totalTaxable = 0.0;
+    double totalDiscount = 0.0;
     double totalGst = 0.0;
     double totalNet = 0.0;
 
     for (final it in _items) {
       totalTaxable += it.taxableAmount;
+      totalDiscount += it.discAmount;
       totalGst += it.gstAmount;
       totalNet += it.finalAmount;
     }
@@ -342,7 +349,7 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
       gstin: widget.forcedBillingType == 'GST' ? _gstinCtrl.text.trim() : '',
       priceList: _pricingType.key,
       dispatch: _deliveryNoteCtrl.text.isNotEmpty ? 'In Transit' : 'Delivered',
-      payStatus: _payMode == 'Credit' ? 'Pending' : 'Paid',
+      payStatus: _payStatus,
       payMode: _payMode,
       userId: user.id,
       userName: user.name,
@@ -351,12 +358,14 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
       createdByRole: user.role,
       items: List.from(_items),
       subtotal: totalTaxable,
-      discountTotal: 0.0,
+      discountTotal: totalDiscount,
       gstTotal: totalGst,
       roundOff: roundOff,
       grandTotal: grandTotal,
       dispatchDetails: DispatchDetails(
         poNumber: _poNumberCtrl.text.trim(),
+        poDate: _poDateCtrl.text.trim(),
+        dispatchThrough: _dispatchThroughCtrl.text.trim(),
         vehicleNumber: _vehicleNumberCtrl.text.trim(),
         driverName: _driverNameCtrl.text.trim(),
         deliveryNote: _deliveryNoteCtrl.text.trim(),
@@ -441,7 +450,7 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
       gstin: widget.forcedBillingType == 'GST' ? _gstinCtrl.text.trim() : '',
       priceList: _pricingType.key,
       dispatch: _deliveryNoteCtrl.text.isNotEmpty ? 'In Transit' : 'Delivered',
-      payStatus: _payMode == 'Credit' ? 'Pending' : 'Paid',
+      payStatus: _payStatus,
       payMode: _payMode,
       userId: user?.id ?? '',
       userName: user?.name ?? '',
@@ -476,6 +485,46 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
     );
   }
 
+  Widget _buildFieldLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Text(
+        label.toUpperCase(),
+        style: const TextStyle(
+          fontSize: 10.5,
+          fontWeight: FontWeight.w700,
+          color: Color(0xFFB45309),
+          letterSpacing: 0.3,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPriceListToggle(String label, PricingType type, List<Product> activeProducts) {
+    final isSel = _pricingType == type;
+    return Expanded(
+      child: InkWell(
+        onTap: () => _setPricingType(type, activeProducts),
+        borderRadius: BorderRadius.circular(4),
+        child: Container(
+          decoration: BoxDecoration(
+            color: isSel ? const Color(0xFFD97706) : Colors.transparent,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 10.5,
+              fontWeight: FontWeight.w800,
+              color: isSel ? Colors.white : const Color(0xFF5B665F),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final data = context.watch<DataProvider>();
@@ -484,22 +533,24 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
     final isGst = widget.forcedBillingType == 'GST';
     final activeProducts = data.products.where((p) => p.status == 'Active').toList();
 
-    // Filter quick chips based on search query
+    // Filter quick chips dynamically ONLY when search query is typed (e.g. "kk")
     final filteredChips = _itemSearchQuery.isEmpty
-        ? activeProducts
+        ? <Product>[]
         : activeProducts.where((p) {
             return p.name.toLowerCase().contains(_itemSearchQuery) ||
                 p.code.toLowerCase().contains(_itemSearchQuery) ||
                 p.sku.toLowerCase().contains(_itemSearchQuery) ||
                 p.oilType.toLowerCase().contains(_itemSearchQuery);
-          }).toList();
+          }).take(8).toList();
 
     double subtotal = 0.0;
+    double totalDiscount = 0.0;
     double gstTotal = 0.0;
     double grandTotal = 0.0;
 
     for (final it in _items) {
       subtotal += it.taxableAmount;
+      totalDiscount += it.discAmount;
       gstTotal += it.gstAmount;
       grandTotal += it.finalAmount;
     }
@@ -511,654 +562,754 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
     final isWide = screenWidth >= 950;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(isMobile ? 12 : 20),
+      padding: EdgeInsets.all(isMobile ? 10 : 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // 1. EXACT VERCEL HEADER BANNER (Forest Green + 3px Gold Bottom Border)
+          // 1. EXACT HORIZON ERP TITLE HEADER BAR (Matching Vercel & Web App)
           Container(
-            decoration: BoxDecoration(
-              color: AppColors.forestDark,
-              borderRadius: BorderRadius.circular(12),
-              border: const Border(
-                bottom: BorderSide(color: AppColors.gold, width: 3),
+            padding: EdgeInsets.symmetric(horizontal: isMobile ? 12 : 18, vertical: isMobile ? 10 : 12),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
               ),
+              border: Border(
+                bottom: BorderSide(color: Color(0xFFE3A92E), width: 2.5),
+              ),
+            ),
+            child: isMobile
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFD97706),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                '${data.company.name.isNotEmpty ? data.company.name.toUpperCase() : "KKK OIL FACTORY"} ERP',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 11,
+                                  letterSpacing: 0.5,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF0E9FF),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(color: const Color(0xFFDDD6FE)),
+                            ),
+                            child: Text(
+                              'VOUCHER: ${data.generateNextVoucherNo(widget.forcedBillingType)}',
+                              style: const TextStyle(
+                                color: Color(0xFF7C3AED),
+                                fontWeight: FontWeight.w800,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        isGst ? 'SALES INVOICE VOUCHER' : 'NON-GST SALES VOUCHER',
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF834006),
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      Text(
+                        isGst ? 'Ledger Billing Station' : 'Sales Voucher Station',
+                        style: const TextStyle(
+                          fontSize: 11.5,
+                          color: Color(0xFFC86D1E),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFD97706),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                '${data.company.name.isNotEmpty ? data.company.name.toUpperCase() : "KKK OIL FACTORY"} ERP',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 12,
+                                  letterSpacing: 0.5,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                isGst ? 'SALES INVOICE VOUCHER' : 'NON-GST SALES VOUCHER',
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                  color: Color(0xFF834006),
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              Text(
+                                isGst ? 'Ledger Billing Station' : 'Sales Voucher Station',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFFC86D1E),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF0E9FF),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: const Color(0xFFDDD6FE)),
+                        ),
+                        child: Text(
+                          'VOUCHER: ${data.generateNextVoucherNo(widget.forcedBillingType)}',
+                          style: const TextStyle(
+                            color: Color(0xFF7C3AED),
+                            fontWeight: FontWeight.w800,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+
+          // 2. HORIZON ERP HEADER INFORMATION PANEL (8-Field Compact Wrap)
+          Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(8),
+                bottomRight: Radius.circular(8),
+              ),
+              border: Border.all(color: const Color(0xFFE7E9E5)),
               boxShadow: const [
-                BoxShadow(color: Color(0x1A10231B), blurRadius: 10, offset: Offset(0, 4)),
+                BoxShadow(color: Color(0x0A000000), blurRadius: 4, offset: Offset(0, 1)),
               ],
             ),
-            padding: EdgeInsets.all(isMobile ? 14 : 18),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Wrap(
+              spacing: 12,
+              runSpacing: 10,
               children: [
-                Expanded(
+                // Voucher Type
+                SizedBox(
+                  width: isMobile ? double.infinity : 150,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      _buildFieldLabel('Voucher Type'),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        height: 38,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         decoration: BoxDecoration(
-                          color: const Color(0x29E3A92E),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: AppColors.gold.withOpacity(0.6)),
-                        ),
-                        child: Text(
-                          isGst ? 'KKK OIL FACTORY ERP' : 'NON-GST EXECUTIVE STATION',
-                          style: const TextStyle(
-                            color: AppColors.gold,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.8,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        isGst ? 'SALES INVOICE VOUCHER' : 'NON-GST SALES VOUCHER',
-                        style: TextStyle(
-                          fontSize: isMobile ? 17 : 21,
-                          fontWeight: FontWeight.w900,
                           color: Colors.white,
-                          letterSpacing: -0.3,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFE7E9E5)),
                         ),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        'Ledger Billing Station · ${data.company.gstin.isNotEmpty ? "GSTIN: " + data.company.gstin : "Dharmapuri Unit"}',
-                        style: const TextStyle(fontSize: 12, color: Color(0xFF8FA298)),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          isGst ? 'GST Invoice' : 'Non-GST Voucher',
+                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: Color(0xFF1A221E)),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: AppColors.forestMedium,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: AppColors.gold, width: 1.2),
-                      ),
-                      child: Text(
-                        'VOUCHER: ${data.generateNextVoucherNo(widget.forcedBillingType)}',
-                        style: const TextStyle(
-                          color: AppColors.gold,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 13,
+
+                // Voucher No.
+                SizedBox(
+                  width: isMobile ? double.infinity : 130,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('Voucher No.'),
+                      Container(
+                        height: 38,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFBFBF9),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFE7E9E5)),
+                        ),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          data.generateNextVoucherNo(widget.forcedBillingType),
+                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: Color(0xFFB45309)),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'DATE: ${AppFormatters.todayISO()}',
-                      style: const TextStyle(fontSize: 11.5, color: Colors.white70, fontWeight: FontWeight.w500),
+                    ],
+                  ),
+                ),
+
+                // Voucher Date
+                SizedBox(
+                  width: isMobile ? double.infinity : 130,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('Voucher Date'),
+                      Container(
+                        height: 38,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFE7E9E5)),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                AppFormatters.todayISO(),
+                                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            const Icon(Icons.calendar_today_outlined, size: 14, color: AppColors.text3),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Party Ledger / Customer
+                SizedBox(
+                  width: isMobile ? double.infinity : 220,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('Party Ledger / Customer'),
+                      Container(
+                        height: 38,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFE7E9E5)),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<Customer?>(
+                            value: _selectedCustomer,
+                            isExpanded: true,
+                            hint: const Text('Walk-in / Cash Customer', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                            items: [
+                              const DropdownMenuItem<Customer?>(
+                                value: null,
+                                child: Text('Walk-in / Cash Customer', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                              ),
+                              ...data.customers.map((c) => DropdownMenuItem(
+                                    value: c,
+                                    child: Text(c.name, style: const TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis),
+                                  )),
+                            ],
+                            onChanged: (val) {
+                              setState(() {
+                                _selectedCustomer = val;
+                                if (val != null) {
+                                  _addressCtrl.text = val.address;
+                                  _gstinCtrl.text = val.gstin;
+                                  _route = val.route;
+                                  if (val.priceList.isNotEmpty) {
+                                    _setPricingType(PricingTypeExtension.fromString(val.priceList), activeProducts);
+                                  }
+                                } else {
+                                  _addressCtrl.clear();
+                                  _gstinCtrl.clear();
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Price List (AWR Rates) Toggle Buttons
+                SizedBox(
+                  width: isMobile ? double.infinity : 210,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('Price List (AWR Rates)'),
+                      Container(
+                        height: 38,
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F6F4),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFE7E9E5)),
+                        ),
+                        child: Row(
+                          children: [
+                            _buildPriceListToggle('AGENCY', PricingType.agency, activeProducts),
+                            const SizedBox(width: 3),
+                            _buildPriceListToggle('WHOLESALE', PricingType.wholesale, activeProducts),
+                            const SizedBox(width: 3),
+                            _buildPriceListToggle('RETAIL', PricingType.retail, activeProducts),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Delivery Address
+                SizedBox(
+                  width: isMobile ? double.infinity : 180,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('Delivery Address'),
+                      SizedBox(
+                        height: 38,
+                        child: TextField(
+                          controller: _addressCtrl,
+                          style: const TextStyle(fontSize: 12),
+                          decoration: InputDecoration(
+                            hintText: 'Delivery Address / Town',
+                            hintStyle: const TextStyle(fontSize: 11.5, color: AppColors.text3),
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Sales Man
+                SizedBox(
+                  width: isMobile ? double.infinity : 130,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('Sales Man'),
+                      Container(
+                        height: 38,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFE7E9E5)),
+                        ),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          user?.name ?? 'Super Admin',
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Godown Location
+                SizedBox(
+                  width: isMobile ? double.infinity : 140,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildFieldLabel('Godown Location'),
+                      Container(
+                        height: 38,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xFFE7E9E5)),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: _godown,
+                            isExpanded: true,
+                            items: AppConstants.godowns.map((g) {
+                              return DropdownMenuItem(value: g, child: Text(g, style: const TextStyle(fontSize: 12)));
+                            }).toList(),
+                            onChanged: (val) {
+                              if (val != null) setState(() => _godown = val);
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // 3. ⚡ FAST ITEM ENTRY (SCAN BARCODE / SEARCH CODE OR NAME)
+          Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFBFBF9),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: const Color(0xFFE7E9E5)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.bolt, color: Color(0xFFD97706), size: 17),
+                    const SizedBox(width: 4),
+                    const Expanded(
+                      child: Text(
+                        'FAST ITEM ENTRY (SCAN BARCODE / SEARCH CODE OR NAME)',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5,
+                          color: Color(0xFFB45309),
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
+                const SizedBox(height: 8),
+
+                // Fast Search Bar + Qty + Disc % (Single sleek row)
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 38,
+                        child: TextField(
+                          controller: _itemSearchCtrl,
+                          onSubmitted: (_) => _addItemFromInputs(activeProducts),
+                          style: const TextStyle(fontSize: 12.5),
+                          decoration: InputDecoration(
+                            hintText: 'Type product name, code (e.g. PRD-101)...',
+                            hintStyle: const TextStyle(fontSize: 12, color: AppColors.text3),
+                            prefixIcon: const Icon(Icons.search, size: 16, color: AppColors.text3),
+                            suffixIcon: _itemSearchCtrl.text.isNotEmpty
+                                ? IconButton(
+                                    icon: const Icon(Icons.clear, size: 16),
+                                    onPressed: () => _itemSearchCtrl.clear(),
+                                  )
+                                : null,
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: 75,
+                      height: 38,
+                      child: TextField(
+                        controller: _qtyCtrl,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.right,
+                        style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                        decoration: InputDecoration(
+                          hintText: 'Qty',
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
+                          fillColor: Colors.white,
+                          filled: true,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      width: 75,
+                      height: 38,
+                      child: TextField(
+                        controller: _discCtrl,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.right,
+                        style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                        decoration: InputDecoration(
+                          hintText: 'Disc %',
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
+                          fillColor: Colors.white,
+                          filled: true,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                // DYNAMIC GOLDEN AMBER PILL CHIPS (ONLY SHOWN WHEN USER TYPES SEARCH QUERY!)
+                if (_itemSearchQuery.isNotEmpty && filteredChips.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: const Color(0xFFE7E9E5)),
+                    ),
+                    child: Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: filteredChips.map((p) {
+                        final rate = p.getRateFor(_pricingType);
+                        return Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              _quickAddProduct(p);
+                              _itemSearchCtrl.clear();
+                            },
+                            borderRadius: BorderRadius.circular(5),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFB45309),
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFFD97706), Color(0xFFB45309)],
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color(0x22B45309),
+                                    blurRadius: 3,
+                                    offset: Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                '+ ${p.name} (${p.code}) — ₹${rate.toStringAsFixed(0)} (Stock: ${p.stock.toInt()})',
+                                style: const TextStyle(
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  letterSpacing: 0.1,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
           const SizedBox(height: 16),
 
-          // 2. VOUCHER FORM TOP CARD (Party, AWR Rate selector, Route, Godown, Billed By)
-          Card(
-            child: Padding(
-              padding: EdgeInsets.all(isMobile ? 14 : 18),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Row 1: Party + AWR Rate Pills + Godown
-                  Wrap(
-                    spacing: 16,
-                    runSpacing: 12,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      // Party / Customer Dropdown
-                      SizedBox(
-                        width: isMobile ? double.infinity : 280,
-                        child: DropdownButtonFormField<Customer?>(
-                          value: _selectedCustomer,
-                          isExpanded: true,
-                          decoration: const InputDecoration(
-                            labelText: 'Party / Customer Name',
-                            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                          ),
-                          hint: const Text('Counter Cash Customer'),
-                          items: [
-                            const DropdownMenuItem<Customer?>(
-                              value: null,
-                              child: Text('Counter Cash Customer (Direct)'),
-                            ),
-                            ...data.customers.map((c) => DropdownMenuItem(
-                                  value: c,
-                                  child: Text(c.name, overflow: TextOverflow.ellipsis),
-                                )),
-                          ],
-                          onChanged: (val) {
-                            setState(() {
-                              _selectedCustomer = val;
-                              if (val != null) {
-                                _addressCtrl.text = val.address;
-                                _gstinCtrl.text = val.gstin;
-                                _route = val.route;
-                                if (val.priceList.isNotEmpty) {
-                                  _setPricingType(PricingTypeExtension.fromString(val.priceList), activeProducts);
-                                }
-                              } else {
-                                _addressCtrl.clear();
-                                _gstinCtrl.clear();
-                              }
-                            });
-                          },
-                        ),
-                      ),
-
-                      // AWR Rate Selector Pills
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: AppColors.surfaceWarm,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColors.border),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              child: Text('RATE:', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.textMuted)),
-                            ),
-                            ...PricingType.values.map((pt) {
-                              final isSel = _pricingType == pt;
-                              return InkWell(
-                                onTap: () => _setPricingType(pt, activeProducts),
-                                borderRadius: BorderRadius.circular(7),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: isSel ? AppColors.gold : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(7),
-                                  ),
-                                  child: Text(
-                                    pt.label.toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w800,
-                                      color: isSel ? AppColors.forestDark : AppColors.textSecondary,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                          ],
-                        ),
-                      ),
-
-                      // Godown Selector
-                      SizedBox(
-                        width: isMobile ? double.infinity : 160,
-                        child: DropdownButtonFormField<String>(
-                          value: _godown,
-                          decoration: const InputDecoration(
-                            labelText: 'Godown',
-                            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                          ),
-                          items: AppConstants.godowns.map((g) {
-                            return DropdownMenuItem(value: g, child: Text(g));
-                          }).toList(),
-                          onChanged: (val) {
-                            if (val != null) setState(() => _godown = val);
-                          },
-                        ),
-                      ),
-
-                      // Salesperson / Billed By
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: AppColors.surfaceAlt,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppColors.border),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.person_outline, size: 16, color: AppColors.textSecondary),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Billed: ${user?.name ?? "Cashier"}',
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.forestMedium),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Optional row for Address & Customer GSTIN
-                  if (_selectedCustomer != null || isGst) ...[
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: TextField(
-                            controller: _addressCtrl,
-                            style: const TextStyle(fontSize: 12.5),
-                            decoration: const InputDecoration(
-                              labelText: 'Delivery Address / Route',
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            ),
-                          ),
-                        ),
-                        if (isGst) ...[
-                          const SizedBox(width: 12),
-                          Expanded(
-                            flex: 1,
-                            child: TextField(
-                              controller: _gstinCtrl,
-                              style: const TextStyle(fontSize: 12.5),
-                              decoration: const InputDecoration(
-                                labelText: 'Party GSTIN',
-                                isDense: true,
-                                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ],
-                ],
-              ),
+          // 4. VOUCHER LINE ITEMS TABLE
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: const Color(0xFFE7E9E5)),
             ),
-          ),
-          const SizedBox(height: 16),
-
-          // 3. ⚡ FAST ITEM ENTRY (SCAN BARCODE / SEARCH CODE OR NAME + QUICK CHIPS)
-          Card(
-            color: AppColors.surfaceAlt,
-            child: Padding(
-              padding: EdgeInsets.all(isMobile ? 14 : 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Title with bolt icon
-                  Row(
-                    children: [
-                      const Icon(Icons.bolt, color: AppColors.gold, size: 20),
-                      const SizedBox(width: 6),
-                      const Text(
-                        'FAST ITEM ENTRY (SCAN BARCODE / SEARCH CODE OR NAME)',
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.5,
-                          color: AppColors.forestDark,
-                        ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (isMobile) ...[
+                  // Mobile Card List
+                  if (_items.isEmpty)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'No items in voucher. Use the fast entry bar above to scan or search products.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 12, color: AppColors.textMuted, fontWeight: FontWeight.w500),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Input bar with Search, Qty, Rate, Disc %, Add Item button
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      final isNarrow = constraints.maxWidth < 720;
-                      if (isNarrow) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            TextField(
-                              controller: _itemSearchCtrl,
-                              decoration: InputDecoration(
-                                hintText: 'Type product name, code (e.g. PRD-101)...',
-                                filled: true,
-                                fillColor: Colors.white,
-                                prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.textMuted),
-                                suffixIcon: _itemSearchCtrl.text.isNotEmpty
-                                    ? IconButton(
-                                        icon: const Icon(Icons.clear, size: 18),
-                                        onPressed: () => _itemSearchCtrl.clear(),
-                                      )
-                                    : null,
-                              ),
-                              onSubmitted: (_) => _addItemFromInputs(activeProducts),
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        children: List.generate(_items.length, (idx) {
+                          final item = _items[idx];
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceAlt,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: AppColors.border),
                             ),
-                            const SizedBox(height: 8),
-                            Row(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: TextField(
-                                    controller: _qtyCtrl,
-                                    keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(labelText: 'Qty', filled: true, fillColor: Colors.white),
-                                  ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('#${idx + 1}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textMuted)),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(item.productName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                                          Text('${item.productCode} · ${item.unit}', style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.danger),
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                      onPressed: () => setState(() => _items.removeAt(idx)),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  flex: 3,
-                                  child: TextField(
-                                    controller: _rateCtrl,
-                                    keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(labelText: 'Rate (₹)', filled: true, fillColor: Colors.white),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  flex: 2,
-                                  child: TextField(
-                                    controller: _discCtrl,
-                                    keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(labelText: 'Disc %', filled: true, fillColor: Colors.white),
-                                  ),
+                                const SizedBox(height: 6),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: AppColors.border),
+                                        borderRadius: BorderRadius.circular(6),
+                                        color: Colors.white,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          InkWell(
+                                            onTap: () => _updateItemQty(idx, -1),
+                                            child: const Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                              child: Text('-', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                            child: Text('${item.qty.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5)),
+                                          ),
+                                          InkWell(
+                                            onTap: () => _updateItemQty(idx, 1),
+                                            child: const Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                              child: Text('+', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Text('× ₹${item.rate.toStringAsFixed(item.rate % 1 == 0 ? 0 : 2)}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                    Text('₹${item.finalAmount.toStringAsFixed(item.finalAmount % 1 == 0 ? 0 : 2)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Color(0xFFD97706))),
+                                  ],
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10),
-                            GoldButton(
-                              icon: Icons.add,
-                              label: '+ Add Item to Voucher',
-                              height: 44,
-                              onPressed: () => _addItemFromInputs(activeProducts),
-                            ),
-                          ],
-                        );
-                      }
-
-                      return Row(
-                        children: [
-                          Expanded(
-                            flex: 4,
-                            child: TextField(
-                              controller: _itemSearchCtrl,
-                              decoration: InputDecoration(
-                                hintText: 'Type product name, code (e.g. PRD-101)...',
-                                filled: true,
-                                fillColor: Colors.white,
-                                prefixIcon: const Icon(Icons.search, size: 18, color: AppColors.textMuted),
-                                suffixIcon: _itemSearchCtrl.text.isNotEmpty
-                                    ? IconButton(
-                                        icon: const Icon(Icons.clear, size: 18),
-                                        onPressed: () => _itemSearchCtrl.clear(),
-                                      )
-                                    : null,
-                              ),
-                              onSubmitted: (_) => _addItemFromInputs(activeProducts),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          SizedBox(
-                            width: 80,
-                            child: TextField(
-                              controller: _qtyCtrl,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(labelText: 'Qty', filled: true, fillColor: Colors.white),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          SizedBox(
-                            width: 110,
-                            child: TextField(
-                              controller: _rateCtrl,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(labelText: 'Rate (₹)', filled: true, fillColor: Colors.white),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          SizedBox(
-                            width: 85,
-                            child: TextField(
-                              controller: _discCtrl,
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(labelText: 'Disc %', filled: true, fillColor: Colors.white),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          GoldButton(
-                            icon: Icons.add,
-                            label: 'Add Item',
-                            height: 48,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            onPressed: () => _addItemFromInputs(activeProducts),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 12),
-
-                  // LIVE CLICKABLE PRODUCT QUICK-ADD CHIPS
-                  const Text(
-                    'Quick Add Items (Click to add directly to voucher):',
-                    style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: filteredChips.map((p) {
-                      final rate = p.getRateFor(_pricingType);
-                      final isLow = p.stock <= p.minStock;
-                      final isSelected = _selectedProduct?.id == p.id;
-
-                      return InkWell(
-                        onTap: () => _quickAddProduct(p),
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: isSelected ? AppColors.gold : AppColors.border,
-                              width: isSelected ? 1.5 : 1.0,
-                            ),
-                            boxShadow: isSelected
-                                ? const [BoxShadow(color: Color(0x24E3A92E), blurRadius: 6, offset: Offset(0, 2))]
-                                : null,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(Icons.add_circle_outline, size: 15, color: AppColors.goldDeep),
-                              const SizedBox(width: 5),
-                              Text(
-                                '${p.name} (${p.pack})',
-                                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.forestDark),
-                              ),
-                              const SizedBox(width: 6),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: AppColors.forestMedium,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  '₹${rate.toStringAsFixed(0)}',
-                                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.gold),
-                                ),
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                '(${p.stock.toInt()})',
-                                style: TextStyle(
-                                  fontSize: 10.5,
-                                  fontWeight: FontWeight.w600,
-                                  color: isLow ? AppColors.danger : AppColors.textMuted,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // 4. VOUCHER LINE ITEMS TABLE (Columns: #, Item Code, Description, Pack/Unit, MRP, Qty, Rate, Disc %, Taxable, GST %, Tax Amt, Line Total, Action)
-          Card(
-            child: Padding(
-              padding: EdgeInsets.all(isMobile ? 12 : 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Voucher Line Items (${_items.length})',
-                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                          );
+                        }),
                       ),
-                      if (_items.isNotEmpty)
-                        TextButton.icon(
-                          icon: const Icon(Icons.delete_sweep, size: 16, color: AppColors.danger),
-                          label: const Text('Clear Table', style: TextStyle(color: AppColors.danger, fontSize: 12)),
-                          onPressed: () => setState(() => _items.clear()),
-                        ),
-                    ],
-                  ),
-                  const Divider(height: 20),
-
-                  if (_items.isEmpty)
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
-                      alignment: Alignment.center,
-                      child: Column(
-                        children: const [
-                          Icon(Icons.receipt_outlined, size: 40, color: AppColors.textMuted),
-                          SizedBox(height: 10),
-                          Text('No line items in voucher yet.', style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
-                          SizedBox(height: 4),
-                          Text('Click any product chip above to add items instantly.', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
-                        ],
-                      ),
-                    )
-                  else if (isMobile)
-                    // Mobile Card List with stepper controls
-                    Column(
-                      children: List.generate(_items.length, (idx) {
-                        final item = _items[idx];
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: AppColors.surfaceAlt,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: AppColors.border),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('#${idx + 1}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textMuted)),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(item.productName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5)),
-                                        Text('${item.productCode} · ${item.unit}', style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
-                                      ],
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.danger),
-                                    padding: EdgeInsets.zero,
-                                    constraints: const BoxConstraints(),
-                                    onPressed: () => setState(() => _items.removeAt(idx)),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  // Stepper controls
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: AppColors.border),
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: Colors.white,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        InkWell(
-                                          onTap: () => _updateItemQty(idx, -1),
-                                          child: const Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                            child: Text('-', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                          child: Text('${item.qty.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                                        ),
-                                        InkWell(
-                                          onTap: () => _updateItemQty(idx, 1),
-                                          child: const Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                            child: Text('+', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Text(
-                                    '× ₹${item.rate.toStringAsFixed(2)}',
-                                    style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
-                                  ),
-                                  Text(
-                                    '₹${item.finalAmount.toStringAsFixed(2)}',
-                                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.forestDark),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
-                    )
-                  else
-                    // Desktop Full ERP Table Matching Vercel Oh
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
+                    ),
+                ] else ...[
+                  // Desktop Full ERP Table Matching Vercel & Web Screenshot
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minWidth: screenWidth - (isMobile ? 20 : 64)),
                       child: DataTable(
-                        headingRowColor: WidgetStateProperty.all(AppColors.surfaceAlt),
-                        columnSpacing: 18,
+                        headingRowHeight: 36,
+                        dataRowMinHeight: 38,
+                        dataRowMaxHeight: 44,
+                        headingRowColor: WidgetStateProperty.all(const Color(0xFFFAFBF9)),
+                        horizontalMargin: 12,
+                        columnSpacing: 14,
                         columns: [
-                          const DataColumn(label: Text('#')),
-                          const DataColumn(label: Text('Item Code')),
-                          const DataColumn(label: Text('Description of Goods')),
-                          const DataColumn(label: Text('Pack / Unit')),
-                          const DataColumn(label: Text('MRP (₹)')),
-                          const DataColumn(label: Text('Qty')),
-                          const DataColumn(label: Text('Rate (AWR)')),
-                          const DataColumn(label: Text('Disc %')),
-                          if (isGst) const DataColumn(label: Text('Taxable (₹)')),
-                          if (isGst) const DataColumn(label: Text('GST %')),
-                          if (isGst) const DataColumn(label: Text('Tax Amt (₹)')),
-                          const DataColumn(label: Text('Line Total (₹)')),
-                          const DataColumn(label: Text('Action')),
+                          const DataColumn(label: Text('#', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          const DataColumn(label: Text('ITEM CODE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          const DataColumn(label: Text('DESCRIPTION OF GOODS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          const DataColumn(label: Text('PACK / UNIT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          const DataColumn(numeric: true, label: Text('MRP', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          const DataColumn(numeric: true, label: Text('QTY', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          DataColumn(numeric: true, label: Text('RATE (${_pricingType.key.toUpperCase()})', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          const DataColumn(numeric: true, label: Text('DISC %', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          const DataColumn(numeric: true, label: Text('TAXABLE AMT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          if (isGst) const DataColumn(label: Text('GST %', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          if (isGst) const DataColumn(numeric: true, label: Text('TAX AMT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          const DataColumn(numeric: true, label: Text('LINE TOTAL', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                          const DataColumn(label: SizedBox(width: 24)),
                         ],
                         rows: List.generate(_items.length, (idx) {
                           final item = _items[idx];
                           return DataRow(
                             cells: [
-                              DataCell(Text('${idx + 1}')),
-                              DataCell(Text(item.productCode, style: const TextStyle(fontWeight: FontWeight.w700))),
-                              DataCell(Text(item.productName, style: const TextStyle(fontWeight: FontWeight.w600))),
-                              DataCell(Text(item.unit)),
-                              DataCell(Text(item.mrp.toStringAsFixed(2))),
+                              DataCell(Text('${idx + 1}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 11.5))),
+                              DataCell(Text(item.productCode, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: Color(0xFFD97706)))),
+                              DataCell(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(item.productName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12.5)),
+                                    const Text('Category: Edible Oils', style: TextStyle(fontSize: 10, color: AppColors.textMuted)),
+                                  ],
+                                ),
+                              ),
+                              DataCell(Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(color: const Color(0xFFF0F1EE), borderRadius: BorderRadius.circular(4)),
+                                child: Text(item.unit, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
+                              )),
+                              DataCell(Text('₹${item.mrp.toStringAsFixed(0)}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary))),
                               DataCell(
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -1166,35 +1317,37 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                                     InkWell(
                                       onTap: () => _updateItemQty(idx, -1),
                                       child: Container(
-                                        padding: const EdgeInsets.all(4),
+                                        padding: const EdgeInsets.all(3),
                                         decoration: BoxDecoration(border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(4)),
-                                        child: const Icon(Icons.remove, size: 12),
+                                        child: const Icon(Icons.remove, size: 10),
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                                      child: Text('${item.qty.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                                      child: Text('${item.qty.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
                                     ),
                                     InkWell(
                                       onTap: () => _updateItemQty(idx, 1),
                                       child: Container(
-                                        padding: const EdgeInsets.all(4),
+                                        padding: const EdgeInsets.all(3),
                                         decoration: BoxDecoration(border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(4)),
-                                        child: const Icon(Icons.add, size: 12),
+                                        child: const Icon(Icons.add, size: 10),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              DataCell(Text(item.rate.toStringAsFixed(2), style: const TextStyle(fontWeight: FontWeight.w600))),
-                              DataCell(Text('${item.discPercent.toStringAsFixed(0)}%')),
-                              if (isGst) DataCell(Text(item.taxableAmount.toStringAsFixed(2))),
-                              if (isGst) DataCell(Text('${item.gstRate.toStringAsFixed(0)}%')),
-                              if (isGst) DataCell(Text(item.gstAmount.toStringAsFixed(2))),
-                              DataCell(Text('₹${item.finalAmount.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.forestMedium))),
+                              DataCell(Text('₹${item.rate.toStringAsFixed(item.rate % 1 == 0 ? 0 : 2)}', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12))),
+                              DataCell(Text('${item.discPercent.toStringAsFixed(0)}%', style: const TextStyle(fontSize: 12))),
+                              DataCell(Text('₹${item.taxableAmount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600))),
+                              if (isGst) DataCell(Text('${item.gstRate.toStringAsFixed(0)}%', style: const TextStyle(fontSize: 12))),
+                              if (isGst) DataCell(Text('₹${item.gstAmount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 12))),
+                              DataCell(Text('₹${item.finalAmount.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12.5, color: Color(0xFFD97706)))),
                               DataCell(
                                 IconButton(
-                                  icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.danger),
+                                  icon: const Icon(Icons.delete_outline, size: 16, color: AppColors.danger),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
                                   onPressed: () => setState(() => _items.removeAt(idx)),
                                 ),
                               ),
@@ -1203,8 +1356,20 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                         }),
                       ),
                     ),
+                  ),
+                  if (_items.isEmpty)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 36, horizontal: 16),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'No items in voucher. Use the fast entry bar above to scan or search products.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 12, color: AppColors.textMuted, fontWeight: FontWeight.w500),
+                      ),
+                    ),
                 ],
-              ),
+              ],
             ),
           ),
           const SizedBox(height: 16),
@@ -1214,17 +1379,17 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(flex: 6, child: _buildDispatchTabsCard(isGst, subtotal, gstTotal, roundOff, roundedGrand)),
+                Expanded(flex: 6, child: _buildDispatchTabsCard(isGst, subtotal, totalDiscount, gstTotal, roundOff, roundedGrand, isMobile)),
                 const SizedBox(width: 16),
-                Expanded(flex: 5, child: _buildGoldenTotalsCard(isGst, subtotal, gstTotal, roundOff, roundedGrand, data)),
+                Expanded(flex: 5, child: _buildGoldenTotalsCard(isGst, subtotal, totalDiscount, gstTotal, roundOff, roundedGrand, data, isMobile)),
               ],
             )
           else
             Column(
               children: [
-                _buildDispatchTabsCard(isGst, subtotal, gstTotal, roundOff, roundedGrand),
+                _buildDispatchTabsCard(isGst, subtotal, totalDiscount, gstTotal, roundOff, roundedGrand, isMobile),
                 const SizedBox(height: 16),
-                _buildGoldenTotalsCard(isGst, subtotal, gstTotal, roundOff, roundedGrand, data),
+                _buildGoldenTotalsCard(isGst, subtotal, totalDiscount, gstTotal, roundOff, roundedGrand, data, isMobile),
               ],
             ),
 
@@ -1302,127 +1467,202 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
   }
 
   // 4-Tab Container matching Vercel left pane
-  Widget _buildDispatchTabsCard(bool isGst, double subtotal, double gstTotal, double roundOff, double grandTotal) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Tab Pill Selector
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _buildTabPill(0, '🚛 Dispatch Details'),
-                  const SizedBox(width: 6),
+  Widget _buildDispatchTabsCard(bool isGst, double subtotal, double totalDiscount, double gstTotal, double roundOff, double grandTotal, bool isMobile) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFFE7E9E5)),
+      ),
+      padding: EdgeInsets.all(isMobile ? 10 : 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Tab Pills Selector - WRAPPED IN HORIZONTAL SCROLL SO IT NEVER OVERFLOWS ON MOBILE
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildTabPill(0, '🚚 Dispatch Details'),
+                const SizedBox(width: 8),
+                if (isGst) ...[
                   _buildTabPill(1, '📄 E-Way Bill'),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 8),
                   _buildTabPill(2, '⚡ E-Invoice IRN'),
-                  const SizedBox(width: 6),
-                  _buildTabPill(3, '📑 Tax Ledgers'),
+                  const SizedBox(width: 8),
                 ],
-              ),
+                _buildTabPill(3, '📑 Tax Ledgers'),
+              ],
             ),
-            const Divider(height: 20),
+          ),
+          const SizedBox(height: 14),
 
-            // Tab Content
-            if (_selectedBottomTab == 0) ...[
-              Wrap(
-                spacing: 12,
-                runSpacing: 10,
-                children: [
-                  SizedBox(
-                    width: 170,
-                    child: TextField(
-                      controller: _vehicleNumberCtrl,
-                      decoration: const InputDecoration(labelText: 'Vehicle Number', hintText: 'TN 29 AB 1234'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 170,
-                    child: TextField(
-                      controller: _driverNameCtrl,
-                      decoration: const InputDecoration(labelText: 'Driver & Phone'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 170,
-                    child: TextField(
-                      controller: _poNumberCtrl,
-                      decoration: const InputDecoration(labelText: 'PO Number'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 170,
-                    child: TextField(
-                      controller: _deliveryNoteCtrl,
-                      decoration: const InputDecoration(labelText: 'Delivery Note / DC'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 170,
-                    child: TextField(
-                      controller: _gatePassCtrl,
-                      decoration: const InputDecoration(labelText: 'Gate Pass No'),
-                    ),
-                  ),
-                ],
-              ),
-            ] else if (_selectedBottomTab == 1) ...[
-              Wrap(
-                spacing: 12,
-                runSpacing: 10,
-                children: [
-                  SizedBox(
-                    width: 220,
-                    child: TextField(
-                      controller: _ewbNoCtrl,
-                      decoration: const InputDecoration(labelText: 'E-Way Bill Number', hintText: '12-digit EWB No'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 220,
-                    child: TextField(
-                      controller: _transporterCtrl,
-                      decoration: const InputDecoration(labelText: 'Transporter Name / ID'),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              const Text('E-Way Bill is mandatory for consignment value > ₹50,000.', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
-            ] else if (_selectedBottomTab == 2) ...[
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceAlt,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.border),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('⚡ NIC E-Invoice System Integration', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5)),
-                    SizedBox(height: 4),
-                    Text('IRN and QR code are automatically registered upon saving the invoice series.', style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary)),
-                    SizedBox(height: 6),
-                    Text('Status: Active Ready · Digital Signature Enabled', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.success)),
-                  ],
-                ),
-              ),
+          // Tab Content
+          if (_selectedBottomTab == 0) ...[
+            if (isMobile) ...[
+              // Stack fields cleanly on mobile screens
+              _buildFieldLabel('PO NUMBER'),
+              const SizedBox(height: 4),
+              _buildDispatchInput(_poNumberCtrl, 'PO-1002'),
+              const SizedBox(height: 10),
+              _buildFieldLabel('PO DATE'),
+              const SizedBox(height: 4),
+              _buildDispatchInput(_poDateCtrl, '13/09/2026', suffixIcon: Icons.calendar_today_outlined),
+              const SizedBox(height: 10),
+              _buildFieldLabel('DISPATCH VIA'),
+              const SizedBox(height: 4),
+              _buildDispatchInput(_dispatchThroughCtrl, 'VRL Logistics'),
+              const SizedBox(height: 10),
+              _buildFieldLabel('VEHICLE NO.'),
+              const SizedBox(height: 4),
+              _buildDispatchInput(_vehicleNumberCtrl, 'TN29BF6289', isBold: true),
+              const SizedBox(height: 10),
+              _buildFieldLabel('DRIVER NAME'),
+              const SizedBox(height: 4),
+              _buildDispatchInput(_driverNameCtrl, ''),
+              const SizedBox(height: 10),
+              _buildFieldLabel('GATE PASS NO'),
+              const SizedBox(height: 4),
+              _buildDispatchInput(_gatePassCtrl, ''),
             ] else ...[
-              // Tax Ledgers
-              Column(
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildLedgerRow('Central GST Ledger (CGST 2.5%):', '₹${(gstTotal / 2).toStringAsFixed(2)}'),
-                  _buildLedgerRow('State GST Ledger (SGST 2.5%):', '₹${(gstTotal / 2).toStringAsFixed(2)}'),
-                  _buildLedgerRow('Round-off Ledger Account:', '₹${roundOff.toStringAsFixed(2)}'),
-                  _buildLedgerRow('Total Net Receivable Account:', '₹${grandTotal.toStringAsFixed(2)}', isBold: true),
+                  // Column 1
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildFieldLabel('PO NUMBER'),
+                        const SizedBox(height: 4),
+                        _buildDispatchInput(_poNumberCtrl, 'PO-1002'),
+                        const SizedBox(height: 10),
+                        _buildFieldLabel('DISPATCH VIA'),
+                        const SizedBox(height: 4),
+                        _buildDispatchInput(_dispatchThroughCtrl, 'VRL Logistics'),
+                        const SizedBox(height: 10),
+                        _buildFieldLabel('DRIVER NAME'),
+                        const SizedBox(height: 4),
+                        _buildDispatchInput(_driverNameCtrl, ''),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  // Column 2
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildFieldLabel('PO DATE'),
+                        const SizedBox(height: 4),
+                        _buildDispatchInput(_poDateCtrl, '13/09/2026', suffixIcon: Icons.calendar_today_outlined),
+                        const SizedBox(height: 10),
+                        _buildFieldLabel('VEHICLE NO.'),
+                        const SizedBox(height: 4),
+                        _buildDispatchInput(_vehicleNumberCtrl, 'TN29BF6289', isBold: true),
+                        const SizedBox(height: 10),
+                        _buildFieldLabel('GATE PASS NO'),
+                        const SizedBox(height: 4),
+                        _buildDispatchInput(_gatePassCtrl, ''),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ],
+          ] else if (_selectedBottomTab == 1 && isGst) ...[
+            if (isMobile) ...[
+              _buildFieldLabel('E-WAY BILL NUMBER'),
+              const SizedBox(height: 4),
+              _buildDispatchInput(_ewbNoCtrl, '12-digit EWB No'),
+              const SizedBox(height: 10),
+              _buildFieldLabel('TRANSPORTER NAME / ID'),
+              const SizedBox(height: 4),
+              _buildDispatchInput(_transporterCtrl, 'Transporter ID'),
+            ] else ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildFieldLabel('E-WAY BILL NUMBER'),
+                        const SizedBox(height: 4),
+                        _buildDispatchInput(_ewbNoCtrl, '12-digit EWB No'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildFieldLabel('TRANSPORTER NAME / ID'),
+                        const SizedBox(height: 4),
+                        _buildDispatchInput(_transporterCtrl, 'Transporter ID'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            const SizedBox(height: 8),
+            const Text('E-Way Bill is mandatory for consignment value > ₹50,000.', style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+          ] else if (_selectedBottomTab == 2 && isGst) ...[
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceAlt,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text('⚡ NIC E-Invoice System Integration', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5)),
+                  SizedBox(height: 4),
+                  Text('IRN and QR code are automatically registered upon saving the invoice series.', style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary)),
+                  SizedBox(height: 6),
+                  Text('Status: Active Ready · Digital Signature Enabled', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.success)),
+                ],
+              ),
+            ),
+          ] else ...[
+            // Tax Ledgers
+            Column(
+              children: [
+                _buildLedgerRow('Gross Taxable Amount:', '₹${subtotal.toStringAsFixed(2)}'),
+                if (isGst) ...[
+                  _buildLedgerRow('Central GST Ledger (CGST 2.5%):', '₹${(gstTotal / 2).toStringAsFixed(2)}'),
+                  _buildLedgerRow('State GST Ledger (SGST 2.5%):', '₹${(gstTotal / 2).toStringAsFixed(2)}'),
+                ],
+                _buildLedgerRow('Round-off Ledger Account:', '${roundOff >= 0 ? "+" : ""}₹${roundOff.toStringAsFixed(2)}'),
+                _buildLedgerRow('Total Net Receivable Account:', '₹${grandTotal.toStringAsFixed(2)}', isBold: true),
+              ],
+            ),
           ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDispatchInput(TextEditingController ctrl, String hint, {bool isBold = false, IconData? suffixIcon}) {
+    return SizedBox(
+      height: 34,
+      child: TextField(
+        controller: ctrl,
+        style: TextStyle(fontSize: 12, fontWeight: isBold ? FontWeight.bold : FontWeight.normal),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          suffixIcon: suffixIcon != null ? Icon(suffixIcon, size: 14, color: AppColors.textMuted) : null,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
+          fillColor: Colors.white,
+          filled: true,
         ),
       ),
     );
@@ -1432,18 +1672,17 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
     final isSel = _selectedBottomTab == index;
     return InkWell(
       onTap: () => setState(() => _selectedBottomTab = index),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(6),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSel ? AppColors.forestMedium : AppColors.surfaceWarm,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: isSel ? AppColors.forestMedium : AppColors.border),
+          color: isSel ? const Color(0xFF10231B) : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
         ),
         child: Text(
           title,
           style: TextStyle(
-            fontSize: 11.5,
+            fontSize: 12,
             fontWeight: FontWeight.w700,
             color: isSel ? Colors.white : AppColors.textSecondary,
           ),
@@ -1465,95 +1704,135 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
     );
   }
 
-  // Golden Frame Totals Card matching Vercel right pane
-  Widget _buildGoldenTotalsCard(bool isGst, double subtotal, double gstTotal, double roundOff, double grandTotal, DataProvider data) {
+  // Golden Frame Totals Card matching Vercel right pane & screenshot
+  Widget _buildGoldenTotalsCard(bool isGst, double subtotal, double totalDiscount, double gstTotal, double roundOff, double grandTotal, DataProvider data, bool isMobile) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.gold, width: 2),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xFFE3A92E), width: 1.5),
         boxShadow: const [
-          BoxShadow(color: Color(0x1AE3A92E), blurRadius: 16, offset: Offset(0, 4)),
+          BoxShadow(color: Color(0x1AE3A92E), blurRadius: 12, offset: Offset(0, 3)),
         ],
       ),
-      padding: const EdgeInsets.all(18),
+      padding: EdgeInsets.all(isMobile ? 12 : 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Header Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Taxable Subtotal:', style: TextStyle(fontSize: 13, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
-              Text('₹${subtotal.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
-            ],
-          ),
-          if (isGst) ...[
-            const SizedBox(height: 6),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('CGST (2.5%):', style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary)),
-                Text('₹${(gstTotal / 2).toStringAsFixed(2)}', style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600)),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('SGST (2.5%):', style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary)),
-                Text('₹${(gstTotal / 2).toStringAsFixed(2)}', style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600)),
-              ],
-            ),
-          ],
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Round Off:', style: TextStyle(fontSize: 12, color: AppColors.textMuted)),
-              Text('${roundOff >= 0 ? "+" : ""}₹${roundOff.toStringAsFixed(2)}', style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+              const Flexible(
+                child: Text(
+                  'VOUCHER BILL TOTALS',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFFD97706),
+                    letterSpacing: 0.5,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                'MODE: ${_payMode.toUpperCase()}',
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFFD97706),
+                  letterSpacing: 0.5,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
 
-          // Grand Total Container
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: AppColors.forestMedium,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          _buildTotalsRow('Gross Taxable Subtotal', '₹${subtotal.toStringAsFixed(subtotal % 1 == 0 ? 0 : 2)}'),
+          const SizedBox(height: 6),
+          _buildTotalsRow(
+            'Item Discounts Total',
+            totalDiscount > 0 ? '− ₹${totalDiscount.toStringAsFixed(totalDiscount % 1 == 0 ? 0 : 2)}' : '− ₹0',
+          ),
+          const SizedBox(height: 6),
+          _buildTotalsRow(
+            'Output GST Tax',
+            isGst ? '₹${gstTotal.toStringAsFixed(2)}' : '₹0 (Non-GST)',
+            valueColor: isGst ? const Color(0xFFD97706) : AppColors.textMuted,
+          ),
+          const SizedBox(height: 6),
+          _buildTotalsRow(
+            'Round Off (+/-)',
+            '${roundOff >= 0 ? "+" : ""}₹${roundOff.toStringAsFixed(roundOff % 1 == 0 ? 0 : 2)}',
+          ),
+
+          const SizedBox(height: 12),
+          const Divider(height: 1, color: Color(0xFFE7E9E5)),
+          const SizedBox(height: 12),
+
+          // GRAND NET PAYABLE DISPLAY
+          Align(
+            alignment: Alignment.centerRight,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Text('Grand Total (Net):', style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800, color: Colors.white)),
+                const Text(
+                  'GRAND NET PAYABLE',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFFD97706),
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                const SizedBox(height: 2),
                 Text(
-                  '₹${grandTotal.toStringAsFixed(2)}',
-                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.gold),
+                  '₹${grandTotal.toStringAsFixed(grandTotal % 1 == 0 ? 0 : 2)}',
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFFD97706),
+                    letterSpacing: -0.5,
+                  ),
                 ),
               ],
             ),
           ),
           if (grandTotal > 0) ...[
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             Align(
               alignment: Alignment.centerRight,
               child: Text(
                 AppFormatters.numberToWordsINR(grandTotal),
-                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary, fontStyle: FontStyle.italic),
+                style: const TextStyle(
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textSecondary,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ),
           ],
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
 
-          // Payment Mode Selector Pills
-          const Text('Payment Mode:', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
+          // PAYMENT TYPE
+          const Text(
+            'PAYMENT TYPE',
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textSecondary,
+              letterSpacing: 0.5,
+            ),
+          ),
           const SizedBox(height: 6),
           Row(
-            children: ['Cash', 'UPI', 'Bank', 'Credit'].map((mode) {
+            children: ['Cash', 'Credit', 'UPI', 'Card'].map((mode) {
               final isSel = _payMode == mode;
               return Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 2.5),
                   child: InkWell(
                     onTap: () {
                       setState(() {
@@ -1563,11 +1842,13 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                     },
                     borderRadius: BorderRadius.circular(6),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      padding: const EdgeInsets.symmetric(vertical: 7),
                       decoration: BoxDecoration(
-                        color: isSel ? AppColors.forestMedium : AppColors.surfaceAlt,
+                        color: isSel ? const Color(0xFFD97706) : Colors.white,
                         borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: isSel ? AppColors.forestMedium : AppColors.border),
+                        border: Border.all(
+                          color: isSel ? const Color(0xFFD97706) : const Color(0xFFE7E9E5),
+                        ),
                       ),
                       child: Text(
                         mode,
@@ -1575,7 +1856,7 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
-                          color: isSel ? Colors.white : AppColors.textSecondary,
+                          color: isSel ? Colors.white : AppColors.textPrimary,
                         ),
                       ),
                     ),
@@ -1586,45 +1867,181 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
           ),
           const SizedBox(height: 16),
 
-          // Action Buttons
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: OutlinedButton(
-                  onPressed: _isSaving ? null : _resetVoucher,
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+          // 4 Action Buttons: 2x2 Grid on Mobile (Zero overflow!) vs 1 Row on Desktop
+          if (isMobile)
+            Column(
+              children: [
+                Row(
+                  children: [
+                    // 1. Clear
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: _isSaving ? null : _resetVoucher,
+                        icon: const Icon(Icons.delete_outline, size: 15),
+                        label: const Text('Clear', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.textPrimary,
+                          side: const BorderSide(color: Color(0xFFD6D9D3)),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // 2. Print Bill
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: (_items.isNotEmpty && !_isSaving) ? _previewPrintCurrentBill : null,
+                        icon: const Icon(Icons.print_outlined, size: 15),
+                        label: const Text('Print Bill', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.textPrimary,
+                          side: const BorderSide(color: Color(0xFFD6D9D3)),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    // 3. Save (F2)
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: (_items.isNotEmpty && !_isSaving) ? () => _saveVoucher(printAfterSave: false) : null,
+                        icon: const Icon(Icons.check, size: 15, color: Colors.white),
+                        label: Text(
+                          _isSaving ? 'Saving…' : 'Save (F2)',
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF10231B),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // 4. Save & Print
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: (_items.isNotEmpty && !_isSaving) ? () => _saveVoucher(printAfterSave: true) : null,
+                        icon: const Icon(Icons.download, size: 15, color: Colors.white),
+                        label: const Text(
+                          'Save & Print',
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFD97706),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          else
+            Row(
+              children: [
+                // 1. Clear
+                Expanded(
+                  flex: 1,
+                  child: OutlinedButton.icon(
+                    onPressed: _isSaving ? null : _resetVoucher,
+                    icon: const Icon(Icons.delete_outline, size: 14),
+                    label: const Text('Clear', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600)),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.textPrimary,
+                      side: const BorderSide(color: Color(0xFFD6D9D3)),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    ),
                   ),
-                  child: const Text('Clear', style: TextStyle(fontSize: 12)),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                flex: 1,
-                child: OutlinedButton.icon(
-                  icon: const Icon(Icons.print_outlined, size: 15),
-                  label: const Text('Print', style: TextStyle(fontSize: 12)),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                const SizedBox(width: 6),
+
+                // 2. Print Bill
+                Expanded(
+                  flex: 1,
+                  child: OutlinedButton.icon(
+                    onPressed: (_items.isNotEmpty && !_isSaving) ? _previewPrintCurrentBill : null,
+                    icon: const Icon(Icons.print_outlined, size: 14),
+                    label: const Text('Print Bill', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600)),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.textPrimary,
+                      side: const BorderSide(color: Color(0xFFD6D9D3)),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    ),
                   ),
-                  onPressed: (_items.isNotEmpty && !_isSaving) ? _previewPrintCurrentBill : null,
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                flex: 2,
-                child: GoldButton(
-                  icon: Icons.print,
-                  label: _isSaving ? 'Saving…' : 'Save & Print',
-                  height: 44,
-                  onPressed: (_items.isNotEmpty && !_isSaving) ? () => _saveVoucher(printAfterSave: true) : null,
+                const SizedBox(width: 6),
+
+                // 3. Save (F2)
+                Expanded(
+                  flex: 1,
+                  child: ElevatedButton.icon(
+                    onPressed: (_items.isNotEmpty && !_isSaving) ? () => _saveVoucher(printAfterSave: false) : null,
+                    icon: const Icon(Icons.check, size: 14, color: Colors.white),
+                    label: Text(
+                      _isSaving ? 'Saving…' : 'Save (F2)',
+                      style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF10231B),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 6),
+
+                // 4. Save & Print
+                Expanded(
+                  flex: 1,
+                  child: ElevatedButton.icon(
+                    onPressed: (_items.isNotEmpty && !_isSaving) ? () => _saveVoucher(printAfterSave: true) : null,
+                    icon: const Icon(Icons.download, size: 14, color: Colors.white),
+                    label: const Text(
+                      'Save & Print',
+                      style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFD97706),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTotalsRow(String label, String value, {Color? valueColor}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(value, style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: valueColor ?? AppColors.textPrimary)),
+      ],
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../models/user.dart';
 import '../providers/auth_provider.dart';
 import '../providers/data_provider.dart';
 import '../theme/app_theme.dart';
@@ -25,94 +24,11 @@ class AppTopbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(62);
 
-  void _showModeSwitchDialog(BuildContext context) {
-    final auth = context.read<AuthProvider>();
-    final passCtrl = TextEditingController();
-    String? error;
-
-    showDialog(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (context, setState) {
-          final isGst = auth.currentUser?.activeMode == BillingMode.gst;
-          return AlertDialog(
-            title: Row(
-              children: [
-                Icon(
-                  isGst ? Icons.lock_outline : Icons.check_circle_outline,
-                  color: isGst ? AppColors.goldDeep : AppColors.green,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  isGst ? 'Switch to Non-GST Station' : 'Switch to GST Billing Station',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  isGst
-                      ? 'Non-GST Mode is restricted to Super Admin executive access only. Enter executive password (e.g. admin123n or ERP@2026N):'
-                      : 'Switch back to public GST Invoicing station? All GST invoice sequences and reporting will apply.',
-                  style: const TextStyle(fontSize: 13, color: AppColors.text2),
-                ),
-                if (isGst) ...[
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: passCtrl,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Executive Password',
-                      hintText: 'admin123n',
-                      errorText: error,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isGst ? AppColors.gold : AppColors.forest,
-                  foregroundColor: isGst ? AppColors.forest : Colors.white,
-                ),
-                onPressed: () async {
-                  if (isGst) {
-                    final res = await auth.switchMode(passCtrl.text);
-                    if (res['ok'] == true) {
-                      if (ctx.mounted) Navigator.pop(ctx);
-                    } else {
-                      setState(() {
-                        error = res['error'] ?? 'Incorrect password';
-                      });
-                    }
-                  } else {
-                    auth.switchModeToGst();
-                    if (ctx.mounted) Navigator.pop(ctx);
-                  }
-                },
-                child: Text(isGst ? 'Unlock Non-GST' : 'Switch to GST'),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     final data = context.watch<DataProvider>();
     final user = auth.currentUser;
-    final isNonGst = auth.isNonGstSession;
     final nowFormatted = DateFormat('EEEE, d MMMM').format(DateTime.now());
     final companyName = data.company.name;
 
@@ -206,50 +122,13 @@ class AppTopbar extends StatelessWidget implements PreferredSizeWidget {
             const SizedBox(width: 16),
           ],
 
-          // Mode Switch Pill (GST vs NON-GST)
-          InkWell(
-            onTap: user?.isSuperAdmin == true ? () => _showModeSwitchDialog(context) : null,
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 8 : 10,
-                vertical: isMobile ? 4 : 5,
-              ),
-              decoration: BoxDecoration(
-                color: isNonGst ? AppColors.goldSoft : AppColors.greenSoft,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isNonGst ? AppColors.goldDeep : AppColors.green,
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isNonGst ? AppColors.goldDeep : AppColors.green,
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    isNonGst ? 'NON-GST' : 'GST',
-                    style: TextStyle(
-                      color: isNonGst ? AppColors.goldDeep : AppColors.green,
-                      fontSize: isMobile ? 10 : 11,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 0.3,
-                    ),
-                  ),
-                  if (user?.isSuperAdmin == true) ...[
-                    const SizedBox(width: 3),
-                    Icon(Icons.swap_horiz, size: 13, color: isNonGst ? AppColors.goldDeep : AppColors.green),
-                  ],
-                ],
-              ),
-            ),
+          // Notification Bell icon
+          IconButton(
+            icon: const Icon(Icons.notifications_none_outlined, size: 20, color: AppColors.text2),
+            onPressed: () {},
+            tooltip: 'Notifications',
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
           ),
           const SizedBox(width: 8),
 
@@ -297,7 +176,7 @@ class AppTopbar extends StatelessWidget implements PreferredSizeWidget {
                               ),
                             ),
                             Text(
-                              isNonGst ? 'Super Admin (Non-GST)' : user.roleLabel,
+                              user.roleLabel,
                               style: const TextStyle(
                                 color: AppColors.text3,
                                 fontSize: 10.5,

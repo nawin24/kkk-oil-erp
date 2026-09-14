@@ -172,11 +172,11 @@ class DashboardScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Expanded(
-                          child: Text(
+                    if (isMobile)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
                             '👑 Super Admin Monthly Sales & Bills Summary (As of Now)',
                             style: TextStyle(
                               fontSize: 13.5,
@@ -185,30 +185,69 @@ class DashboardScreen extends StatelessWidget {
                               letterSpacing: 0.2,
                             ),
                           ),
-                        ),
-                        Wrap(
-                          spacing: 8,
-                          children: [
-                            GoldButton(
-                              icon: Icons.receipt_long,
-                              label: 'GST History',
-                              height: 36,
-                              onPressed: () => onNavigate('billing_history'),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.forestMedium,
-                                foregroundColor: Colors.white,
-                                minimumSize: const Size(0, 36),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          const SizedBox(height: 10),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              GoldButton(
+                                icon: Icons.receipt_long,
+                                label: 'GST History',
+                                height: 36,
+                                onPressed: () => onNavigate('billing_history'),
                               ),
-                              onPressed: () => onNavigate('non_gst_history'),
-                              child: const Text('Non-GST History', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.forestMedium,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: const Size(0, 36),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
+                                onPressed: () => onNavigate('non_gst_history'),
+                                child: const Text('Non-GST History', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    else
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Expanded(
+                            child: Text(
+                              '👑 Super Admin Monthly Sales & Bills Summary (As of Now)',
+                              style: TextStyle(
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.goldDeep,
+                                letterSpacing: 0.2,
+                              ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                          ),
+                          Wrap(
+                            spacing: 8,
+                            children: [
+                              GoldButton(
+                                icon: Icons.receipt_long,
+                                label: 'GST History',
+                                height: 36,
+                                onPressed: () => onNavigate('billing_history'),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.forestMedium,
+                                  foregroundColor: Colors.white,
+                                  minimumSize: const Size(0, 36),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
+                                onPressed: () => onNavigate('non_gst_history'),
+                                child: const Text('Non-GST History', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     const SizedBox(height: 14),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -589,10 +628,14 @@ class DashboardScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Weekly Sales Trend (Past 7 Days)',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                const Expanded(
+                  child: Text(
+                    'Weekly Sales Trend (Past 7 Days)',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
+                const SizedBox(width: 8),
                 StatusBadge(
                   label: 'Live Sales',
                   tone: BadgeTone.success,
@@ -702,10 +745,14 @@ class DashboardScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Low Stock Warnings',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                const Expanded(
+                  child: Text(
+                    'Low Stock Warnings',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
+                const SizedBox(width: 8),
                 StatusBadge(
                   label: '${metrics.lowStockProducts.length} Items',
                   tone: metrics.lowStockProducts.isNotEmpty ? BadgeTone.danger : BadgeTone.success,
