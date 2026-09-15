@@ -1191,49 +1191,56 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                   ),
                 ],
 
-                // DYNAMIC PRODUCT PILL CHIPS (SOLID AMBER #B45309 MATCHING SCREENSHOT EXACTLY)
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: (_itemSearchQuery.isEmpty ? activeProducts.take(8).toList() : filteredChips).map((p) {
-                    final rate = p.getRateFor(_pricingType);
-                    return Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () => _quickAddProduct(p),
-                        borderRadius: BorderRadius.circular(6),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFB45309),
+                // DYNAMIC PRODUCT PILL CHIPS (Only displayed when search code/name is typed)
+                if (_itemSearchQuery.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  if (filteredChips.isNotEmpty)
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: filteredChips.map((p) {
+                        final rate = p.getRateFor(_pricingType);
+                        return Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              _quickAddProduct(p);
+                              _itemSearchCtrl.clear();
+                              setState(() => _itemSearchQuery = '');
+                            },
                             borderRadius: BorderRadius.circular(6),
-                            boxShadow: const [
-                              BoxShadow(color: Color(0x20B45309), blurRadius: 4, offset: Offset(0, 1)),
-                            ],
-                          ),
-                          child: Text(
-                            '+ ${p.name} (${p.code}) — ₹${rate.toStringAsFixed(0)} (Stock: ${p.stock.toInt()})',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                              letterSpacing: 0.1,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFB45309),
+                                borderRadius: BorderRadius.circular(6),
+                                boxShadow: const [
+                                  BoxShadow(color: Color(0x20B45309), blurRadius: 4, offset: Offset(0, 1)),
+                                ],
+                              ),
+                              child: Text(
+                                '+ ${p.name} (${p.code}) — ₹${rate.toStringAsFixed(0)} (Stock: ${p.stock.toInt()})',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  letterSpacing: 0.1,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        );
+                      }).toList(),
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        'No products matched "$_itemSearchQuery". Try searching by code or oil type.',
+                        style: const TextStyle(fontSize: 11.5, color: AppColors.textMuted, fontStyle: FontStyle.italic),
                       ),
-                    );
-                  }).toList(),
-                ),
-                if (_itemSearchQuery.isNotEmpty && filteredChips.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: Text(
-                      'No products matched "$_itemSearchQuery". Try searching by code or oil type.',
-                      style: const TextStyle(fontSize: 11.5, color: AppColors.textMuted, fontStyle: FontStyle.italic),
                     ),
-                  ),
+                ],
               ],
             ),
           ),
