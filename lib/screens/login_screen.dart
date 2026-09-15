@@ -87,35 +87,58 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: AppColors.bg,
       body: Row(
         children: [
-          // Left: Official KKK Brand Banner Side (Full-Size Remastered Brown & Gold)
+          // Left: Official KKK Brand Panel (Soft Saffron Chocolate & Gold Theme)
           Expanded(
             flex: 11,
             child: Container(
-              color: const Color(0xFF1B130E),
+              decoration: const BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment(0.0, -0.05),
+                  radius: 1.15,
+                  colors: [
+                    Color(0xFF925327), // Soft golden saffron chocolate glow
+                    Color(0xFF7C441F), // Rich warm milk chocolate
+                    Color(0xFF653416), // Deep warm chocolate edge
+                  ],
+                  stops: [0.0, 0.55, 1.0],
+                ),
+              ),
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // Full-bleed remastered brown & gold logo spanning the entire panel
-                  Image.asset(
-                    'assets/images/kkk_logo_gold.png',
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                  ),
-                  // Subtle rich vignette overlay so text badges at bottom stay legible
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.12),
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.65),
-                        ],
-                        stops: const [0.0, 0.65, 1.0],
+                  // Subtle ambient background illumination
+                  Positioned.fill(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withOpacity(0.04),
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.35),
+                          ],
+                          stops: const [0.0, 0.65, 1.0],
+                        ),
                       ),
                     ),
                   ),
+
+                  // Center Hero: High-resolution pristine gold logo, perfectly sized
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 36),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 640),
+                        child: Image.asset(
+                          'assets/images/kkk_logo_gold.png',
+                          fit: BoxFit.contain,
+                          filterQuality: FilterQuality.high,
+                        ),
+                      ),
+                    ),
+                  ),
+
                   // Bottom System Subtitle & Version Info
                   Positioned(
                     left: 36,
@@ -127,9 +150,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1B130E).withOpacity(0.85),
+                            color: const Color(0xFF5A3116).withOpacity(0.85),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: const Color(0xFFE4AC36).withOpacity(0.4)),
+                            border: Border.all(color: const Color(0xFFF5BA00).withOpacity(0.45)),
                           ),
                           child: const Row(
                             mainAxisSize: MainAxisSize.min,
@@ -146,13 +169,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF1B130E).withOpacity(0.85),
+                            color: const Color(0xFF5A3116).withOpacity(0.85),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: const Color(0xFFE4AC36).withOpacity(0.35)),
+                            border: Border.all(color: const Color(0xFFF5BA00).withOpacity(0.40)),
                           ),
                           child: const Text(
                             'Tamil Nadu · Official Portal',
-                            style: TextStyle(color: Color(0xFFE4AC36), fontSize: 11.5, fontWeight: FontWeight.w500),
+                            style: TextStyle(color: Color(0xFFF5BA00), fontSize: 11.5, fontWeight: FontWeight.w500),
                           ),
                         ),
                       ],
@@ -187,12 +210,12 @@ class _LoginScreenState extends State<LoginScreen> {
         Container(
           height: 76,
           decoration: BoxDecoration(
-            color: const Color(0xFF1B130E),
+            color: const Color(0xFF7C441F),
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFE4AC36).withOpacity(0.55), width: 1.2),
+            border: Border.all(color: const Color(0xFFF5BA00).withOpacity(0.55), width: 1.2),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.35),
+                color: Colors.black.withOpacity(0.25),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -200,7 +223,11 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           clipBehavior: Clip.antiAlias,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Image.asset('assets/images/kkk_logo_gold.png', fit: BoxFit.contain),
+          child: Image.asset(
+            'assets/images/kkk_logo_gold.png',
+            fit: BoxFit.contain,
+            filterQuality: FilterQuality.high,
+          ),
         ),
         const SizedBox(height: 12),
         const Text(

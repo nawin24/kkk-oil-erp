@@ -42,19 +42,23 @@ class AppDrawer extends StatelessWidget {
                   width: 38,
                   height: 38,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1B130E),
+                    color: const Color(0xFF7C441F),
                     borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: const Color(0xFFE4AC36).withOpacity(0.55), width: 1.2),
+                    border: Border.all(color: const Color(0xFFF5BA00).withOpacity(0.55), width: 1.2),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.4),
+                        color: Colors.black.withOpacity(0.3),
                         blurRadius: 10,
                         offset: const Offset(0, 3),
                       ),
                     ],
                   ),
                   clipBehavior: Clip.antiAlias,
-                  child: Image.asset('assets/images/kkk_logo_gold_square.png', fit: BoxFit.cover),
+                  child: Image.asset(
+                    'assets/images/kkk_logo_gold_square.png',
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.high,
+                  ),
                 ),
                 const SizedBox(width: 11),
                 Expanded(
