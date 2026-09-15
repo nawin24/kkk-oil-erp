@@ -1839,17 +1839,24 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                           color: AppColors.surfaceAlt,
-                          child: const Row(
+                          child: Row(
                             children: [
-                              SizedBox(width: 30, child: Text('#', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                              Expanded(flex: 3, child: Text('Product & Code', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                              Expanded(flex: 2, child: Text('Brand & Pack', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                              Expanded(flex: 1, child: Text('Cost', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                              Expanded(flex: 3, child: Text('Selling Rates (AWR)', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: AppColors.goldDeep))),
-                              Expanded(flex: 1, child: Text('MRP', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                              Expanded(flex: 1, child: Text('Stock', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                              Expanded(flex: 1, child: Text('GST', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                              SizedBox(width: 100, child: Center(child: Text('Actions', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold)))),
+                              const SizedBox(width: 30, child: Text('#', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                              const Expanded(flex: 3, child: Text('Product & Code', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                              const Expanded(flex: 2, child: Text('Brand & Pack', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                              const Expanded(flex: 1, child: Text('Cost', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                              const Expanded(
+                                flex: 3,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text('Selling Rates (AWR)', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: AppColors.goldDeep)),
+                                ),
+                              ),
+                              const Expanded(flex: 1, child: Text('MRP', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                              const Expanded(flex: 1, child: Text('Stock', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                              const Expanded(flex: 1, child: Text('GST', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                              const SizedBox(width: 110, child: Center(child: Text('Actions', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold)))),
                             ],
                           ),
                         ),
@@ -1944,46 +1951,50 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                       child: Text('${p.gst.toStringAsFixed(0)}%', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
                                     ),
                                     SizedBox(
-                                      width: 100,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Tooltip(
-                                            message: 'Quick Price Edit (AWR)',
-                                            child: InkWell(
-                                              borderRadius: BorderRadius.circular(4),
-                                              onTap: () => _showQuickPriceEditDialog(context, p),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(4),
-                                                child: Icon(Icons.price_change_outlined, size: 16, color: AppColors.goldDeep),
+                                      width: 110,
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Tooltip(
+                                              message: 'Quick Price Edit (AWR)',
+                                              child: InkWell(
+                                                borderRadius: BorderRadius.circular(4),
+                                                onTap: () => _showQuickPriceEditDialog(context, p),
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(4),
+                                                  child: Icon(Icons.price_change_outlined, size: 16, color: AppColors.goldDeep),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Tooltip(
-                                            message: 'Edit Full Product',
-                                            child: InkWell(
-                                              borderRadius: BorderRadius.circular(4),
-                                              onTap: () => _showAddEditDialog(context, p),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(4),
-                                                child: Icon(Icons.edit_outlined, size: 16, color: AppColors.forestLight),
+                                            const SizedBox(width: 4),
+                                            Tooltip(
+                                              message: 'Edit Full Product',
+                                              child: InkWell(
+                                                borderRadius: BorderRadius.circular(4),
+                                                onTap: () => _showAddEditDialog(context, p),
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(4),
+                                                  child: Icon(Icons.edit_outlined, size: 16, color: AppColors.forestLight),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Tooltip(
-                                            message: 'Delete Product',
-                                            child: InkWell(
-                                              borderRadius: BorderRadius.circular(4),
-                                              onTap: () => _confirmDeleteProduct(context, p),
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(4),
-                                                child: Icon(Icons.delete_outline, size: 16, color: AppColors.danger),
+                                            const SizedBox(width: 4),
+                                            Tooltip(
+                                              message: 'Delete Product',
+                                              child: InkWell(
+                                                borderRadius: BorderRadius.circular(4),
+                                                onTap: () => _confirmDeleteProduct(context, p),
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(4),
+                                                  child: Icon(Icons.delete_outline, size: 16, color: AppColors.danger),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
