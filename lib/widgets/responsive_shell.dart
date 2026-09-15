@@ -145,7 +145,7 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
                               style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
                             ),
                             Text(
-                              '${auth.currentUser?.role ?? "Staff"} · ${isNonGst ? "Non-GST Station" : "GST Station"}',
+                              '${auth.currentUser?.role ?? "Staff"} · ${isNonGst ? "Non-GST Station" : "Billing Station"}',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: isNonGst ? AppColors.goldDeep : AppColors.forestMedium,
@@ -190,7 +190,7 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
                     children: [
                       if (auth.can('billing')) ...[
                         _buildMoreGridItem(ctx, 'counter', 'POS Counter Billing', Icons.point_of_sale_outlined, 'Fast-Click POS Grid'),
-                        _buildMoreGridItem(ctx, 'erp_billing', 'GST Billing Voucher', Icons.receipt_long, 'Full A4 Invoice'),
+                        _buildMoreGridItem(ctx, 'erp_billing', 'Billing Voucher', Icons.receipt_long, 'Full A4 Invoice'),
                       ],
                       if (isNonGst && auth.isSuperAdmin) ...[
                         _buildMoreGridItem(ctx, 'nongst_counter', 'Non-GST POS Counter', Icons.point_of_sale_outlined, 'Fast-Click Non-GST POS'),
@@ -277,11 +277,11 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
         return 'Dashboard Overview';
       case 'erp_billing':
       case 'counter':
-        return 'GST Billing Voucher';
+        return 'Billing Voucher';
       case 'nongst_billing':
         return 'Non-GST Billing Voucher';
       case 'billing_history':
-        return 'GST Billing History';
+        return 'Billing History';
       case 'nongst_history':
         return 'Non-GST Bills History';
       case 'products':
@@ -303,7 +303,7 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
       case 'suppliers':
         return 'Suppliers Directory';
       case 'reports':
-        return 'Reports & GST Analytics';
+        return 'Reports & Analytics';
       case 'employees':
         return 'Employees & Staff Roles';
       case 'settings':

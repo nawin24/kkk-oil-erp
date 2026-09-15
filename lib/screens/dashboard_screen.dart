@@ -218,7 +218,7 @@ class DashboardScreen extends StatelessWidget {
                   crossAxisCount: isWide ? 4 : 2,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  mainAxisExtent: isMobile ? 122 : 118,
+                  mainAxisExtent: isMobile ? 128 : 124,
                 ),
                 itemCount: kpiCards.length,
                 itemBuilder: (context, index) => kpiCards[index],
@@ -262,7 +262,7 @@ class DashboardScreen extends StatelessWidget {
                             children: [
                               GoldButton(
                                 icon: Icons.receipt_long,
-                                label: 'GST History',
+                                label: 'Billing History',
                                 height: 36,
                                 onPressed: () => onNavigate('billing_history'),
                               ),
@@ -311,7 +311,7 @@ class DashboardScreen extends StatelessWidget {
                                     OutlinedButton(
                                       style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32), padding: const EdgeInsets.symmetric(horizontal: 10)),
                                       onPressed: () => onNavigate('erp_billing'),
-                                      child: const Text('Open GST Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                      child: const Text('Open Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                                     ),
                                   ],
                                 ),
@@ -409,7 +409,7 @@ class DashboardScreen extends StatelessWidget {
                             children: [
                               GoldButton(
                                 icon: Icons.receipt_long,
-                                label: 'GST History',
+                                label: 'Billing History',
                                 height: 36,
                                 onPressed: () => onNavigate('billing_history'),
                               ),
@@ -456,7 +456,7 @@ class DashboardScreen extends StatelessWidget {
                                   OutlinedButton(
                                     style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32)),
                                     onPressed: () => onNavigate('erp_billing'),
-                                    child: const Text('Open GST Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                    child: const Text('Open Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                                   ),
                                 ),
                               ],
@@ -711,7 +711,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       ElevatedButton.icon(
                         icon: const Icon(Icons.receipt_long, size: 18),
-                        label: const Text('New GST Voucher'),
+                        label: const Text('New Billing Voucher'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.forestMedium,
                           foregroundColor: Colors.white,

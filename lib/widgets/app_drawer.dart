@@ -113,20 +113,20 @@ class AppDrawer extends StatelessWidget {
                   _buildNavItem(context, 'dashboard', 'Dashboard', Icons.dashboard_outlined),
 
                 if (isNonGst && auth.isSuperAdmin) ...[
-                  _buildSectionHeader('GST BILLING & INVOICES'),
+                  _buildSectionHeader('BILLING & INVOICES'),
                   if (auth.can('billing')) ...[
-                    _buildNavItem(context, 'erp_billing', 'GST Billing Voucher', Icons.receipt_long_outlined),
-                    _buildNavItem(context, 'billing_history', 'GST Invoices History', Icons.history_outlined),
+                    _buildNavItem(context, 'erp_billing', 'Billing Voucher', Icons.receipt_long_outlined),
+                    _buildNavItem(context, 'billing_history', 'Billing History', Icons.history_outlined),
                   ],
                   _buildSectionHeader('NON-GST BILLING STATION'),
                   _buildNavItem(context, 'nongst_billing', 'Non-GST Billing Voucher', Icons.receipt_outlined, isSpecial: true),
                   _buildNavItem(context, 'nongst_history', 'Non-GST History', Icons.manage_history_outlined, isSpecial: true),
                   _buildSectionHeader('OPERATIONS & MASTERS'),
                 ] else ...[
-                  _buildSectionHeader('GST BILLING & OPERATIONS'),
+                  _buildSectionHeader('BILLING & OPERATIONS'),
                   if (auth.can('billing')) ...[
-                    _buildNavItem(context, 'erp_billing', 'GST Billing Voucher', Icons.receipt_long_outlined),
-                    _buildNavItem(context, 'billing_history', 'GST Invoices History', Icons.history_outlined),
+                    _buildNavItem(context, 'erp_billing', 'Billing Voucher', Icons.receipt_long_outlined),
+                    _buildNavItem(context, 'billing_history', 'Billing History', Icons.history_outlined),
                   ],
                 ],
 

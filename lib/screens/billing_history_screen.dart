@@ -110,7 +110,7 @@ class _BillingHistoryScreenState extends State<BillingHistoryScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.forcedBillingType == 'GST' ? 'GST Invoices History' : 'Non-GST History (Super Admin)',
+                      widget.forcedBillingType == 'GST' ? 'Billing History' : 'Non-GST History (Super Admin)',
                       style: TextStyle(
                         fontSize: isMobile ? 18 : 22,
                         fontWeight: FontWeight.w800,
@@ -127,7 +127,7 @@ class _BillingHistoryScreenState extends State<BillingHistoryScreen> {
                 ),
               ),
               StatusBadge(
-                label: widget.forcedBillingType == 'GST' ? 'GST Ledgers' : 'Non-GST Stream',
+                label: widget.forcedBillingType == 'GST' ? 'Billing Stream' : 'Non-GST Stream',
                 tone: widget.forcedBillingType == 'GST' ? BadgeTone.success : BadgeTone.purple,
               ),
             ],
@@ -174,7 +174,7 @@ class _BillingHistoryScreenState extends State<BillingHistoryScreen> {
                           const Icon(Icons.receipt_long_outlined, size: 48, color: AppColors.textMuted),
                           const SizedBox(height: 12),
                           Text(
-                            'No ${widget.forcedBillingType == "GST" ? "GST" : "Non-GST"} vouchers found.',
+                            'No ${widget.forcedBillingType == "GST" ? "billing" : "Non-GST"} vouchers found.',
                             style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
                           ),
                         ],

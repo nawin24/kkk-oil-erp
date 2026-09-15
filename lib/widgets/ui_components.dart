@@ -31,7 +31,7 @@ class MetricCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -42,18 +42,18 @@ class MetricCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              padding: const EdgeInsets.all(7),
+              padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 color: iconBg ?? AppColors.surfaceAlt,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(icon, size: 18, color: iconColor ?? AppColors.forestLight),
+              child: Icon(icon, size: 16, color: iconColor ?? AppColors.forestLight),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Text(
               title,
               style: const TextStyle(
-                fontSize: 11.5,
+                fontSize: 11,
                 fontWeight: FontWeight.w600,
                 color: AppColors.textMuted,
                 letterSpacing: 0.1,
@@ -61,35 +61,38 @@ class MetricCard extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 6),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
-                letterSpacing: -0.5,
+            const SizedBox(height: 3),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textPrimary,
+                  letterSpacing: -0.5,
+                ),
+                maxLines: 1,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
             if (delta != null) ...[
-              const SizedBox(height: 3),
+              const SizedBox(height: 2),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (deltaDir == 'up') ...[
-                    const Icon(Icons.arrow_upward_rounded, size: 12, color: AppColors.success),
-                    const SizedBox(width: 3),
+                    const Icon(Icons.arrow_upward_rounded, size: 11, color: AppColors.success),
+                    const SizedBox(width: 2),
                   ] else if (deltaDir == 'down') ...[
-                    const Icon(Icons.arrow_downward_rounded, size: 12, color: AppColors.danger),
-                    const SizedBox(width: 3),
+                    const Icon(Icons.arrow_downward_rounded, size: 11, color: AppColors.danger),
+                    const SizedBox(width: 2),
                   ],
                   Flexible(
                     child: Text(
                       delta!,
                       style: TextStyle(
-                        fontSize: 11.5,
+                        fontSize: 10.5,
                         fontWeight: FontWeight.w600,
                         color: deltaDir == 'up'
                             ? AppColors.success
@@ -106,7 +109,7 @@ class MetricCard extends StatelessWidget {
               Text(
                 subtitle!,
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: 10.5,
                   fontWeight: FontWeight.w500,
                   color: AppColors.textSecondary,
                 ),
