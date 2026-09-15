@@ -201,13 +201,35 @@ class AppTopbar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
 
-          // Sign Out Icon Button
-          IconButton(
-            icon: const Icon(Icons.logout, size: 18, color: AppColors.text3),
-            tooltip: 'Sign Out',
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-            onPressed: () => auth.logout(),
+          // Sign Out Button (Prominently visible)
+          InkWell(
+            onTap: () => auth.logout(),
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 8 : 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.danger.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppColors.danger.withOpacity(0.35)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.logout, size: 15, color: AppColors.danger),
+                  if (!isMobile) ...[
+                    const SizedBox(width: 4),
+                    const Text(
+                      'Sign Out',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.danger,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
         ],
       ),

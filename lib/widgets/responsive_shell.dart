@@ -27,21 +27,21 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
 
   int _getMobileNavIndex(String route) {
     switch (route) {
+      case 'dashboard':
+        return 0;
       case 'counter':
       case 'nongst_counter':
       case 'erp_billing':
       case 'gst_billing':
       case 'nongst_billing':
       case 'non_gst_billing':
-        return 0;
+        return 1;
       case 'inventory':
       case 'products':
-        return 1;
+        return 2;
       case 'billing_history':
       case 'nongst_history':
       case 'non_gst_history':
-        return 2;
-      case 'dashboard':
         return 3;
       default:
         return 4; // 'more'
@@ -54,16 +54,16 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
 
     switch (index) {
       case 0:
-        widget.onNavigate(isNonGst ? 'nongst_billing' : 'erp_billing');
+        widget.onNavigate('dashboard');
         break;
       case 1:
-        widget.onNavigate('inventory');
+        widget.onNavigate(isNonGst ? 'nongst_billing' : 'erp_billing');
         break;
       case 2:
-        widget.onNavigate(isNonGst ? 'nongst_history' : 'billing_history');
+        widget.onNavigate('inventory');
         break;
       case 3:
-        widget.onNavigate('dashboard');
+        widget.onNavigate(isNonGst ? 'nongst_history' : 'billing_history');
         break;
       case 4:
         _showMobileMoreSheet(context);
@@ -155,30 +155,53 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
                           ],
                         ),
                       ),
-                      if (auth.isSuperAdmin)
-                        InkWell(
-                          onTap: () {
-                            auth.toggleNonGstMode();
-                            Navigator.pop(ctx);
-                          },
-                          borderRadius: BorderRadius.circular(8),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: isNonGst ? AppColors.goldSoft : AppColors.forestLight.withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: isNonGst ? AppColors.gold : AppColors.forestLight),
-                            ),
-                            child: Text(
-                              isNonGst ? 'Switch GST' : 'Switch Non-GST',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
-                                color: isNonGst ? AppColors.forestDark : AppColors.forestMedium,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (isNonGst && auth.isSuperAdmin)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: InkWell(
+                                onTap: () {
+                                  auth.toggleNonGstMode();
+                                  Navigator.pop(ctx);
+                                },
+                                borderRadius: BorderRadius.circular(8),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.goldSoft,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(color: AppColors.gold),
+                                  ),
+                                  child: const Text(
+                                    'Switch GST',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.forestDark,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.logout, size: 14, color: Colors.white),
+                            label: const Text('Log Out', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.danger,
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              minimumSize: const Size(0, 32),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(ctx);
+                              auth.logout();
+                            },
                           ),
-                        ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -362,6 +385,11 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
           elevation: 8,
           items: const [
             BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard_outlined),
+              activeIcon: Icon(Icons.dashboard),
+              label: 'Dashboard',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.receipt_long_outlined),
               activeIcon: Icon(Icons.receipt_long),
               label: 'Billing',
@@ -375,11 +403,6 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
               icon: Icon(Icons.history_outlined),
               activeIcon: Icon(Icons.history),
               label: 'History',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_outlined),
-              activeIcon: Icon(Icons.dashboard),
-              label: 'Dashboard',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.more_horiz),

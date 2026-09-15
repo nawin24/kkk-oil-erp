@@ -51,6 +51,52 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
+  void _confirmDeleteProduct(BuildContext context, Product p) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        title: const Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: AppColors.danger, size: 24),
+            SizedBox(width: 8),
+            Text('Delete Inventory Item?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          ],
+        ),
+        content: Text(
+          'Are you sure you want to delete "${p.name}" (${p.code}) permanently from Central Master and godown stock records? This action cannot be undone.',
+          style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.danger,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () async {
+              final data = context.read<DataProvider>();
+              await data.deleteProduct(p.id);
+              if (ctx.mounted) Navigator.pop(ctx);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Deleted "${p.name}" from inventory master.'),
+                    backgroundColor: AppColors.danger,
+                  ),
+                );
+              }
+            },
+            child: const Text('Delete Permanently'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final data = context.watch<DataProvider>();
@@ -78,14 +124,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
             LayoutBuilder(
               builder: (context, constraints) {
                 final isWide = constraints.maxWidth > 850;
-                final count = isWide ? 3 : (constraints.maxWidth > 520 ? 2 : 1);
-                return GridView.count(
-                  crossAxisCount: count,
+                final crossAxisCount = isWide ? 3 : (constraints.maxWidth > 550 ? 2 : 1);
+                return GridView(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    mainAxisExtent: isMobile ? 128 : 124,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                  ),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: isWide ? 1.5 : (constraints.maxWidth > 520 ? 2.0 : 2.4),
                   children: [
                     MetricCard(
                       title: 'FINISHED GOODS VALUATION',
@@ -199,6 +247,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                       icon: const Icon(Icons.edit_note, size: 20, color: AppColors.forestLight),
                                       tooltip: 'Adjust Physical Count',
                                       onPressed: () => _showAdjustStockDialog(context, p),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete_outline, size: 19, color: AppColors.danger),
+                                      tooltip: 'Delete Product',
+                                      onPressed: () => _confirmDeleteProduct(context, p),
                                     ),
                                   ],
                                 ),

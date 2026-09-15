@@ -245,42 +245,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _showResetConfirmDialog() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Row(
-          children: [
-            Icon(Icons.warning_amber_rounded, color: AppColors.danger),
-            SizedBox(width: 8),
-            Text('Reset All Data to Sample Seed?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          ],
-        ),
-        content: const Text(
-          'Reload the KKK sample dataset? Your current local sales orders will be reset and default products (KKK Gold 1L/5L/15L) restored.',
-          style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.danger),
-            onPressed: () async {
-              final data = context.read<DataProvider>();
-              await data.resetDemoData();
-              if (ctx.mounted) Navigator.pop(ctx);
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Sample seed loaded successfully.'), backgroundColor: AppColors.success),
-                );
-              }
-            },
-            child: const Text('Confirm Reset'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
@@ -1079,32 +1043,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     }
                   },
                 ),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.cloud_upload_outlined, size: 16),
-                  label: const Text('Seed Firestore'),
-                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.forestMedium),
-                  onPressed: () async {
-                    await data.seedToFirestore();
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Seeded all ERP records to Firestore!'), backgroundColor: AppColors.success),
-                      );
-                    }
-                  },
-                ),
               ],
             ),
-            const Divider(height: 32),
-            const Text('Data Management', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 6),
-            const Text('Reset local device sales data back to sample factory defaults.', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-            const SizedBox(height: 12),
-            OutlinedButton.icon(
-              icon: const Icon(Icons.restore, size: 16, color: AppColors.danger),
-              label: const Text('Reset Sample Data', style: TextStyle(color: AppColors.danger)),
-              style: OutlinedButton.styleFrom(side: const BorderSide(color: AppColors.danger)),
-              onPressed: _showResetConfirmDialog,
-            ),
+            const SizedBox(height: 16),
+            const Divider(height: 1),
             const SizedBox(height: 16),
             _buildKvRow('Build', 'v2.0 · Flutter Monolith'),
             _buildKvRow('Stack', 'Flutter Multiplatform · Web · iOS · Android'),

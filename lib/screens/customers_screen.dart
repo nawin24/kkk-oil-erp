@@ -16,6 +16,7 @@ class CustomersScreen extends StatefulWidget {
 class _CustomersScreenState extends State<CustomersScreen> {
   final TextEditingController _searchCtrl = TextEditingController();
   String _searchQuery = '';
+  String _customerSegment = 'ALL'; // 'ALL', 'RETAIL', 'DEALERS'
 
   void _showAddCustomerDialog(BuildContext context, [Customer? existing]) {
     final data = context.read<DataProvider>();
@@ -29,6 +30,11 @@ class _CustomersScreenState extends State<CustomersScreen> {
     final areaCtrl = TextEditingController(text: existing?.area ?? '');
     final routeCtrl = TextEditingController(text: existing?.route ?? '');
     final limitCtrl = TextEditingController(text: existing?.creditLimit.toStringAsFixed(0) ?? '100000');
+    
+    // Category helper: Retail vs Dealer
+    bool isDealerCategory = existing != null &&
+        (existing.type == 'Wholesaler' || existing.type == 'Distributor' || existing.priceList == 'AGENCY' || existing.priceList == 'WHOLESALE');
+    String category = isDealerCategory ? 'DEALER' : 'RETAIL';
     String type = existing?.type ?? 'Retail Store';
     String priceList = existing?.priceList ?? 'RETAIL';
 
@@ -44,6 +50,78 @@ class _CustomersScreenState extends State<CustomersScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Category selector
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceWarm,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  category = 'RETAIL';
+                                  type = 'Retail Store';
+                                  priceList = 'RETAIL';
+                                });
+                              },
+                              borderRadius: BorderRadius.circular(6),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: category == 'RETAIL' ? AppColors.forestMedium : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Regular / Retail',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: category == 'RETAIL' ? Colors.white : AppColors.textSecondary,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  category = 'DEALER';
+                                  type = 'Wholesaler';
+                                  priceList = 'WHOLESALE';
+                                });
+                              },
+                              borderRadius: BorderRadius.circular(6),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: category == 'DEALER' ? const Color(0xFFD97706) : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Dealer / Agency',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: category == 'DEALER' ? Colors.white : AppColors.textSecondary,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 14),
                     TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Customer / Store Name')),
                     const SizedBox(height: 12),
                     Row(
@@ -134,7 +212,16 @@ class _CustomersScreenState extends State<CustomersScreen> {
   @override
   Widget build(BuildContext context) {
     final data = context.watch<DataProvider>();
-    final customers = data.customers.where((c) {
+    final allList = data.customers;
+    final retailCount = allList.where((c) => c.priceList == 'RETAIL' || c.type == 'Retail Store' || c.type == 'Supermarket').length;
+    final dealerCount = allList.where((c) => c.priceList == 'AGENCY' || c.priceList == 'WHOLESALE' || c.type == 'Wholesaler' || c.type == 'Distributor').length;
+
+    final customers = allList.where((c) {
+      if (_customerSegment == 'RETAIL') {
+        if (c.priceList != 'RETAIL' && c.type != 'Retail Store' && c.type != 'Supermarket') return false;
+      } else if (_customerSegment == 'DEALERS') {
+        if (c.priceList != 'AGENCY' && c.priceList != 'WHOLESALE' && c.type != 'Wholesaler' && c.type != 'Distributor') return false;
+      }
       if (_searchQuery.isEmpty) return true;
       final q = _searchQuery.toLowerCase();
       return c.name.toLowerCase().contains(q) ||
@@ -165,7 +252,26 @@ class _CustomersScreenState extends State<CustomersScreen> {
               onPressed: () => _showAddCustomerDialog(context),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
+
+          // SEGMENTED TABS: All, Regular Retail, Dealers & Wholesale
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildSegmentTab('ALL', 'All Customers (${allList.length})'),
+                _buildSegmentTab('RETAIL', 'Regular / Retail ($retailCount)'),
+                _buildSegmentTab('DEALERS', 'Dealers & Agencies ($dealerCount)'),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
 
           Expanded(
             child: Card(
@@ -265,6 +371,29 @@ class _CustomersScreenState extends State<CustomersScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSegmentTab(String key, String label) {
+    final isSelected = _customerSegment == key;
+    return InkWell(
+      onTap: () => setState(() => _customerSegment = key),
+      borderRadius: BorderRadius.circular(6),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.forestMedium : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: isSelected ? Colors.white : AppColors.textSecondary,
+          ),
+        ),
       ),
     );
   }

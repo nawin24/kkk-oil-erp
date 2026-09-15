@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-class MetricCard extends StatelessWidget {
+class MetricCard extends StatefulWidget {
   final String title;
   final String value;
   final String? subtitle;
@@ -26,106 +26,143 @@ class MetricCard extends StatelessWidget {
   });
 
   @override
+  State<MetricCard> createState() => _MetricCardState();
+}
+
+class _MetricCardState extends State<MetricCard> {
+  bool _isHovered = false;
+  bool _isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.cardBorder),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textSecondary,
-                      letterSpacing: 0.1,
+    final isHighlighted = _isHovered || _isPressed;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: widget.onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) => setState(() => _isPressed = false),
+        onTapCancel: () => setState(() => _isPressed = false),
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isHighlighted ? AppColors.goldDeep : AppColors.cardBorder,
+              width: isHighlighted ? 1.8 : 1.0,
+            ),
+            boxShadow: isHighlighted
+                ? [
+                    BoxShadow(
+                      color: AppColors.gold.withOpacity(0.25),
+                      blurRadius: 10,
+                      spreadRadius: 1,
+                      offset: const Offset(0, 3),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const SizedBox(width: 6),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: iconBg ?? AppColors.surfaceAlt,
-                    borderRadius: BorderRadius.circular(7),
-                  ),
-                  child: Icon(icon, size: 15, color: iconColor ?? AppColors.forestLight),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.textPrimary,
-                  letterSpacing: -0.5,
-                ),
-                maxLines: 1,
-              ),
-            ),
-            if (delta != null) ...[
-              const SizedBox(height: 2),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (deltaDir == 'up') ...[
-                    const Icon(Icons.arrow_upward_rounded, size: 11, color: AppColors.success),
-                    const SizedBox(width: 2),
-                  ] else if (deltaDir == 'down') ...[
-                    const Icon(Icons.arrow_downward_rounded, size: 11, color: AppColors.danger),
-                    const SizedBox(width: 2),
+                  ]
+                : const [
+                    BoxShadow(
+                      color: Color(0x08000000),
+                      blurRadius: 4,
+                      offset: Offset(0, 1),
+                    ),
                   ],
-                  Flexible(
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
                     child: Text(
-                      delta!,
-                      style: TextStyle(
-                        fontSize: 10.5,
+                      widget.title,
+                      style: const TextStyle(
+                        fontSize: 11.5,
                         fontWeight: FontWeight.w600,
-                        color: deltaDir == 'up'
-                            ? AppColors.success
-                            : (deltaDir == 'down' ? AppColors.danger : AppColors.textSecondary),
+                        color: AppColors.textSecondary,
+                        letterSpacing: 0.1,
                       ),
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: widget.iconBg ?? AppColors.surfaceAlt,
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Icon(widget.icon, size: 15, color: widget.iconColor ?? AppColors.forestLight),
+                  ),
                 ],
               ),
-            ] else if (subtitle != null) ...[
-              const SizedBox(height: 2),
-              Text(
-                subtitle!,
-                style: const TextStyle(
-                  fontSize: 10.5,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.textSecondary,
+              const SizedBox(height: 6),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  widget.value,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary,
+                    letterSpacing: -0.5,
+                  ),
+                  maxLines: 1,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
+              if (widget.delta != null) ...[
+                const SizedBox(height: 2),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (widget.deltaDir == 'up') ...[
+                      const Icon(Icons.arrow_upward_rounded, size: 11, color: AppColors.success),
+                      const SizedBox(width: 2),
+                    ] else if (widget.deltaDir == 'down') ...[
+                      const Icon(Icons.arrow_downward_rounded, size: 11, color: AppColors.danger),
+                      const SizedBox(width: 2),
+                    ],
+                    Flexible(
+                      child: Text(
+                        widget.delta!,
+                        style: TextStyle(
+                          fontSize: 10.5,
+                          fontWeight: FontWeight.w600,
+                          color: widget.deltaDir == 'up'
+                              ? AppColors.success
+                              : (widget.deltaDir == 'down' ? AppColors.danger : AppColors.textSecondary),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ] else if (widget.subtitle != null) ...[
+                const SizedBox(height: 2),
+                Text(
+                  widget.subtitle!,
+                  style: const TextStyle(
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textSecondary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

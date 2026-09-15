@@ -488,6 +488,159 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
+  String _generateExcelSpreadsheetML(List<Product> products, Map<String, String> brandMap) {
+    final sb = StringBuffer();
+    sb.writeln('<?xml version="1.0" encoding="UTF-8"?>');
+    sb.writeln('<?mso-application progid="Excel.Sheet"?>');
+    sb.writeln('<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"');
+    sb.writeln(' xmlns:o="urn:schemas-microsoft-com:office:office"');
+    sb.writeln(' xmlns:x="urn:schemas-microsoft-com:office:excel"');
+    sb.writeln(' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"');
+    sb.writeln(' xmlns:html="http://www.w3.org/TR/REC-html40">');
+    sb.writeln(' <Styles>');
+    sb.writeln('  <Style ss:ID="Header">');
+    sb.writeln('   <Font ss:Bold="1" ss:Color="#FFFFFF"/>');
+    sb.writeln('   <Interior ss:Color="#1B4D3E" ss:Pattern="Solid"/>');
+    sb.writeln('   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>');
+    sb.writeln('  </Style>');
+    sb.writeln('  <Style ss:ID="Number"><NumberFormat ss:Format="0"/></Style>');
+    sb.writeln('  <Style ss:ID="Decimal"><NumberFormat ss:Format="0.00"/></Style>');
+    sb.writeln(' </Styles>');
+    sb.writeln(' <Worksheet ss:Name="Products">');
+    sb.writeln('  <Table>');
+    sb.writeln('   <Column ss:Width="90"/>');
+    sb.writeln('   <Column ss:Width="170"/>');
+    sb.writeln('   <Column ss:Width="110"/>');
+    sb.writeln('   <Column ss:Width="90"/>');
+    sb.writeln('   <Column ss:Width="70"/>');
+    sb.writeln('   <Column ss:Width="70"/>');
+    sb.writeln('   <Column ss:Width="80"/>');
+    sb.writeln('   <Column ss:Width="90"/>');
+    sb.writeln('   <Column ss:Width="90"/>');
+    sb.writeln('   <Column ss:Width="90"/>');
+    sb.writeln('   <Column ss:Width="80"/>');
+    sb.writeln('   <Column ss:Width="70"/>');
+    sb.writeln('   <Column ss:Width="70"/>');
+    sb.writeln('   <Column ss:Width="70"/>');
+    sb.writeln('   <Column ss:Width="60"/>');
+
+    sb.writeln('   <Row ss:StyleID="Header" ss:Height="24">');
+    sb.writeln('    <Cell><Data ss:Type="String">Product Code</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">Product Name</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">Brand</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">Oil Type</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">Pack Size</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">Unit</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">Cost Rate (INR)</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">Agency Rate (INR)</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">Wholesale Rate (INR)</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">Retail Rate (INR)</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">MRP (INR)</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">Stock</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">Min Stock</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">HSN Code</Data></Cell>');
+    sb.writeln('    <Cell><Data ss:Type="String">GST %</Data></Cell>');
+    sb.writeln('   </Row>');
+
+    for (final p in products) {
+      String xmlEscape(String text) {
+        return text
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&apos;');
+      }
+
+      final brandName = brandMap[p.brandId] ?? p.brandId;
+      sb.writeln('   <Row>');
+      sb.writeln('    <Cell><Data ss:Type="String">${xmlEscape(p.code)}</Data></Cell>');
+      sb.writeln('    <Cell><Data ss:Type="String">${xmlEscape(p.name)}</Data></Cell>');
+      sb.writeln('    <Cell><Data ss:Type="String">${xmlEscape(brandName)}</Data></Cell>');
+      sb.writeln('    <Cell><Data ss:Type="String">${xmlEscape(p.oilType)}</Data></Cell>');
+      sb.writeln('    <Cell><Data ss:Type="String">${xmlEscape(p.pack)}</Data></Cell>');
+      sb.writeln('    <Cell><Data ss:Type="String">${xmlEscape(p.unit)}</Data></Cell>');
+      sb.writeln('    <Cell ss:StyleID="Decimal"><Data ss:Type="Number">${p.cost.toStringAsFixed(2)}</Data></Cell>');
+      sb.writeln('    <Cell ss:StyleID="Decimal"><Data ss:Type="Number">${p.agencyRate.toStringAsFixed(2)}</Data></Cell>');
+      sb.writeln('    <Cell ss:StyleID="Decimal"><Data ss:Type="Number">${p.wholesaleRate.toStringAsFixed(2)}</Data></Cell>');
+      sb.writeln('    <Cell ss:StyleID="Decimal"><Data ss:Type="Number">${p.retailRate.toStringAsFixed(2)}</Data></Cell>');
+      sb.writeln('    <Cell ss:StyleID="Decimal"><Data ss:Type="Number">${p.mrp.toStringAsFixed(2)}</Data></Cell>');
+      sb.writeln('    <Cell ss:StyleID="Number"><Data ss:Type="Number">${p.stock.toInt()}</Data></Cell>');
+      sb.writeln('    <Cell ss:StyleID="Number"><Data ss:Type="Number">${p.minStock.toInt()}</Data></Cell>');
+      sb.writeln('    <Cell><Data ss:Type="String">${xmlEscape(p.hsn)}</Data></Cell>');
+      sb.writeln('    <Cell ss:StyleID="Number"><Data ss:Type="Number">${p.gst.toInt()}</Data></Cell>');
+      sb.writeln('   </Row>');
+    }
+
+    sb.writeln('  </Table>');
+    sb.writeln(' </Worksheet>');
+    sb.writeln('</Workbook>');
+    return sb.toString();
+  }
+
+  void _downloadExcelTemplate(BuildContext context, {required Map<String, String> brandMap}) {
+    final sampleProducts = [
+      Product(
+        id: 'SMP-1',
+        code: 'KKK-GND-1L',
+        brandId: 'B1',
+        name: 'KKK Pure Groundnut Oil 1L',
+        category: 'Edible Oils',
+        oilType: 'Groundnut',
+        pack: '1 L',
+        unit: 'Bottle',
+        sku: 'KKK-GND-1L',
+        cost: 155.0,
+        agencyRate: 172.0,
+        wholesaleRate: 182.0,
+        retailRate: 192.0,
+        price: 192.0,
+        mrp: 215.0,
+        stock: 150.0,
+        minStock: 30.0,
+        hsn: '1508',
+        gst: 5.0,
+        status: 'Active',
+      ),
+      Product(
+        id: 'SMP-2',
+        code: 'KKK-SES-500M',
+        brandId: 'B1',
+        name: 'KKK Gingelly Sesame Oil 500ml',
+        category: 'Edible Oils',
+        oilType: 'Gingelly',
+        pack: '500 ml',
+        unit: 'Pouch',
+        sku: 'KKK-SES-500M',
+        cost: 110.0,
+        agencyRate: 122.0,
+        wholesaleRate: 130.0,
+        retailRate: 140.0,
+        price: 140.0,
+        mrp: 155.0,
+        stock: 200.0,
+        minStock: 40.0,
+        hsn: '1515',
+        gst: 5.0,
+        status: 'Active',
+      ),
+    ];
+
+    final xmlContent = _generateExcelSpreadsheetML(sampleProducts, brandMap);
+    FileDownloadHelper.downloadFile(
+      content: xmlContent,
+      fileName: 'kkk_product_import_template.xls',
+      mimeType: 'application/vnd.ms-excel',
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Excel Import Template (.xls) downloaded successfully.'),
+        backgroundColor: AppColors.forestDark,
+      ),
+    );
+  }
+
   void _exportProducts(BuildContext context, List<Product> products, {required bool isExcel, required Map<String, String> brandMap}) {
     if (products.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -496,69 +649,91 @@ class _ProductsScreenState extends State<ProductsScreen> {
       return;
     }
 
-    final buffer = StringBuffer();
-    // Prepend UTF-8 BOM so Microsoft Excel cleanly parses Unicode and commas without garbled characters
-    buffer.write('\uFEFF');
+    final dateStr = AppFormatters.todayISO();
 
-    // Header row
-    buffer.writeln('Product Code,Product Name,Brand,Oil Type,Pack Size,Unit,Cost Rate (INR),Agency Rate (INR),Wholesale Rate (INR),Retail Rate (INR),MRP (INR),Current Stock,Min Stock Alert,HSN Code,GST Rate (%),Status,Last Updated');
+    if (isExcel) {
+      final xmlContent = _generateExcelSpreadsheetML(products, brandMap);
+      final fileName = 'kkk_products_$dateStr.xls';
 
-    for (final p in products) {
-      String escape(dynamic val) {
-        final str = (val ?? '').toString().replaceAll('"', '""');
-        if (str.contains(',') || str.contains('"') || str.contains('\n')) {
-          return '"$str"';
+      FileDownloadHelper.downloadFile(
+        content: xmlContent,
+        fileName: fileName,
+        mimeType: 'application/vnd.ms-excel',
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.table_chart, color: Colors.white, size: 18),
+              const SizedBox(width: 10),
+              Expanded(child: Text('Exported ${products.length} products as Excel Spreadsheet (.xls)')),
+            ],
+          ),
+          backgroundColor: AppColors.forestDark,
+        ),
+      );
+    } else {
+      final buffer = StringBuffer();
+      buffer.write('\uFEFF');
+      buffer.writeln('Product Code,Product Name,Brand,Oil Type,Pack Size,Unit,Cost Rate (INR),Agency Rate (INR),Wholesale Rate (INR),Retail Rate (INR),MRP (INR),Current Stock,Min Stock Alert,HSN Code,GST Rate (%),Status,Last Updated');
+
+      for (final p in products) {
+        String escape(dynamic val) {
+          final str = (val ?? '').toString().replaceAll('"', '""');
+          if (str.contains(',') || str.contains('"') || str.contains('\n')) {
+            return '"$str"';
+          }
+          return str;
         }
-        return str;
+
+        final brandName = brandMap[p.brandId] ?? p.brandId;
+        buffer.writeln([
+          escape(p.code),
+          escape(p.name),
+          escape(brandName),
+          escape(p.oilType),
+          escape(p.pack),
+          escape(p.unit),
+          p.cost.toStringAsFixed(2),
+          p.agencyRate.toStringAsFixed(2),
+          p.wholesaleRate.toStringAsFixed(2),
+          p.retailRate.toStringAsFixed(2),
+          p.mrp.toStringAsFixed(2),
+          p.stock.toStringAsFixed(0),
+          p.minStock.toStringAsFixed(0),
+          escape(p.hsn),
+          p.gst.toStringAsFixed(0),
+          escape(p.status),
+          escape(p.updatedDate),
+        ].join(','));
       }
 
-      final brandName = brandMap[p.brandId] ?? p.brandId;
-      buffer.writeln([
-        escape(p.code),
-        escape(p.name),
-        escape(brandName),
-        escape(p.oilType),
-        escape(p.pack),
-        escape(p.unit),
-        p.cost.toStringAsFixed(2),
-        p.agencyRate.toStringAsFixed(2),
-        p.wholesaleRate.toStringAsFixed(2),
-        p.retailRate.toStringAsFixed(2),
-        p.mrp.toStringAsFixed(2),
-        p.stock.toStringAsFixed(0),
-        p.minStock.toStringAsFixed(0),
-        escape(p.hsn),
-        p.gst.toStringAsFixed(0),
-        escape(p.status),
-        escape(p.updatedDate),
-      ].join(','));
-    }
+      final fileName = 'kkk_products_$dateStr.csv';
+      FileDownloadHelper.downloadFile(
+        content: buffer.toString(),
+        fileName: fileName,
+        mimeType: 'text/csv',
+      );
 
-    final dateStr = AppFormatters.todayISO();
-    final fileName = 'kkk_products_${isExcel ? "excel_" : ""}$dateStr.csv';
-
-    FileDownloadHelper.downloadFile(
-      content: buffer.toString(),
-      fileName: fileName,
-      mimeType: 'text/csv',
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(isExcel ? Icons.table_chart : Icons.file_download, color: Colors.white, size: 18),
-            const SizedBox(width: 10),
-            Expanded(child: Text('Exported ${products.length} products as ${isExcel ? "Excel CSV" : "CSV"} ($fileName)')),
-          ],
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.file_download, color: Colors.white, size: 18),
+              const SizedBox(width: 10),
+              Expanded(child: Text('Exported ${products.length} products as CSV ($fileName)')),
+            ],
+          ),
+          backgroundColor: AppColors.forestDark,
         ),
-        backgroundColor: AppColors.forestDark,
-      ),
-    );
+      );
+    }
   }
 
   void _showImportDialog(BuildContext context) {
     final data = context.read<DataProvider>();
+    final brandMap = {for (final b in data.brands) b.id: b.name};
     final textCtrl = TextEditingController();
     String parseStatus = '';
     List<Product> parsedProducts = [];
@@ -650,10 +825,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
           }
 
           return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            titlePadding: const EdgeInsets.fromLTRB(20, 16, 16, 10),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            titlePadding: const EdgeInsets.fromLTRB(20, 16, 16, 12),
             contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-            actionsPadding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
+            actionsPadding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
             title: Row(
               children: [
                 Container(
@@ -691,8 +866,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       runSpacing: 6,
                       children: [
                         OutlinedButton.icon(
+                          icon: const Icon(Icons.table_chart, size: 14, color: Color(0xFF16A34A)),
+                          label: const Text('Download Excel Template (.xls)', style: TextStyle(fontSize: 11.5, color: Color(0xFF16A34A), fontWeight: FontWeight.bold)),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFF16A34A)),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                          ),
+                          onPressed: () => _downloadExcelTemplate(context, brandMap: brandMap),
+                        ),
+                        OutlinedButton.icon(
                           icon: const Icon(Icons.download, size: 14),
-                          label: const Text('Download Sample CSV Template', style: TextStyle(fontSize: 11.5)),
+                          label: const Text('Download CSV Template', style: TextStyle(fontSize: 11.5)),
                           style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8)),
                           onPressed: () {
                             const sampleCsv = '\uFEFFCode,Name,Brand,OilType,Pack,Unit,Cost,AgencyRate,WholesaleRate,RetailRate,MRP,Stock,MinStock,HSN,GST\n'
@@ -823,6 +1007,295 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
+  void _confirmDeleteProduct(BuildContext context, Product p) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        title: const Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: AppColors.danger, size: 24),
+            SizedBox(width: 8),
+            Text('Delete Product?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          ],
+        ),
+        content: Text(
+          'Are you sure you want to delete "${p.name}" (${p.code}) permanently from Central Master, pricing lists, and stock? This action cannot be undone.',
+          style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.danger,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () async {
+              final data = context.read<DataProvider>();
+              await data.deleteProduct(p.id);
+              if (ctx.mounted) Navigator.pop(ctx);
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Deleted "${p.name}" permanently.'),
+                    backgroundColor: AppColors.danger,
+                  ),
+                );
+              }
+            },
+            child: const Text('Delete Permanently'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showBulkPriceEditor(BuildContext context, List<Product> products) {
+    final data = context.read<DataProvider>();
+
+    final Map<String, Map<String, TextEditingController>> controllers = {};
+    for (final p in products) {
+      controllers[p.id] = {
+        'agency': TextEditingController(text: p.agencyRate.toStringAsFixed(0)),
+        'wholesale': TextEditingController(text: p.wholesaleRate.toStringAsFixed(0)),
+        'retail': TextEditingController(text: p.retailRate.toStringAsFixed(0)),
+        'mrp': TextEditingController(text: p.mrp.toStringAsFixed(0)),
+      };
+    }
+
+    String modalSearch = '';
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setModalState) {
+          final filtered = products.where((p) {
+            if (modalSearch.isEmpty) return true;
+            final q = modalSearch.toLowerCase();
+            return p.name.toLowerCase().contains(q) || p.code.toLowerCase().contains(q);
+          }).toList();
+
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            titlePadding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+            actionsPadding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+            title: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD97706).withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.bolt, color: Color(0xFFD97706), size: 22),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Bulk Price Editor · 1-Click Rate Adjustments',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      Text(
+                        'Edit Agency, Wholesale, Retail & MRP rates for multiple products in a single stretch.',
+                        style: TextStyle(fontSize: 11.5, color: AppColors.textSecondary),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, size: 18),
+                  onPressed: () => Navigator.pop(ctx),
+                ),
+              ],
+            ),
+            content: SizedBox(
+              width: 820,
+              height: 520,
+              child: Column(
+                children: [
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Filter products in bulk editor…',
+                      prefixIcon: const Icon(Icons.search, size: 18),
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    onChanged: (val) => setModalState(() => modalSearch = val),
+                  ),
+                  const SizedBox(height: 10),
+                  // Header
+                  Container(
+                    height: 36,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceWarm,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: const Row(
+                      children: [
+                        Expanded(flex: 3, child: Text('PRODUCT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textSecondary))),
+                        Expanded(flex: 2, child: Text('AGENCY (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFD97706)))),
+                        Expanded(flex: 2, child: Text('WHOLESALE (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF2563EB)))),
+                        Expanded(flex: 2, child: Text('RETAIL (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1F8A5B)))),
+                        Expanded(flex: 2, child: Text('MRP (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textPrimary))),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: filtered.length,
+                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      itemBuilder: (context, idx) {
+                        final p = filtered[idx];
+                        final ctrlMap = controllers[p.id]!;
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(p.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
+                                    Text('${p.code} · ${p.pack}', style: const TextStyle(fontSize: 10.5, color: AppColors.textSecondary)),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                flex: 2,
+                                child: TextField(
+                                  controller: ctrlMap['agency'],
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                flex: 2,
+                                child: TextField(
+                                  controller: ctrlMap['wholesale'],
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                flex: 2,
+                                child: TextField(
+                                  controller: ctrlMap['retail'],
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Expanded(
+                                flex: 2,
+                                child: TextField(
+                                  controller: ctrlMap['mrp'],
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.check, size: 16),
+                label: const Text('Save All Price Changes (1-Click)'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.forestMedium,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+                onPressed: () async {
+                  int updatedCount = 0;
+
+                  for (final p in products) {
+                    final ctrlMap = controllers[p.id];
+                    if (ctrlMap == null) continue;
+
+                    final newAgency = double.tryParse(ctrlMap['agency']!.text.trim()) ?? p.agencyRate;
+                    final newWholesale = double.tryParse(ctrlMap['wholesale']!.text.trim()) ?? p.wholesaleRate;
+                    final newRetail = double.tryParse(ctrlMap['retail']!.text.trim()) ?? p.retailRate;
+                    final newMrp = double.tryParse(ctrlMap['mrp']!.text.trim()) ?? p.mrp;
+
+                    if (newAgency != p.agencyRate ||
+                        newWholesale != p.wholesaleRate ||
+                        newRetail != p.retailRate ||
+                        newMrp != p.mrp) {
+                      final updated = p.copyWith(
+                        agencyRate: newAgency,
+                        wholesaleRate: newWholesale,
+                        retailRate: newRetail,
+                        price: newRetail,
+                        mrp: newMrp,
+                        updatedDate: AppFormatters.todayISO(),
+                      );
+                      await data.saveProduct(updated);
+                      updatedCount++;
+                    }
+                  }
+
+                  if (ctx.mounted) Navigator.pop(ctx);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Updated rates for $updatedCount product(s) in a single stretch!'),
+                        backgroundColor: AppColors.success,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final data = context.watch<DataProvider>();
@@ -881,6 +1354,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
           runSpacing: 6,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
+            ElevatedButton.icon(
+              icon: const Icon(Icons.bolt, size: 15, color: Colors.white),
+              label: Text(isMobile ? 'Bulk' : 'Bulk Price Editor', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFD97706),
+                padding: EdgeInsets.symmetric(horizontal: isMobile ? 8 : 12, vertical: 9),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () => _showBulkPriceEditor(context, products),
+            ),
             OutlinedButton.icon(
               icon: const Icon(Icons.file_upload_outlined, size: 15, color: AppColors.forestDark),
               label: Text(isMobile ? 'Import' : 'Import Excel/CSV', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.forestDark)),
@@ -902,9 +1385,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   value: 'EXCEL',
                   child: Row(
                     children: [
-                      Icon(Icons.table_chart_outlined, color: Color(0xFF16A34A), size: 18),
+                      Icon(Icons.table_chart, color: Color(0xFF16A34A), size: 18),
                       SizedBox(width: 8),
-                      Text('Export to Excel (.csv)', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600)),
+                      Text('Export to Excel (.xls)', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold, color: Color(0xFF16A34A))),
                     ],
                   ),
                 ),
@@ -929,9 +1412,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.file_download_outlined, size: 15, color: AppColors.textPrimary),
+                    const Icon(Icons.table_chart_outlined, size: 15, color: Color(0xFF16A34A)),
                     const SizedBox(width: 4),
-                    Text(isMobile ? 'Export' : 'Export Data', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                    Text(isMobile ? 'Export' : 'Export Excel / CSV', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
                     const Icon(Icons.arrow_drop_down, size: 16, color: AppColors.textMuted),
                   ],
                 ),
@@ -1151,109 +1634,149 @@ class _ProductsScreenState extends State<ProductsScreen> {
           const SizedBox(height: 14),
           toolbar,
           const SizedBox(height: 14),
-          // Products Desktop Table
+          // Products Desktop Table - Responsive Flex (No Horizontal Scroll)
           Expanded(
             child: Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: const BorderSide(color: AppColors.border),
+              ),
+              clipBehavior: Clip.antiAlias,
               child: products.isEmpty
                   ? const Center(child: Text('No products found matching criteria.', style: TextStyle(color: AppColors.textSecondary)))
-                  : SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          headingRowHeight: 36,
-                          dataRowMinHeight: 38,
-                          dataRowMaxHeight: 44,
-                          horizontalMargin: 12,
-                          columnSpacing: 14,
-                          headingRowColor: WidgetStateProperty.all(AppColors.surfaceAlt),
-                          columns: const [
-                            DataColumn(label: Text('#', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Code', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Product Name', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Brand', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Pack / Unit', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Cost (₹)', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Selling Rates (AWR)', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: AppColors.goldDeep))),
-                            DataColumn(label: Text('MRP (₹)', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Stock', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('GST', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Actions', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
-                          ],
-                          rows: List.generate(products.length, (idx) {
-                            final p = products[idx];
-                            final isLow = p.stock <= p.minStock;
-
-                            return DataRow(
-                              cells: [
-                                DataCell(Text('${idx + 1}', style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600))),
-                                DataCell(
-                                  Text(
-                                    p.code,
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5, color: AppColors.goldDeep),
-                                  ),
-                                ),
-                                DataCell(Text(p.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12))),
-                                DataCell(Text(brandMap[p.brandId] ?? '-', style: const TextStyle(fontSize: 11.5))),
-                                DataCell(Text('${p.pack} (${p.unit})', style: const TextStyle(fontSize: 11.5))),
-                                DataCell(Text('₹${p.cost.toStringAsFixed(0)}', style: const TextStyle(fontSize: 11.5))),
-                                DataCell(
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      _buildRatePill('A', p.agencyRate, _selectedRateType == 'AGENCY', const Color(0xFFD97706), onTap: () => _showQuickPriceEditDialog(context, p)),
-                                      const SizedBox(width: 4),
-                                      _buildRatePill('W', p.wholesaleRate, _selectedRateType == 'WHOLESALE', const Color(0xFF2563EB), onTap: () => _showQuickPriceEditDialog(context, p)),
-                                      const SizedBox(width: 4),
-                                      _buildRatePill('R', p.retailRate, _selectedRateType == 'RETAIL', const Color(0xFF1F8A5B), onTap: () => _showQuickPriceEditDialog(context, p)),
-                                    ],
-                                  ),
-                                ),
-                                DataCell(Text('₹${p.mrp.toStringAsFixed(0)}', style: const TextStyle(fontSize: 11.5))),
-                                DataCell(
-                                  StatusBadge(
-                                    label: '${p.stock.toInt()} ${p.unit}',
-                                    tone: isLow ? BadgeTone.danger : BadgeTone.success,
-                                  ),
-                                ),
-                                DataCell(Text('${p.gst.toStringAsFixed(0)}%', style: const TextStyle(fontSize: 11.5))),
-                                DataCell(
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.price_change_outlined, size: 16, color: AppColors.goldDeep),
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(),
-                                        tooltip: 'Quick Price Edit (AWR)',
-                                        onPressed: () => _showQuickPriceEditDialog(context, p),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      IconButton(
-                                        icon: const Icon(Icons.edit_outlined, size: 16, color: AppColors.forestLight),
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(),
-                                        tooltip: 'Edit Full Product',
-                                        onPressed: () => _showAddEditDialog(context, p),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete_outline, size: 16, color: AppColors.danger),
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(),
-                                        tooltip: 'Delete Product',
-                                        onPressed: () async {
-                                          await data.deleteProduct(p.id);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
+                  : Column(
+                      children: [
+                        // Responsive Header Row
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          color: AppColors.surfaceAlt,
+                          child: const Row(
+                            children: [
+                              SizedBox(width: 30, child: Text('#', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                              Expanded(flex: 3, child: Text('Product & Code', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                              Expanded(flex: 2, child: Text('Brand & Pack', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                              Expanded(flex: 1, child: Text('Cost', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                              Expanded(flex: 3, child: Text('Selling Rates (AWR)', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: AppColors.goldDeep))),
+                              Expanded(flex: 1, child: Text('MRP', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                              Expanded(flex: 1, child: Text('Stock', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                              Expanded(flex: 1, child: Text('GST', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold))),
+                              SizedBox(width: 100, child: Center(child: Text('Actions', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold)))),
+                            ],
+                          ),
                         ),
-                      ),
+                        const Divider(height: 1, thickness: 1, color: AppColors.border),
+                        // Responsive Body Rows
+                        Expanded(
+                          child: ListView.separated(
+                            itemCount: products.length,
+                            separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.8, color: AppColors.border),
+                            itemBuilder: (context, idx) {
+                              final p = products[idx];
+                              final isLow = p.stock <= p.minStock;
+
+                              return Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                color: idx.isOdd ? AppColors.surfaceWarm.withOpacity(0.35) : Colors.white,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 30,
+                                      child: Text('${idx + 1}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(p.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
+                                          const SizedBox(height: 2),
+                                          Text(p.code, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10.5, color: AppColors.goldDeep)),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        '${brandMap[p.brandId] ?? "-"} · ${p.pack} (${p.unit})',
+                                        style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text('₹${p.cost.toStringAsFixed(0)}', style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w500)),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          _buildRatePill('A', p.agencyRate, _selectedRateType == 'AGENCY', const Color(0xFFD97706), onTap: () => _showQuickPriceEditDialog(context, p)),
+                                          const SizedBox(width: 4),
+                                          _buildRatePill('W', p.wholesaleRate, _selectedRateType == 'WHOLESALE', const Color(0xFF2563EB), onTap: () => _showQuickPriceEditDialog(context, p)),
+                                          const SizedBox(width: 4),
+                                          _buildRatePill('R', p.retailRate, _selectedRateType == 'RETAIL', const Color(0xFF1F8A5B), onTap: () => _showQuickPriceEditDialog(context, p)),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text('₹${p.mrp.toStringAsFixed(0)}', style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w500)),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: StatusBadge(
+                                          label: '${p.stock.toInt()} ${p.unit}',
+                                          tone: isLow ? BadgeTone.danger : BadgeTone.success,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Text('${p.gst.toStringAsFixed(0)}%', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                    ),
+                                    SizedBox(
+                                      width: 100,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(Icons.price_change_outlined, size: 16, color: AppColors.goldDeep),
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            tooltip: 'Quick Price Edit (AWR)',
+                                            onPressed: () => _showQuickPriceEditDialog(context, p),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          IconButton(
+                                            icon: const Icon(Icons.edit_outlined, size: 16, color: AppColors.forestLight),
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            tooltip: 'Edit Full Product',
+                                            onPressed: () => _showAddEditDialog(context, p),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          IconButton(
+                                            icon: const Icon(Icons.delete_outline, size: 16, color: AppColors.danger),
+                                            padding: EdgeInsets.zero,
+                                            constraints: const BoxConstraints(),
+                                            tooltip: 'Delete Product',
+                                            onPressed: () => _confirmDeleteProduct(context, p),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
             ),
           ),
@@ -1351,9 +1874,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               IconButton(
                 icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.danger),
                 tooltip: 'Delete Product',
-                onPressed: () async {
-                  await data.deleteProduct(p.id);
-                },
+                onPressed: () => _confirmDeleteProduct(context, p),
               ),
             ],
           ),

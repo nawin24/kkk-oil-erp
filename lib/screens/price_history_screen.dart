@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/product.dart';
 import '../providers/data_provider.dart';
@@ -219,7 +220,7 @@ class _PriceHistoryScreenState extends State<PriceHistoryScreen> {
                         const SizedBox(width: 4),
                         Text(
                           (_filterDate != null && _filterDate != todayStr && _filterDate != yesterdayStr)
-                              ? _filterDate!
+                              ? DateFormat('dd MMM yyyy').format(DateTime.tryParse(_filterDate!) ?? DateTime.now())
                               : 'Select Date…',
                           style: TextStyle(
                             fontSize: 11,
@@ -229,6 +230,13 @@ class _PriceHistoryScreenState extends State<PriceHistoryScreen> {
                                 : const Color(0xFFD97706),
                           ),
                         ),
+                        if (_filterDate != null && _filterDate != todayStr && _filterDate != yesterdayStr) ...[
+                          const SizedBox(width: 6),
+                          InkWell(
+                            onTap: () => setState(() => _filterDate = null),
+                            child: const Icon(Icons.cancel, size: 13, color: Colors.white),
+                          ),
+                        ],
                       ],
                     ),
                   ),

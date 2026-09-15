@@ -324,19 +324,11 @@ class _BillingHistoryScreenState extends State<BillingHistoryScreen> {
                 ),
                 // CUSTOMER
                 DataCell(
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        order.customerName?.isNotEmpty == true ? order.customerName! : 'Walk-in Customer',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.text),
-                      ),
-                      Text(
-                        'Sales: ${order.salesperson.isNotEmpty ? order.salesperson : order.userName}',
-                        style: const TextStyle(fontSize: 10, color: AppColors.text3),
-                      ),
-                    ],
+                  Text(
+                    order.customerName?.isNotEmpty == true ? order.customerName! : 'Walk-in Customer',
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.text),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 // DATE
