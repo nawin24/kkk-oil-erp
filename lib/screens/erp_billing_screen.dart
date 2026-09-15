@@ -1042,202 +1042,89 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                 ),
                 const SizedBox(height: 8),
 
-                // Responsive Search Bar + Product Dropdown + Qty + Disc % + Add Item Button
+                // Fast Item Entry: Search + Qty + Disc % (Exact match to reference screenshot)
                 if (isMobile) ...[
-                  // Mobile Row 1: Direct Product Dropdown Selector
-                  Container(
-                    height: 38,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: const Color(0xFFE7E9E5)),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _selectedProduct?.id,
-                        hint: const Text('Select product from list...', style: TextStyle(fontSize: 12, color: AppColors.text3)),
-                        isExpanded: true,
-                        icon: const Icon(Icons.arrow_drop_down, color: Color(0xFFD97706)),
-                        items: activeProducts.map((p) {
-                          final rate = p.getRateFor(_pricingType);
-                          return DropdownMenuItem<String>(
-                            value: p.id,
-                            child: Text(
-                              '${p.name} (${p.code}) — ₹${rate.toStringAsFixed(0)}',
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (prodId) {
-                          if (prodId != null) {
-                            final p = activeProducts.where((prod) => prod.id == prodId).firstOrNull;
-                            if (p != null) {
-                              setState(() {
-                                _selectedProduct = p;
-                                _rateCtrl.text = p.getRateFor(_pricingType).toStringAsFixed(2);
-                              });
-                            }
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Mobile Row 2: Search Input
-                  SizedBox(
-                    height: 38,
-                    child: TextField(
-                      controller: _itemSearchCtrl,
-                      onChanged: (val) => setState(() => _itemSearchQuery = val.toLowerCase().trim()),
-                      onSubmitted: (_) => _addItemFromInputs(activeProducts),
-                      style: const TextStyle(fontSize: 12.5),
-                      decoration: InputDecoration(
-                        hintText: 'Or type product name / code / barcode...',
-                        hintStyle: const TextStyle(fontSize: 12, color: AppColors.text3),
-                        prefixIcon: const Icon(Icons.search, size: 16, color: AppColors.text3),
-                        suffixIcon: _itemSearchCtrl.text.isNotEmpty
-                            ? IconButton(
-                                icon: const Icon(Icons.clear, size: 16),
-                                onPressed: () {
-                                  _itemSearchCtrl.clear();
-                                  setState(() => _itemSearchQuery = '');
-                                },
-                              )
-                            : null,
-                        isDense: true,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
-                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
-                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
-                        fillColor: Colors.white,
-                        filled: true,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Mobile Row 3: Qty, Disc %, Add Item
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        flex: 3,
-                        child: SizedBox(
-                          height: 38,
-                          child: TextField(
-                            controller: _qtyCtrl,
-                            keyboardType: TextInputType.number,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
-                            decoration: InputDecoration(
-                              labelText: 'Qty',
-                              labelStyle: const TextStyle(fontSize: 11),
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
-                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
-                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
-                              fillColor: Colors.white,
-                              filled: true,
-                            ),
+                      SizedBox(
+                        height: 38,
+                        child: TextField(
+                          controller: _itemSearchCtrl,
+                          onChanged: (val) => setState(() => _itemSearchQuery = val.toLowerCase().trim()),
+                          onSubmitted: (_) => _addItemFromInputs(activeProducts),
+                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w500),
+                          decoration: InputDecoration(
+                            hintText: 'Search product name or code (e.g. PRD-101)...',
+                            hintStyle: const TextStyle(fontSize: 11.5, color: AppColors.text3),
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
+                            fillColor: Colors.white,
+                            filled: true,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        flex: 3,
-                        child: SizedBox(
-                          height: 38,
-                          child: TextField(
-                            controller: _discCtrl,
-                            keyboardType: TextInputType.number,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
-                            decoration: InputDecoration(
-                              labelText: 'Disc %',
-                              labelStyle: const TextStyle(fontSize: 11),
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
-                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
-                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
-                              fillColor: Colors.white,
-                              filled: true,
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 38,
+                              child: TextField(
+                                controller: _qtyCtrl,
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                                decoration: InputDecoration(
+                                  prefixText: 'Qty: ',
+                                  prefixStyle: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        flex: 4,
-                        child: SizedBox(
-                          height: 38,
-                          child: ElevatedButton.icon(
-                            onPressed: () => _addItemFromInputs(activeProducts),
-                            icon: const Icon(Icons.add_shopping_cart, size: 15),
-                            label: const Text('Add Item', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFD97706),
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: SizedBox(
+                              height: 38,
+                              child: TextField(
+                                controller: _discCtrl,
+                                keyboardType: TextInputType.number,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                                decoration: InputDecoration(
+                                  prefixText: 'Disc: ',
+                                  suffixText: '%',
+                                  prefixStyle: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                  suffixStyle: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
+                                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
                 ] else ...[
-                  // Desktop Row: Product Dropdown + Search Box + Qty + Disc % + Add Item
+                  // Desktop Row: [Search TextField (Expanded)] [Qty (65px)] [Disc % (65px)]
                   Row(
                     children: [
-                      // Product Dropdown
-                      SizedBox(
-                        width: 220,
-                        height: 38,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: const Color(0xFFE7E9E5)),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              value: _selectedProduct?.id,
-                              hint: const Text('Select Product...', style: TextStyle(fontSize: 12, color: AppColors.text3)),
-                              isExpanded: true,
-                              icon: const Icon(Icons.arrow_drop_down, color: Color(0xFFD97706)),
-                              items: activeProducts.map((p) {
-                                final rate = p.getRateFor(_pricingType);
-                                return DropdownMenuItem<String>(
-                                  value: p.id,
-                                  child: Text(
-                                    '${p.name} — ₹${rate.toStringAsFixed(0)}',
-                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (prodId) {
-                                if (prodId != null) {
-                                  final p = activeProducts.where((prod) => prod.id == prodId).firstOrNull;
-                                  if (p != null) {
-                                    setState(() {
-                                      _selectedProduct = p;
-                                      _rateCtrl.text = p.getRateFor(_pricingType).toStringAsFixed(2);
-                                    });
-                                  }
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      // Search Box
                       Expanded(
                         child: SizedBox(
                           height: 38,
@@ -1245,22 +1132,12 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                             controller: _itemSearchCtrl,
                             onChanged: (val) => setState(() => _itemSearchQuery = val.toLowerCase().trim()),
                             onSubmitted: (_) => _addItemFromInputs(activeProducts),
-                            style: const TextStyle(fontSize: 12.5),
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                             decoration: InputDecoration(
-                              hintText: 'Or search name, code (e.g. PRD-101)...',
+                              hintText: 'Search product name or code (e.g. PRD-101)...',
                               hintStyle: const TextStyle(fontSize: 12, color: AppColors.text3),
-                              prefixIcon: const Icon(Icons.search, size: 16, color: AppColors.text3),
-                              suffixIcon: _itemSearchCtrl.text.isNotEmpty
-                                  ? IconButton(
-                                      icon: const Icon(Icons.clear, size: 16),
-                                      onPressed: () {
-                                        _itemSearchCtrl.clear();
-                                        setState(() => _itemSearchQuery = '');
-                                      },
-                                    )
-                                  : null,
                               isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
                               enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
                               focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
@@ -1272,17 +1149,16 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                       ),
                       const SizedBox(width: 8),
                       SizedBox(
-                        width: 75,
+                        width: 65,
                         height: 38,
                         child: TextField(
                           controller: _qtyCtrl,
                           keyboardType: TextInputType.number,
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
                           decoration: InputDecoration(
-                            hintText: 'Qty',
                             isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
                             enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
                             focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
@@ -1293,37 +1169,21 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                       ),
                       const SizedBox(width: 8),
                       SizedBox(
-                        width: 75,
+                        width: 65,
                         height: 38,
                         child: TextField(
                           controller: _discCtrl,
                           keyboardType: TextInputType.number,
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
                           decoration: InputDecoration(
-                            hintText: 'Disc %',
                             isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
                             enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFE7E9E5))),
                             focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(6), borderSide: const BorderSide(color: Color(0xFFD97706))),
                             fillColor: Colors.white,
                             filled: true,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      SizedBox(
-                        height: 38,
-                        child: ElevatedButton.icon(
-                          onPressed: () => _addItemFromInputs(activeProducts),
-                          icon: const Icon(Icons.add_shopping_cart, size: 15),
-                          label: const Text('+ Add Item', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFD97706),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 14),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                           ),
                         ),
                       ),
@@ -1331,130 +1191,49 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                   ),
                 ],
 
-                // DYNAMIC PRODUCT PILL CHIPS (QUICK ADD WHEN SEARCH EMPTY, FILTERED WHEN TYPING)
+                // DYNAMIC PRODUCT PILL CHIPS (SOLID AMBER #B45309 MATCHING SCREENSHOT EXACTLY)
                 const SizedBox(height: 10),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: const Color(0xFFE7E9E5)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            _itemSearchQuery.isEmpty ? Icons.touch_app_outlined : Icons.search,
-                            size: 13,
-                            color: _itemSearchQuery.isEmpty ? AppColors.textMuted : const Color(0xFFB45309),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: (_itemSearchQuery.isEmpty ? activeProducts.take(8).toList() : filteredChips).map((p) {
+                    final rate = p.getRateFor(_pricingType);
+                    return Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => _quickAddProduct(p),
+                        borderRadius: BorderRadius.circular(6),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFB45309),
+                            borderRadius: BorderRadius.circular(6),
+                            boxShadow: const [
+                              BoxShadow(color: Color(0x20B45309), blurRadius: 4, offset: Offset(0, 1)),
+                            ],
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            _itemSearchQuery.isEmpty
-                                ? '⚡ Quick Add Products (Tap to Add):'
-                                : '🔍 Matching Products (${filteredChips.length}):',
-                            style: TextStyle(
-                              fontSize: 11,
+                          child: Text(
+                            '+ ${p.name} (${p.code}) — ₹${rate.toStringAsFixed(0)} (Stock: ${p.stock.toInt()})',
+                            style: const TextStyle(
+                              fontSize: 12,
                               fontWeight: FontWeight.w700,
-                              color: _itemSearchQuery.isEmpty ? AppColors.textSecondary : const Color(0xFFB45309),
+                              color: Colors.white,
+                              letterSpacing: 0.1,
                             ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      if (_itemSearchQuery.isNotEmpty && filteredChips.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Text(
-                            'No products matched "$_itemSearchQuery". Try searching by code or oil type.',
-                            style: const TextStyle(fontSize: 11.5, color: AppColors.textMuted, fontStyle: FontStyle.italic),
-                          ),
-                        )
-                      else
-                        Wrap(
-                          spacing: 6,
-                          runSpacing: 6,
-                          children: (_itemSearchQuery.isEmpty ? activeProducts.take(8).toList() : filteredChips).map((p) {
-                            final rate = p.getRateFor(_pricingType);
-                            final isFiltered = _itemSearchQuery.isNotEmpty;
-                            return Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () {
-                                  _quickAddProduct(p);
-                                  _itemSearchCtrl.clear();
-                                  setState(() => _itemSearchQuery = '');
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Added ${p.name} to voucher'),
-                                      duration: const Duration(milliseconds: 1000),
-                                      behavior: SnackBarBehavior.floating,
-                                    ),
-                                  );
-                                },
-                                borderRadius: BorderRadius.circular(5),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: isFiltered ? const Color(0xFFB45309) : AppColors.surfaceAlt,
-                                    gradient: isFiltered
-                                        ? const LinearGradient(
-                                            colors: [Color(0xFFD97706), Color(0xFFB45309)],
-                                          )
-                                        : null,
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                      color: isFiltered ? const Color(0xFFB45309) : AppColors.border,
-                                    ),
-                                    boxShadow: isFiltered
-                                        ? const [
-                                            BoxShadow(
-                                              color: Color(0x22B45309),
-                                              blurRadius: 3,
-                                              offset: Offset(0, 1),
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.add,
-                                        size: 13,
-                                        color: isFiltered ? Colors.white : AppColors.forestLight,
-                                      ),
-                                      const SizedBox(width: 3),
-                                      Text(
-                                        '${p.name} — ₹${rate.toStringAsFixed(0)}',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w700,
-                                          color: isFiltered ? Colors.white : AppColors.textPrimary,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        '(${p.stock.toInt()} left)',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w500,
-                                          color: isFiltered ? Colors.white.withOpacity(0.85) : AppColors.textMuted,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
                         ),
-                    ],
-                  ),
+                      ),
+                    );
+                  }).toList(),
                 ),
+                if (_itemSearchQuery.isNotEmpty && filteredChips.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      'No products matched "$_itemSearchQuery". Try searching by code or oil type.',
+                      style: const TextStyle(fontSize: 11.5, color: AppColors.textMuted, fontStyle: FontStyle.italic),
+                    ),
+                  ),
               ],
             ),
           ),
