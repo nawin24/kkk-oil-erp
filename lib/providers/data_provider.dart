@@ -604,16 +604,91 @@ class DataProvider extends ChangeNotifier {
   }
 
   // Product CRUD
-  Future<void> saveProduct(Product product) async {
-    final exists = _products.any((p) => p.id == product.id);
-    if (exists) {
+  Future<void> saveProduct(Product product, {String updatedBy = 'Admin'}) async {
+    final existingIdx = _products.indexWhere((p) => p.id == product.id);
+    if (existingIdx >= 0) {
+      final existing = _products[existingIdx];
+      // Compare prices and automatically record price history for any changed rates!
+      final now = DateTime.now();
+      final today = AppFormatters.todayISO();
+
+      void recordRateDiff(PricingType type, double oldRate, double newRate) {
+        if ((oldRate - newRate).abs() > 0.001) {
+          final hist = PriceHistoryRecord(
+            id: 'PH-${now.millisecondsSinceEpoch}-${type.key}',
+            productId: product.id,
+            productName: product.name,
+            pricingType: type,
+            oldRate: oldRate,
+            newRate: newRate,
+            effectiveDate: today,
+            updatedBy: updatedBy,
+            updatedAt: now.toIso8601String(),
+          );
+          _priceHistory = [hist, ..._priceHistory];
+          FirebaseService.setDocument('priceHistory', hist.id, hist.toMap());
+        }
+      }
+
+      recordRateDiff(PricingType.agency, existing.agencyRate, product.agencyRate);
+      recordRateDiff(PricingType.wholesale, existing.wholesaleRate, product.wholesaleRate);
+      recordRateDiff(PricingType.retail, existing.retailRate, product.retailRate);
+
       _products = _products.map((p) => p.id == product.id ? product : p).toList();
+      await StorageService.savePriceHistory(_priceHistory.map((h) => h.toMap()).toList());
     } else {
       _products = [..._products, product];
     }
     await StorageService.saveProducts(_products.map((p) => p.toMap()).toList());
     FirebaseService.setDocument('products', product.id, product.toMap());
     notifyListeners();
+  }
+
+  Future<int> bulkImportProducts(List<Product> importedProducts, {String updatedBy = 'Bulk Import'}) async {
+    int count = 0;
+    final updatedList = List<Product>.from(_products);
+    final now = DateTime.now();
+    final today = AppFormatters.todayISO();
+
+    for (final p in importedProducts) {
+      final idx = updatedList.indexWhere((item) => item.code.toLowerCase() == p.code.toLowerCase() || item.id == p.id);
+      if (idx >= 0) {
+        final existing = updatedList[idx];
+        // Check for price changes
+        void recordDiff(PricingType type, double oldRate, double newRate) {
+          if ((oldRate - newRate).abs() > 0.001) {
+            final hist = PriceHistoryRecord(
+              id: 'PH-${now.millisecondsSinceEpoch}-${type.key}-${count}',
+              productId: p.id,
+              productName: p.name,
+              pricingType: type,
+              oldRate: oldRate,
+              newRate: newRate,
+              effectiveDate: today,
+              updatedBy: updatedBy,
+              updatedAt: now.toIso8601String(),
+            );
+            _priceHistory = [hist, ..._priceHistory];
+            FirebaseService.setDocument('priceHistory', hist.id, hist.toMap());
+          }
+        }
+
+        recordDiff(PricingType.agency, existing.agencyRate, p.agencyRate);
+        recordDiff(PricingType.wholesale, existing.wholesaleRate, p.wholesaleRate);
+        recordDiff(PricingType.retail, existing.retailRate, p.retailRate);
+
+        updatedList[idx] = p;
+      } else {
+        updatedList.add(p);
+      }
+      FirebaseService.setDocument('products', p.id, p.toMap());
+      count++;
+    }
+    _products = updatedList;
+    await StorageService.saveProducts(_products.map((p) => p.toMap()).toList());
+    await StorageService.savePriceHistory(_priceHistory.map((h) => h.toMap()).toList());
+    notifyListeners();
+    return count;
   }
 
   Future<void> deleteProduct(String productId) async {
