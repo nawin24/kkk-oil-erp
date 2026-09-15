@@ -87,38 +87,32 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: AppColors.bg,
       body: Row(
         children: [
-          // Left: Official KKK Brand Banner Side (Fitted to Resolution)
+          // Left: Official KKK Brand Banner Side (Full-Size Remastered Brown & Gold)
           Expanded(
             flex: 11,
             child: Container(
-              color: const Color(0xFFDE0A14),
+              color: const Color(0xFF1B130E),
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // Subtle Radial Depth Gradient
-                  Container(
-                    decoration: const BoxDecoration(
-                      gradient: RadialGradient(
-                        center: Alignment.center,
-                        radius: 1.1,
-                        colors: [
-                          Color(0xFFEA1D27),
-                          Color(0xFFC00710),
-                          Color(0xFFA0050C),
-                        ],
-                      ),
-                    ),
+                  // Full-bleed remastered brown & gold logo spanning the entire panel
+                  Image.asset(
+                    'assets/images/kkk_logo_gold.png',
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center,
                   ),
-                  // Centered Official KKK Brand Logo Banner (Fits Resolution)
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 36),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 640),
-                        child: Image.asset(
-                          'assets/images/kkk_logo.png',
-                          fit: BoxFit.contain,
-                        ),
+                  // Subtle rich vignette overlay so text badges at bottom stay legible
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.12),
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.65),
+                        ],
+                        stops: const [0.0, 0.65, 1.0],
                       ),
                     ),
                   ),
@@ -133,9 +127,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.35),
+                            color: const Color(0xFF1B130E).withOpacity(0.85),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.white.withOpacity(0.2)),
+                            border: Border.all(color: const Color(0xFFE4AC36).withOpacity(0.4)),
                           ),
                           child: const Row(
                             mainAxisSize: MainAxisSize.min,
@@ -152,13 +146,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.35),
+                            color: const Color(0xFF1B130E).withOpacity(0.85),
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.white.withOpacity(0.2)),
+                            border: Border.all(color: const Color(0xFFE4AC36).withOpacity(0.35)),
                           ),
                           child: const Text(
                             'Tamil Nadu · Official Portal',
-                            style: TextStyle(color: Colors.white70, fontSize: 11.5, fontWeight: FontWeight.w500),
+                            style: TextStyle(color: Color(0xFFE4AC36), fontSize: 11.5, fontWeight: FontWeight.w500),
                           ),
                         ),
                       ],
@@ -193,11 +187,12 @@ class _LoginScreenState extends State<LoginScreen> {
         Container(
           height: 76,
           decoration: BoxDecoration(
-            color: const Color(0xFFDE0A14),
+            color: const Color(0xFF1B130E),
             borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: const Color(0xFFE4AC36).withOpacity(0.55), width: 1.2),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFDE0A14).withOpacity(0.25),
+                color: Colors.black.withOpacity(0.35),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -205,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           clipBehavior: Clip.antiAlias,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Image.asset('assets/images/kkk_logo.png', fit: BoxFit.contain),
+          child: Image.asset('assets/images/kkk_logo_gold.png', fit: BoxFit.contain),
         ),
         const SizedBox(height: 12),
         const Text(
@@ -222,32 +217,6 @@ class _LoginScreenState extends State<LoginScreen> {
           style: TextStyle(
             fontSize: 12.5,
             color: AppColors.text2,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildArtStat(String val, String label) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          val,
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w800,
-            color: AppColors.gold,
-            letterSpacing: -0.5,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Color(0xFFA9BCB1),
-            fontWeight: FontWeight.w500,
           ),
         ),
       ],

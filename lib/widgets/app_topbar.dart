@@ -64,56 +64,32 @@ class AppTopbar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
 
-          // Title & Crumb with Official KKK Brand Logo Badge
+          // Title & Crumb
           Expanded(
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: isMobile ? 32 : 36,
-                  height: isMobile ? 32 : 36,
-                  margin: const EdgeInsets.only(right: 10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFDE0A14),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFDE0A14).withOpacity(0.35),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: AppColors.text,
+                    fontSize: isMobile ? 14.5 : 16,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -0.2,
                   ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Image.asset('assets/images/kkk_logo_square.png', fit: BoxFit.cover),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          color: AppColors.text,
-                          fontSize: isMobile ? 14.5 : 16,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.2,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 1),
-                      Text(
-                        isMobile ? nowFormatted : '$companyName · $nowFormatted',
-                        style: const TextStyle(
-                          color: AppColors.text3,
-                          fontSize: 11,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                const SizedBox(height: 1),
+                Text(
+                  isMobile ? nowFormatted : '$companyName · $nowFormatted',
+                  style: const TextStyle(
+                    color: AppColors.text3,
+                    fontSize: 11,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
