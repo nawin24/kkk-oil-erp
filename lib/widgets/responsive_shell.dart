@@ -30,13 +30,16 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
       case 'counter':
       case 'nongst_counter':
       case 'erp_billing':
+      case 'gst_billing':
       case 'nongst_billing':
+      case 'non_gst_billing':
         return 0;
       case 'inventory':
       case 'products':
         return 1;
       case 'billing_history':
       case 'nongst_history':
+      case 'non_gst_history':
         return 2;
       case 'dashboard':
         return 3;
@@ -46,15 +49,18 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
   }
 
   void _onMobileNavTapped(int index) {
+    final auth = context.read<AuthProvider>();
+    final isNonGst = auth.currentUser?.isNonGstMode ?? false;
+
     switch (index) {
       case 0:
-        widget.onNavigate('erp_billing');
+        widget.onNavigate(isNonGst ? 'nongst_billing' : 'erp_billing');
         break;
       case 1:
         widget.onNavigate('inventory');
         break;
       case 2:
-        widget.onNavigate('billing_history');
+        widget.onNavigate(isNonGst ? 'nongst_history' : 'billing_history');
         break;
       case 3:
         widget.onNavigate('dashboard');
@@ -313,23 +319,33 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
     final isDesktopLayout = (screenWidth >= 900 || _forceDesktop);
 
     if (!isDesktopLayout) {
-      // Mobile Layout with Bottom Navigation Bar
+      // Mobile Layout with Bottom Navigation Bar & Drawer
       return Scaffold(
         key: _scaffoldKey,
         backgroundColor: AppColors.background,
+        drawer: AppDrawer(
+          currentRoute: widget.currentRoute,
+          onSelectRoute: widget.onNavigate,
+        ),
         appBar: AppTopbar(
           title: _getPageTitle(widget.currentRoute),
           isDesktop: false,
           forceDesktop: _forceDesktop,
+          onToggleSidebar: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
           onToggleForceDesktop: () {
             setState(() {
               _forceDesktop = !_forceDesktop;
             });
           },
         ),
-        body: Material(
-          color: AppColors.background,
-          child: widget.child,
+        body: SafeArea(
+          top: false,
+          child: Material(
+            color: AppColors.background,
+            child: widget.child,
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _getMobileNavIndex(widget.currentRoute),

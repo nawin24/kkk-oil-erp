@@ -295,10 +295,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: AppColors.border),
             ),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
                 children: [
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5),
@@ -329,7 +327,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 ],
               ),
             ),
-          ),
 
           // Brand Selector Dropdown
           Container(
@@ -608,18 +605,14 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ],
                 ),
                 const SizedBox(height: 6),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildRatePill('A', p.agencyRate, _selectedRateType == 'AGENCY', const Color(0xFFD97706)),
-                      const SizedBox(width: 8),
-                      _buildRatePill('W', p.wholesaleRate, _selectedRateType == 'WHOLESALE', const Color(0xFF2563EB)),
-                      const SizedBox(width: 8),
-                      _buildRatePill('R', p.retailRate, _selectedRateType == 'RETAIL', const Color(0xFF1F8A5B)),
-                    ],
-                  ),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: [
+                    _buildRatePill('A', p.agencyRate, _selectedRateType == 'AGENCY', const Color(0xFFD97706)),
+                    _buildRatePill('W', p.wholesaleRate, _selectedRateType == 'WHOLESALE', const Color(0xFF2563EB)),
+                    _buildRatePill('R', p.retailRate, _selectedRateType == 'RETAIL', const Color(0xFF1F8A5B)),
+                  ],
                 ),
               ],
             ),

@@ -1461,6 +1461,7 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
               ),
             ),
           ],
+          const SizedBox(height: 32),
         ],
       ),
     );
@@ -1478,22 +1479,18 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Tab Pills Selector - WRAPPED IN HORIZONTAL SCROLL SO IT NEVER OVERFLOWS ON MOBILE
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _buildTabPill(0, '🚚 Dispatch Details'),
-                const SizedBox(width: 8),
-                if (isGst) ...[
-                  _buildTabPill(1, '📄 E-Way Bill'),
-                  const SizedBox(width: 8),
-                  _buildTabPill(2, '⚡ E-Invoice IRN'),
-                  const SizedBox(width: 8),
-                ],
-                _buildTabPill(3, '📑 Tax Ledgers'),
+          // Tab Pills Selector - WRAPPED IN WRAP SO IT FITS THE SCREEN CLEANLY WITHOUT HORIZONTAL SCROLL
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _buildTabPill(0, '🚚 Dispatch Details'),
+              if (isGst) ...[
+                _buildTabPill(1, '📄 E-Way Bill'),
+                _buildTabPill(2, '⚡ E-Invoice IRN'),
               ],
-            ),
+              _buildTabPill(3, '📑 Tax Ledgers'),
+            ],
           ),
           const SizedBox(height: 14),
 

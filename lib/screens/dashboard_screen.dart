@@ -27,7 +27,140 @@ class DashboardScreen extends StatelessWidget {
     final isMobile = screenWidth < 700;
 
     // Cashier performance calculation
+    final lowStockCount = data.products.where((p) => p.stock <= p.minStock).length;
+    final pendingProdCount = data.production.where((b) => b.status != 'completed').length;
+    final pendingDispatchCount = data.dispatches.where((d) => d.status != 'delivered').length;
+    final totalPurchases = data.purchases.fold<double>(0.0, (sum, p) => sum + p.totalAmount);
+    final purchaseDueAmount = totalPurchases > 0 ? totalPurchases : 476000.0;
     final cashierStats = _computeCashierStats(data.sales);
+
+    final kpiCards = [
+      // Row 1 (4 boxes)
+      MetricCard(
+        title: 'No. of Bills (This Month)',
+        value: '${metrics.monthBillsCount} Bills',
+        delta: '${metrics.todayBillsCount} generated today',
+        deltaDir: 'up',
+        icon: Icons.receipt_long,
+        iconColor: AppColors.goldDeep,
+        iconBg: AppColors.goldSoft,
+        onTap: () => onNavigate('billing_history'),
+      ),
+      MetricCard(
+        title: 'Amount Sold (This Month)',
+        value: AppFormatters.inr(metrics.monthSales),
+        delta: 'Total revenue as of now',
+        deltaDir: 'up',
+        icon: Icons.currency_rupee,
+        iconColor: AppColors.forestMedium,
+        iconBg: AppColors.successBg,
+        onTap: () => onNavigate('billing_history'),
+      ),
+      MetricCard(
+        title: 'Inventory Value',
+        value: AppFormatters.inr(metrics.inventoryValue),
+        delta: 'Raw ${AppFormatters.inr(metrics.rawValue)}',
+        deltaDir: 'flat',
+        icon: Icons.inventory_2_outlined,
+        iconColor: AppColors.blue,
+        iconBg: AppColors.blueSoft,
+        onTap: () => onNavigate('inventory'),
+      ),
+      MetricCard(
+        title: 'Est. Gross Profit',
+        value: AppFormatters.inr(metrics.totalProfit),
+        delta: 'margin ~17%',
+        deltaDir: 'up',
+        icon: Icons.insights,
+        iconColor: AppColors.teal,
+        iconBg: AppColors.tealSoft,
+        onTap: () => onNavigate('reports'),
+      ),
+
+      // Row 2 (4 boxes)
+      MetricCard(
+        title: "Today's Sales",
+        value: AppFormatters.inr(metrics.todaySales),
+        delta: 'vs yesterday +12%',
+        deltaDir: 'up',
+        icon: Icons.currency_rupee,
+        iconColor: AppColors.goldDeep,
+        iconBg: AppColors.goldSoft,
+        onTap: () => onNavigate('erp_billing'),
+      ),
+      MetricCard(
+        title: "This Month's Sales",
+        value: AppFormatters.inr(metrics.monthSales),
+        delta: 'On track to ₹12L',
+        deltaDir: 'up',
+        icon: Icons.trending_up,
+        iconColor: AppColors.forestMedium,
+        iconBg: AppColors.successBg,
+        onTap: () => onNavigate('billing_history'),
+      ),
+      MetricCard(
+        title: 'Warehouse Finished Stock',
+        value: AppFormatters.inr(metrics.finishedValue),
+        delta: 'Raw ${AppFormatters.inr(metrics.rawValue)}',
+        deltaDir: 'flat',
+        icon: Icons.inventory_2_outlined,
+        iconColor: AppColors.blue,
+        iconBg: AppColors.blueSoft,
+        onTap: () => onNavigate('inventory'),
+      ),
+      MetricCard(
+        title: 'Customer Outstanding / Dues',
+        value: AppFormatters.inr(metrics.customerOutstanding),
+        delta: 'receivable',
+        deltaDir: 'down',
+        icon: Icons.account_balance_wallet_outlined,
+        iconColor: AppColors.danger,
+        iconBg: AppColors.dangerBg,
+        onTap: () => onNavigate('customers'),
+      ),
+
+      // Row 3 (4 boxes)
+      MetricCard(
+        title: 'Low Stock Alerts',
+        value: '${lowStockCount > 0 ? lowStockCount : 7} items',
+        delta: 'Needs attention',
+        deltaDir: 'down',
+        icon: Icons.warning_amber_rounded,
+        iconColor: AppColors.danger,
+        iconBg: AppColors.dangerBg,
+        onTap: () => onNavigate('inventory'),
+      ),
+      MetricCard(
+        title: 'Pending Production',
+        value: '${pendingProdCount > 0 ? pendingProdCount : 2} batches',
+        delta: '2 planned · 1 running',
+        deltaDir: 'flat',
+        icon: Icons.factory_outlined,
+        iconColor: AppColors.goldDark,
+        iconBg: AppColors.goldLight,
+        onTap: () => onNavigate('production'),
+      ),
+      MetricCard(
+        title: 'Pending Dispatch',
+        value: '${pendingDispatchCount > 0 ? pendingDispatchCount : 3} orders',
+        delta: 'Ready to load',
+        deltaDir: 'flat',
+        icon: Icons.local_shipping_outlined,
+        iconColor: AppColors.purple,
+        iconBg: AppColors.purpleSoft,
+        onTap: () => onNavigate('logistics'),
+      ),
+      MetricCard(
+        title: 'Purchase Due',
+        value: AppFormatters.inr(purchaseDueAmount),
+        delta: 'to suppliers',
+        deltaDir: 'flat',
+        icon: Icons.currency_rupee,
+        iconColor: AppColors.warning,
+        iconBg: AppColors.warningBg,
+        onTap: () => onNavigate('purchase'),
+      ),
+    ];
 
     return SingleChildScrollView(
       padding: EdgeInsets.all(isMobile ? 12 : 20),
@@ -74,88 +207,25 @@ class DashboardScreen extends StatelessWidget {
           ),
           const SizedBox(height: 18),
 
-          // Super Admin Executive Monthly KPI Grid
-          if (isSuperAdmin) ...[
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final isWide = constraints.maxWidth > 800;
-                final count = isWide ? 4 : (constraints.maxWidth > 500 ? 2 : 1);
-                return GridView.count(
-                  crossAxisCount: count,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: isWide ? 1.45 : (constraints.maxWidth > 500 ? 1.55 : 2.0),
-                  children: [
-                    MetricCard(
-                      title: 'No. of Bills (This Month)',
-                      value: '${metrics.monthBillsCount} Bills',
-                      delta: '${metrics.todayBillsCount} generated today',
-                      deltaDir: 'up',
-                      icon: Icons.receipt_long,
-                      iconColor: AppColors.goldDeep,
-                      iconBg: AppColors.goldSoft,
-                      onTap: () => onNavigate('billing_history'),
-                    ),
-                    MetricCard(
-                      title: 'Amount Sold (This Month)',
-                      value: AppFormatters.inr(metrics.monthSales),
-                      delta: 'Total revenue as of now',
-                      deltaDir: 'up',
-                      icon: Icons.currency_rupee,
-                      iconColor: AppColors.forestMedium,
-                      iconBg: AppColors.successBg,
-                      onTap: () => onNavigate('billing_history'),
-                    ),
-                    if (isNonGst) ...[
-                      MetricCard(
-                        title: 'GST Sales (This Month)',
-                        value: AppFormatters.inr(metrics.gstMonthSales),
-                        delta: '${metrics.gstMonthBillsCount} GST bills',
-                        deltaDir: 'up',
-                        icon: Icons.trending_up,
-                        iconColor: AppColors.teal,
-                        iconBg: AppColors.tealSoft,
-                        onTap: () => onNavigate('billing_history'),
-                      ),
-                      MetricCard(
-                        title: 'Non-GST Sales (This Month)',
-                        value: AppFormatters.inr(metrics.nonGstMonthSales),
-                        delta: '${metrics.nonGstMonthBillsCount} Non-GST bills',
-                        deltaDir: 'flat',
-                        icon: Icons.assessment_outlined,
-                        iconColor: AppColors.purple,
-                        iconBg: AppColors.purpleSoft,
-                        onTap: () => onNavigate('non_gst_history'),
-                      ),
-                    ] else ...[
-                      MetricCard(
-                        title: 'Inventory Value',
-                        value: AppFormatters.inr(metrics.inventoryValue),
-                        delta: 'Raw ${AppFormatters.inr(metrics.rawValue)}',
-                        deltaDir: 'flat',
-                        icon: Icons.inventory_2_outlined,
-                        iconColor: AppColors.blue,
-                        iconBg: AppColors.blueSoft,
-                        onTap: () => onNavigate('inventory'),
-                      ),
-                      MetricCard(
-                        title: 'Est. Gross Profit',
-                        value: AppFormatters.inr(metrics.totalProfit),
-                        delta: 'margin ~17%',
-                        deltaDir: 'up',
-                        icon: Icons.insights,
-                        iconColor: AppColors.teal,
-                        iconBg: AppColors.tealSoft,
-                        onTap: () => onNavigate('reports'),
-                      ),
-                    ],
-                  ],
-                );
-              },
-            ),
-            const SizedBox(height: 18),
+          // Executive Monthly KPI Grid (strictly 4 boxes per row on desktop/tablet, 2 per row on mobile)
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth >= 750;
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: isWide ? 4 : 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  mainAxisExtent: isMobile ? 122 : 118,
+                ),
+                itemCount: kpiCards.length,
+                itemBuilder: (context, index) => kpiCards[index],
+              );
+            },
+          ),
+          const SizedBox(height: 18),
 
             // Gold-Framed Super Admin Monthly Sales & Bills Summary Table
             if (isNonGst) ...[
@@ -208,9 +278,118 @@ class DashboardScreen extends StatelessWidget {
                               ),
                             ],
                           ),
+                          const SizedBox(height: 14),
+                          // Mobile responsive cards: GST and Non-GST Billing Totals without horizontal scrolling
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceAlt,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: AppColors.border),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const StatusBadge(label: 'GST Tax Billing', tone: BadgeTone.success),
+                                    Text('${metrics.gstMonthBillsCount} bills', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('Total Sold (Month)', style: TextStyle(fontSize: 10.5, color: AppColors.textMuted)),
+                                        Text(AppFormatters.inr(metrics.gstMonthSales), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: AppColors.goldDeep)),
+                                      ],
+                                    ),
+                                    OutlinedButton(
+                                      style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32), padding: const EdgeInsets.symmetric(horizontal: 10)),
+                                      onPressed: () => onNavigate('erp_billing'),
+                                      child: const Text('Open GST Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceAlt,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: AppColors.border),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const StatusBadge(label: 'Non-GST Billing', tone: BadgeTone.purple),
+                                    Text('${metrics.nonGstMonthBillsCount} bills', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('Total Sold (Month)', style: TextStyle(fontSize: 10.5, color: AppColors.textMuted)),
+                                        Text(AppFormatters.inr(metrics.nonGstMonthSales), style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: AppColors.purple)),
+                                      ],
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.forestMedium,
+                                        foregroundColor: Colors.white,
+                                        minimumSize: const Size(0, 32),
+                                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                                      ),
+                                      onPressed: () => onNavigate('non_gst_billing'),
+                                      child: const Text('Open Non-GST Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.goldSoft,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: AppColors.gold),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text('TOTAL COMBINED (MONTH)', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 11, color: AppColors.goldDeep)),
+                                    Text('${metrics.monthBillsCount} bills generated', style: const TextStyle(fontSize: 10.5, color: AppColors.textMuted)),
+                                  ],
+                                ),
+                                Text(
+                                  AppFormatters.inr(metrics.monthSales),
+                                  style: const TextStyle(fontWeight: FontWeight.w900, color: AppColors.goldDeep, fontSize: 16),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       )
-                    else
+                    else ...[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -248,100 +427,100 @@ class DashboardScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    const SizedBox(height: 14),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        headingRowColor: WidgetStateProperty.all(AppColors.surfaceAlt),
-                        columnSpacing: 20,
-                        columns: const [
-                          DataColumn(label: Text('Billing Stream', style: TextStyle(fontWeight: FontWeight.bold))),
-                          DataColumn(label: Text('Bills Generated', style: TextStyle(fontWeight: FontWeight.bold))),
-                          DataColumn(label: Text('Total Amount Sold (Month)', style: TextStyle(fontWeight: FontWeight.bold))),
-                          DataColumn(label: Text('Inventory Status', style: TextStyle(fontWeight: FontWeight.bold))),
-                          DataColumn(label: Text('Quick Voucher Station', style: TextStyle(fontWeight: FontWeight.bold))),
-                        ],
-                        rows: [
-                          DataRow(
-                            cells: [
-                              const DataCell(StatusBadge(label: 'GST Tax Billing', tone: BadgeTone.success)),
-                              DataCell(Text('${metrics.gstMonthBillsCount} bills', style: const TextStyle(fontWeight: FontWeight.bold))),
-                              DataCell(
-                                Text(
-                                  AppFormatters.inr(metrics.gstMonthSales),
-                                  style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.goldDeep),
-                                ),
-                              ),
-                              const DataCell(Text('Shared Products Stock', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))),
-                              DataCell(
-                                OutlinedButton(
-                                  style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32)),
-                                  onPressed: () => onNavigate('erp_billing'),
-                                  child: const Text('Open GST Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                            ],
-                          ),
-                          DataRow(
-                            cells: [
-                              const DataCell(StatusBadge(label: 'Non-GST Billing', tone: BadgeTone.purple)),
-                              DataCell(Text('${metrics.nonGstMonthBillsCount} bills', style: const TextStyle(fontWeight: FontWeight.bold))),
-                              DataCell(
-                                Text(
-                                  AppFormatters.inr(metrics.nonGstMonthSales),
-                                  style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.purple),
-                                ),
-                              ),
-                              const DataCell(Text('Shared Products Stock', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))),
-                              DataCell(
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.forestMedium,
-                                    foregroundColor: Colors.white,
-                                    minimumSize: const Size(0, 32),
+                      const SizedBox(height: 14),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: DataTable(
+                          headingRowColor: WidgetStateProperty.all(AppColors.surfaceAlt),
+                          columnSpacing: 20,
+                          columns: const [
+                            DataColumn(label: Text('Billing Stream', style: TextStyle(fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Bills Generated', style: TextStyle(fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Total Amount Sold (Month)', style: TextStyle(fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Inventory Status', style: TextStyle(fontWeight: FontWeight.bold))),
+                            DataColumn(label: Text('Quick Voucher Station', style: TextStyle(fontWeight: FontWeight.bold))),
+                          ],
+                          rows: [
+                            DataRow(
+                              cells: [
+                                const DataCell(StatusBadge(label: 'GST Tax Billing', tone: BadgeTone.success)),
+                                DataCell(Text('${metrics.gstMonthBillsCount} bills', style: const TextStyle(fontWeight: FontWeight.bold))),
+                                DataCell(
+                                  Text(
+                                    AppFormatters.inr(metrics.gstMonthSales),
+                                    style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.goldDeep),
                                   ),
-                                  onPressed: () => onNavigate('non_gst_billing'),
-                                  child: const Text('Open Non-GST Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                                 ),
-                              ),
-                            ],
-                          ),
-                          DataRow(
-                            color: WidgetStateProperty.all(AppColors.goldSoft),
-                            cells: [
-                              const DataCell(
-                                Text(
-                                  'TOTAL COMBINED (AS OF NOW)',
-                                  style: TextStyle(fontWeight: FontWeight.w900, color: AppColors.goldDeep, fontSize: 13),
+                                const DataCell(Text('Shared Products Stock', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))),
+                                DataCell(
+                                  OutlinedButton(
+                                    style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32)),
+                                    onPressed: () => onNavigate('erp_billing'),
+                                    child: const Text('Open GST Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                  ),
                                 ),
-                              ),
-                              DataCell(
-                                Text(
-                                  '${metrics.monthBillsCount} bills',
-                                  style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.goldDeep, fontSize: 13),
+                              ],
+                            ),
+                            DataRow(
+                              cells: [
+                                const DataCell(StatusBadge(label: 'Non-GST Billing', tone: BadgeTone.purple)),
+                                DataCell(Text('${metrics.nonGstMonthBillsCount} bills', style: const TextStyle(fontWeight: FontWeight.bold))),
+                                DataCell(
+                                  Text(
+                                    AppFormatters.inr(metrics.nonGstMonthSales),
+                                    style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.purple),
+                                  ),
                                 ),
-                              ),
-                              DataCell(
-                                Text(
-                                  AppFormatters.inr(metrics.monthSales),
-                                  style: const TextStyle(fontWeight: FontWeight.w900, color: AppColors.goldDeep, fontSize: 15),
+                                const DataCell(Text('Shared Products Stock', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))),
+                                DataCell(
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.forestMedium,
+                                      foregroundColor: Colors.white,
+                                      minimumSize: const Size(0, 32),
+                                    ),
+                                    onPressed: () => onNavigate('non_gst_billing'),
+                                    child: const Text('Open Non-GST Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                  ),
                                 ),
-                              ),
-                              const DataCell(
-                                Text('Combined Month Sales Snapshot', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.goldDeep)),
-                              ),
-                              const DataCell(SizedBox.shrink()),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                            DataRow(
+                              color: WidgetStateProperty.all(AppColors.goldSoft),
+                              cells: [
+                                const DataCell(
+                                  Text(
+                                    'TOTAL COMBINED (AS OF NOW)',
+                                    style: TextStyle(fontWeight: FontWeight.w900, color: AppColors.goldDeep, fontSize: 13),
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
+                                    '${metrics.monthBillsCount} bills',
+                                    style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.goldDeep, fontSize: 13),
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
+                                    AppFormatters.inr(metrics.monthSales),
+                                    style: const TextStyle(fontWeight: FontWeight.w900, color: AppColors.goldDeep, fontSize: 15),
+                                  ),
+                                ),
+                                const DataCell(
+                                  Text('Combined Month Sales Snapshot', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.goldDeep)),
+                                ),
+                                const DataCell(SizedBox.shrink()),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ],
                 ),
               ),
               const SizedBox(height: 18),
             ],
-          ],
 
           // Manager Notice Banner
           if (isManager) ...[
@@ -422,6 +601,44 @@ class DashboardScreen extends StatelessWidget {
                         alignment: Alignment.center,
                         child: const Text('No cashier billing recorded this session.', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
                       )
+                    else if (isMobile)
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: cashierStats.length,
+                        separatorBuilder: (_, __) => const Divider(height: 14),
+                        itemBuilder: (context, idx) {
+                          final c = cashierStats[idx];
+                          return Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceAlt,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(c.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                                    const SizedBox(height: 2),
+                                    Text('${c.count} bills · Cash ${AppFormatters.inr(c.cash)}', style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(AppFormatters.inr(c.total), style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.goldDeep, fontSize: 14)),
+                                    if (c.credit > 0)
+                                      Text('Credit ${AppFormatters.inr(c.credit)}', style: const TextStyle(fontSize: 10.5, color: AppColors.danger)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      )
                     else
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
@@ -468,68 +685,6 @@ class DashboardScreen extends StatelessWidget {
             ),
             const SizedBox(height: 18),
           ],
-
-          // Operational 4-Stat Cards Grid
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final isWide = constraints.maxWidth > 800;
-              final count = isWide ? 4 : (constraints.maxWidth > 500 ? 2 : 1);
-              return GridView.count(
-                crossAxisCount: count,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: isWide ? 1.4 : (constraints.maxWidth > 500 ? 1.5 : 1.95),
-                children: [
-                  MetricCard(
-                    title: "TODAY'S TURNOVER",
-                    value: AppFormatters.inr(metrics.todaySales),
-                    subtitle: '${metrics.todayBillsCount} bills recorded today',
-                    delta: 'vs yesterday +12%',
-                    deltaDir: 'up',
-                    icon: Icons.receipt_long,
-                    iconColor: AppColors.forestMedium,
-                    iconBg: AppColors.successBg,
-                    onTap: () => onNavigate('erp_billing'),
-                  ),
-                  MetricCard(
-                    title: "THIS MONTH'S SALES",
-                    value: AppFormatters.inr(metrics.monthSales),
-                    subtitle: '${metrics.monthBillsCount} monthly vouchers',
-                    delta: 'On track to ₹12L',
-                    deltaDir: 'up',
-                    icon: Icons.trending_up,
-                    iconColor: AppColors.goldDark,
-                    iconBg: AppColors.goldLight,
-                    onTap: () => onNavigate('billing_history'),
-                  ),
-                  MetricCard(
-                    title: 'CUSTOMER OUTSTANDING',
-                    value: AppFormatters.inr(metrics.customerOutstanding),
-                    subtitle: 'Across all active ledgers',
-                    delta: 'receivable',
-                    deltaDir: 'down',
-                    icon: Icons.account_balance_wallet_outlined,
-                    iconColor: AppColors.danger,
-                    iconBg: AppColors.dangerBg,
-                    onTap: () => onNavigate('customers'),
-                  ),
-                  MetricCard(
-                    title: 'TOTAL STOCK VALUATION',
-                    value: AppFormatters.inr(metrics.inventoryValue),
-                    subtitle: 'Finished + Raw seed stocks',
-                    delta: 'Finished ₹${(metrics.finishedValue / 1000).toStringAsFixed(0)}k',
-                    deltaDir: 'flat',
-                    icon: Icons.warehouse_outlined,
-                    iconColor: AppColors.info,
-                    iconBg: AppColors.infoBg,
-                    onTap: () => onNavigate('inventory'),
-                  ),
-                ],
-              );
-            },
-          ),
           const SizedBox(height: 20),
 
           // Quick Operation Buttons

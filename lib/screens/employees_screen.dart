@@ -849,6 +849,328 @@ class _EmployeesScreenState extends State<EmployeesScreen> with SingleTickerProv
     }
   }
 
+  void _confirmDeleteUser(AppUser u, AuthProvider auth) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Confirm Deletion', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        content: Text('Are you sure you want to permanently delete employee @${u.username}?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.red, foregroundColor: Colors.white),
+            onPressed: () {
+              auth.deleteUser(u.id);
+              Navigator.pop(ctx);
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmDeleteRole(RoleDefinition r, AuthProvider auth) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Custom Role', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        content: Text('Are you sure you want to delete the custom role "${r.label}"?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.red, foregroundColor: Colors.white),
+            onPressed: () {
+              auth.deleteRole(r.key);
+              Navigator.pop(ctx);
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStaffAccountRow(AppUser u, AuthProvider auth, UserSession? currentUser, bool isMobile) {
+    final roleDef = auth.roles[u.role];
+    final roleTone = roleDef?.tone ?? 'green';
+    final toneColor = _getToneColor(roleTone);
+    final canManage = canManageUser(currentUser, u, auth.roles);
+    final isSuperAdmin = currentUser?.isSuperAdmin == true;
+    final isRevealed = (_showAllPasswords || _revealedUsers.contains(u.id)) && isSuperAdmin;
+    final displayPassword = isRevealed ? (u.plainPassword ?? 'admin123') : '••••••••';
+
+    if (!isMobile) {
+      // Desktop: Clean single horizontal row
+      return Container(
+        height: 52,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: toneColor,
+              foregroundColor: Colors.white,
+              radius: 16,
+              child: Text(
+                u.name.isNotEmpty ? u.name[0].toUpperCase() : 'U',
+                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(u.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5), maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(
+                    '@${u.username}${u.phone != null && u.phone!.isNotEmpty ? " · ${u.phone}" : ""}',
+                    style: AppTheme.mono(fontSize: 11, color: AppColors.textMuted),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: toneColor.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: toneColor.withValues(alpha: 0.4)),
+              ),
+              child: Text(
+                roleDef?.label ?? u.role,
+                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: toneColor),
+              ),
+            ),
+            const SizedBox(width: 10),
+            if (!u.active)
+              Container(
+                margin: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.redSoft,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.red.withValues(alpha: 0.4)),
+                ),
+                child: const Text('FIRED', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppColors.red)),
+              )
+            else
+              Container(
+                margin: const EdgeInsets.only(right: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.successBg,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.success.withValues(alpha: 0.4)),
+                ),
+                child: const Text('ACTIVE', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppColors.success)),
+              ),
+            const SizedBox(width: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.surface2,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.key, size: 14, color: AppColors.goldDeep),
+                  const SizedBox(width: 5),
+                  Text(displayPassword, style: AppTheme.mono(fontSize: 12, fontWeight: FontWeight.w700, color: isRevealed ? AppColors.textMain : AppColors.textMuted)),
+                  if (isSuperAdmin) ...[
+                    const SizedBox(width: 4),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          if (_revealedUsers.contains(u.id)) {
+                            _revealedUsers.remove(u.id);
+                          } else {
+                            _revealedUsers.add(u.id);
+                          }
+                        });
+                      },
+                      child: Icon(isRevealed ? Icons.visibility_off : Icons.visibility, size: 15, color: AppColors.goldDeep),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            if (canManage) ...[
+              IconButton(
+                icon: const Icon(Icons.edit_outlined, size: 16, color: AppColors.blue),
+                tooltip: 'Edit',
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+                onPressed: () => _showEditEmployeeSheet(context, u),
+              ),
+              IconButton(
+                icon: Icon(u.active ? Icons.block_outlined : Icons.check_circle_outline, size: 16, color: u.active ? AppColors.danger : AppColors.success),
+                tooltip: u.active ? 'Fire / Deactivate' : 'Reactivate',
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+                onPressed: () => auth.toggleUserActive(u.id),
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_outline, size: 16, color: AppColors.red),
+                tooltip: 'Delete',
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+                onPressed: () => _confirmDeleteUser(u, auth),
+              ),
+            ] else if (u.id != currentUser?.id)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppColors.goldSoft,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.gold),
+                ),
+                child: const Text('🔒 Protected', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppColors.goldDeep)),
+              ),
+          ],
+        ),
+      );
+    }
+
+    // Mobile compact card: 2 compact rows without overspace
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: toneColor,
+                foregroundColor: Colors.white,
+                radius: 14,
+                child: Text(
+                  u.name.isNotEmpty ? u.name[0].toUpperCase() : 'U',
+                  style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 11),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: Text(
+                        u.name,
+                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: AppColors.textMain),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '@${u.username}',
+                      style: AppTheme.mono(fontSize: 11, color: AppColors.textMuted),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: toneColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: toneColor.withValues(alpha: 0.4)),
+                ),
+                child: Text(
+                  roleDef?.label ?? u.role,
+                  style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: toneColor),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Password badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.surface2,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.key, size: 12, color: AppColors.goldDeep),
+                    const SizedBox(width: 4),
+                    Text(displayPassword, style: AppTheme.mono(fontSize: 11, fontWeight: FontWeight.w700)),
+                    if (isSuperAdmin) ...[
+                      const SizedBox(width: 4),
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            if (_revealedUsers.contains(u.id)) {
+                              _revealedUsers.remove(u.id);
+                            } else {
+                              _revealedUsers.add(u.id);
+                            }
+                          });
+                        },
+                        child: Icon(isRevealed ? Icons.visibility_off : Icons.visibility, size: 14, color: AppColors.goldDeep),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              // Action buttons
+              if (canManage)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit_outlined, size: 16, color: AppColors.blue),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(minWidth: 26, minHeight: 26),
+                      onPressed: () => _showEditEmployeeSheet(context, u),
+                    ),
+                    IconButton(
+                      icon: Icon(u.active ? Icons.block_outlined : Icons.check_circle_outline, size: 16, color: u.active ? AppColors.danger : AppColors.success),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(minWidth: 26, minHeight: 26),
+                      onPressed: () => auth.toggleUserActive(u.id),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline, size: 16, color: AppColors.red),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(minWidth: 26, minHeight: 26),
+                      onPressed: () => _confirmDeleteUser(u, auth),
+                    ),
+                  ],
+                )
+              else if (!u.active)
+                const Text('FIRED', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppColors.red))
+              else
+                const Text('ACTIVE', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppColors.success)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   // ==========================================
   // COMPACT SINGLE-ROW KPI STAT CARD (52px)
   // ==========================================
@@ -877,7 +1199,6 @@ class _EmployeesScreenState extends State<EmployeesScreen> with SingleTickerProv
           boxShadow: const [AppColors.shadowSm],
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               width: 32,
@@ -888,24 +1209,30 @@ class _EmployeesScreenState extends State<EmployeesScreen> with SingleTickerProv
               ),
               child: Icon(icon, size: 18, color: color),
             ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  value,
-                  style: AppTheme.kpiValue(color: color).copyWith(fontSize: 16, height: 1.1),
-                ),
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textMuted,
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    value,
+                    style: AppTheme.kpiValue(color: color).copyWith(fontSize: 15, height: 1.1),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ],
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textMuted,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -944,72 +1271,151 @@ class _EmployeesScreenState extends State<EmployeesScreen> with SingleTickerProv
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ----------------------------------------------------
-          // 1. COMPACT SINGLE-ROW KPI ENGINE (52px Height)
+          // 1. COMPACT SINGLE-ROW / 2x2 KPI ENGINE (Fits Screen Without Horizontal Scroll)
           // ----------------------------------------------------
-          SizedBox(
-            height: 52,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
+          if (isMobile)
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final itemWidth = (constraints.maxWidth - 8) / 2;
+                return Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    SizedBox(
+                      width: itemWidth,
+                      child: _buildKpiCard(
+                        icon: Icons.people_alt,
+                        color: AppColors.goldDeep,
+                        softColor: AppColors.goldSoft,
+                        value: '$totalStaff',
+                        label: 'Total Staff',
+                        isSelected: _filterStatus == 'all',
+                        onTap: () {
+                          setState(() {
+                            _filterStatus = 'all';
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: itemWidth,
+                      child: _buildKpiCard(
+                        icon: Icons.check_circle,
+                        color: AppColors.green,
+                        softColor: AppColors.greenSoft,
+                        value: '$activeStaff',
+                        label: 'Active Staff',
+                        isSelected: _filterStatus == 'active',
+                        onTap: () {
+                          setState(() {
+                            _filterStatus = _filterStatus == 'active' ? 'all' : 'active';
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: itemWidth,
+                      child: _buildKpiCard(
+                        icon: Icons.warning_amber_rounded,
+                        color: AppColors.red,
+                        softColor: AppColors.redSoft,
+                        value: '$inactiveStaff',
+                        label: 'Fired / Inactive',
+                        isSelected: _filterStatus == 'inactive',
+                        onTap: () {
+                          setState(() {
+                            _filterStatus = _filterStatus == 'inactive' ? 'all' : 'inactive';
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: itemWidth,
+                      child: _buildKpiCard(
+                        icon: Icons.settings,
+                        color: AppColors.purple,
+                        softColor: AppColors.purpleSoft,
+                        value: '$totalRoles',
+                        label: 'Distinct Roles',
+                        isSelected: false,
+                        onTap: () {
+                          _tabController.animateTo(1);
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+            )
+          else
+            SizedBox(
+              height: 52,
               child: Row(
                 children: [
-                  _buildKpiCard(
-                    icon: Icons.people_alt,
-                    color: AppColors.goldDeep,
-                    softColor: AppColors.goldSoft,
-                    value: '$totalStaff',
-                    label: 'Total Staff',
-                    isSelected: _filterStatus == 'all',
-                    onTap: () {
-                      setState(() {
-                        _filterStatus = 'all';
-                      });
-                    },
+                  Expanded(
+                    child: _buildKpiCard(
+                      icon: Icons.people_alt,
+                      color: AppColors.goldDeep,
+                      softColor: AppColors.goldSoft,
+                      value: '$totalStaff',
+                      label: 'Total Staff',
+                      isSelected: _filterStatus == 'all',
+                      onTap: () {
+                        setState(() {
+                          _filterStatus = 'all';
+                        });
+                      },
+                    ),
                   ),
                   const SizedBox(width: 10),
-                  _buildKpiCard(
-                    icon: Icons.check_circle,
-                    color: AppColors.green,
-                    softColor: AppColors.greenSoft,
-                    value: '$activeStaff',
-                    label: 'Active Staff',
-                    isSelected: _filterStatus == 'active',
-                    onTap: () {
-                      setState(() {
-                        _filterStatus = _filterStatus == 'active' ? 'all' : 'active';
-                      });
-                    },
+                  Expanded(
+                    child: _buildKpiCard(
+                      icon: Icons.check_circle,
+                      color: AppColors.green,
+                      softColor: AppColors.greenSoft,
+                      value: '$activeStaff',
+                      label: 'Active Staff',
+                      isSelected: _filterStatus == 'active',
+                      onTap: () {
+                        setState(() {
+                          _filterStatus = _filterStatus == 'active' ? 'all' : 'active';
+                        });
+                      },
+                    ),
                   ),
                   const SizedBox(width: 10),
-                  _buildKpiCard(
-                    icon: Icons.warning_amber_rounded,
-                    color: AppColors.red,
-                    softColor: AppColors.redSoft,
-                    value: '$inactiveStaff',
-                    label: 'Fired / Inactive',
-                    isSelected: _filterStatus == 'inactive',
-                    onTap: () {
-                      setState(() {
-                        _filterStatus = _filterStatus == 'inactive' ? 'all' : 'inactive';
-                      });
-                    },
+                  Expanded(
+                    child: _buildKpiCard(
+                      icon: Icons.warning_amber_rounded,
+                      color: AppColors.red,
+                      softColor: AppColors.redSoft,
+                      value: '$inactiveStaff',
+                      label: 'Fired / Inactive',
+                      isSelected: _filterStatus == 'inactive',
+                      onTap: () {
+                        setState(() {
+                          _filterStatus = _filterStatus == 'inactive' ? 'all' : 'inactive';
+                        });
+                      },
+                    ),
                   ),
                   const SizedBox(width: 10),
-                  _buildKpiCard(
-                    icon: Icons.settings,
-                    color: AppColors.purple,
-                    softColor: AppColors.purpleSoft,
-                    value: '$totalRoles',
-                    label: 'Distinct Roles',
-                    isSelected: false,
-                    onTap: () {
-                      _tabController.animateTo(1);
-                    },
+                  Expanded(
+                    child: _buildKpiCard(
+                      icon: Icons.settings,
+                      color: AppColors.purple,
+                      softColor: AppColors.purpleSoft,
+                      value: '$totalRoles',
+                      label: 'Distinct Roles',
+                      isSelected: false,
+                      onTap: () {
+                        _tabController.animateTo(1);
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
           const SizedBox(height: 12),
 
           // ----------------------------------------------------
@@ -1125,260 +1531,10 @@ class _EmployeesScreenState extends State<EmployeesScreen> with SingleTickerProv
                             : ListView.separated(
                                 padding: const EdgeInsets.all(12),
                                 itemCount: filteredUsers.length,
-                                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                                separatorBuilder: (_, __) => const SizedBox(height: 8),
                                 itemBuilder: (context, idx) {
                                   final u = filteredUsers[idx];
-                                  final roleDef = auth.roles[u.role];
-                                  final roleTone = roleDef?.tone ?? 'green';
-                                  final toneColor = _getToneColor(roleTone);
-
-                                  // Check hierarchy permissions:
-                                  final canManage = canManageUser(currentUser, u, auth.roles);
-
-                                  // Password unmasking check:
-                                  // Only Super Admin can view plain passwords
-                                  final isSuperAdmin = currentUser?.isSuperAdmin == true;
-                                  final isRevealed = (_showAllPasswords || _revealedUsers.contains(u.id)) && isSuperAdmin;
-                                  final displayPassword = isRevealed
-                                      ? (u.plainPassword ?? 'admin123')
-                                      : '••••••••';
-
-                                  return Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: AppColors.border),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        // Header Row: Avatar, Name, Role badge, Status, Protection
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            CircleAvatar(
-                                              backgroundColor: toneColor,
-                                              foregroundColor: Colors.white,
-                                              radius: 20,
-                                              child: Text(
-                                                u.name.isNotEmpty ? u.name[0].toUpperCase() : 'U',
-                                                style: const TextStyle(fontWeight: FontWeight.w800),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Wrap(
-                                                    crossAxisAlignment: WrapCrossAlignment.center,
-                                                    spacing: 6,
-                                                    runSpacing: 4,
-                                                    children: [
-                                                      Text(
-                                                        u.name,
-                                                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5, color: AppColors.textMain),
-                                                      ),
-                                                      Container(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                                        decoration: BoxDecoration(
-                                                          color: toneColor.withOpacity(0.12),
-                                                          borderRadius: BorderRadius.circular(6),
-                                                          border: Border.all(color: toneColor.withOpacity(0.4)),
-                                                        ),
-                                                        child: Text(
-                                                          roleDef?.label ?? u.role,
-                                                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: toneColor),
-                                                        ),
-                                                      ),
-                                                      if (!u.active)
-                                                        Container(
-                                                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                                          decoration: BoxDecoration(
-                                                            color: AppColors.redSoft,
-                                                            borderRadius: BorderRadius.circular(6),
-                                                            border: Border.all(color: AppColors.red.withOpacity(0.4)),
-                                                          ),
-                                                          child: const Text(
-                                                            'TERMINATED / FIRED',
-                                                            style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.red),
-                                                          ),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 3),
-                                                  Wrap(
-                                                    spacing: 8,
-                                                    children: [
-                                                      Text(
-                                                        '@${u.username}',
-                                                        style: AppTheme.mono(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textMain),
-                                                      ),
-                                                      if (u.phone != null && u.phone!.isNotEmpty)
-                                                        Text(
-                                                          '· ${u.phone}',
-                                                          style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
-                                                        ),
-                                                      if (u.email != null && u.email!.isNotEmpty)
-                                                        Text(
-                                                          '· ${u.email}',
-                                                          style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
-                                                        ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            if (!canManage && u.id != currentUser?.id)
-                                              Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                                decoration: BoxDecoration(
-                                                  color: AppColors.goldSoft,
-                                                  borderRadius: BorderRadius.circular(6),
-                                                  border: Border.all(color: AppColors.gold),
-                                                ),
-                                                child: const Text(
-                                                  '🔒 Protected (Superior)',
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.w800,
-                                                    color: AppColors.goldDeep,
-                                                  ),
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 10),
-
-                                        // ----------------------------------------------------
-                                        // Login Password Column Badge: [ 🔑 •••••••• 👁️ ]
-                                        // ----------------------------------------------------
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.surface2,
-                                            borderRadius: BorderRadius.circular(8),
-                                            border: Border.all(color: AppColors.border),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  const Icon(Icons.key, size: 16, color: AppColors.goldDeep),
-                                                  const SizedBox(width: 8),
-                                                  const Text(
-                                                    'Login Password: ',
-                                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textMuted),
-                                                  ),
-                                                  Text(
-                                                    displayPassword,
-                                                    style: AppTheme.mono(
-                                                      fontSize: 13,
-                                                      fontWeight: FontWeight.w800,
-                                                      color: isRevealed ? AppColors.textMain : AppColors.textMuted,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              // Only Super Admin can toggle individual password view
-                                              if (isSuperAdmin)
-                                                IconButton(
-                                                  icon: Icon(
-                                                    isRevealed ? Icons.visibility_off : Icons.visibility,
-                                                    size: 18,
-                                                    color: AppColors.goldDeep,
-                                                  ),
-                                                  tooltip: isRevealed ? 'Hide password' : 'View password',
-                                                  padding: EdgeInsets.zero,
-                                                  constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      if (_revealedUsers.contains(u.id)) {
-                                                        _revealedUsers.remove(u.id);
-                                                      } else {
-                                                        _revealedUsers.add(u.id);
-                                                      }
-                                                    });
-                                                  },
-                                                )
-                                              else
-                                                const Tooltip(
-                                                  message: 'Hidden for non-super admins',
-                                                  child: Icon(Icons.lock_outline, size: 16, color: AppColors.textMuted),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-
-                                        // ----------------------------------------------------
-                                        // Action Buttons (Edit, Fire/Deactivate, Delete)
-                                        // ----------------------------------------------------
-                                        if (canManage) ...[
-                                          const Divider(height: 14),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              OutlinedButton.icon(
-                                                icon: const Icon(Icons.edit_outlined, size: 15, color: AppColors.blue),
-                                                label: const Text('Edit', style: TextStyle(fontSize: 12, color: AppColors.blue, fontWeight: FontWeight.bold)),
-                                                style: OutlinedButton.styleFrom(
-                                                  side: const BorderSide(color: AppColors.blueSoft),
-                                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                                  minimumSize: const Size(0, 34),
-                                                ),
-                                                onPressed: () => _showEditEmployeeSheet(context, u),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              TextButton(
-                                                onPressed: () => auth.toggleUserActive(u.id),
-                                                style: TextButton.styleFrom(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                                  minimumSize: const Size(0, 34),
-                                                ),
-                                                child: Text(
-                                                  u.active ? 'Fire / Deactivate' : 'Reactivate',
-                                                  style: TextStyle(
-                                                    color: u.active ? AppColors.red : AppColors.green,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 6),
-                                              IconButton(
-                                                icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.red),
-                                                tooltip: 'Delete Account',
-                                                padding: EdgeInsets.zero,
-                                                constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                                                onPressed: () {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (ctx) => AlertDialog(
-                                                      title: const Text('Confirm Deletion', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                                                      content: Text('Are you sure you want to permanently delete employee @${u.username}?'),
-                                                      actions: [
-                                                        TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-                                                        ElevatedButton(
-                                                          style: ElevatedButton.styleFrom(backgroundColor: AppColors.red, foregroundColor: Colors.white),
-                                                          onPressed: () {
-                                                            auth.deleteUser(u.id);
-                                                            Navigator.pop(ctx);
-                                                          },
-                                                          child: const Text('Delete'),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ],
-                                    ),
-                                  );
+                                  return _buildStaffAccountRow(u, auth, currentUser, isMobile);
                                 },
                               ),
                       ),
@@ -1413,162 +1569,145 @@ class _EmployeesScreenState extends State<EmployeesScreen> with SingleTickerProv
 
                     Expanded(
                       child: Card(
-                        child: ListView.separated(
-                          padding: const EdgeInsets.all(12),
-                          itemCount: auth.roles.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 10),
-                          itemBuilder: (context, idx) {
-                            final entry = auth.roles.entries.elementAt(idx);
-                            final r = entry.value;
-                            final toneColor = _getToneColor(r.tone);
-                            final superiorDef = auth.roles[r.superiorRole];
-
-                            // Find subordinates for this role
-                            final subordinates = auth.roles.values
-                                .where((role) => role.superiorRole == r.key)
-                                .map((role) => role.label)
-                                .toList();
-
-                            return Container(
-                              padding: const EdgeInsets.all(14),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: AppColors.border),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return GridView.builder(
+                              padding: const EdgeInsets.all(12),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                mainAxisExtent: isMobile ? 180 : 160,
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
+                              itemCount: auth.roles.length,
+                              itemBuilder: (context, idx) {
+                                final entry = auth.roles.entries.elementAt(idx);
+                                final r = entry.value;
+                                final toneColor = _getToneColor(r.tone);
+                                final superiorDef = auth.roles[r.superiorRole];
+
+                                return Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: AppColors.border),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Row(
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                            decoration: BoxDecoration(
-                                              color: toneColor.withOpacity(0.12),
-                                              borderRadius: BorderRadius.circular(6),
-                                              border: Border.all(color: toneColor.withOpacity(0.4)),
-                                            ),
-                                            child: Text(
-                                              'Rank ${r.rank}',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w800,
-                                                fontSize: 11,
-                                                color: toneColor,
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                                                decoration: BoxDecoration(
+                                                  color: toneColor.withOpacity(0.12),
+                                                  borderRadius: BorderRadius.circular(5),
+                                                  border: Border.all(color: toneColor.withOpacity(0.4)),
+                                                ),
+                                                child: Text(
+                                                  'Rank ${r.rank}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w800,
+                                                    fontSize: 10.5,
+                                                    color: toneColor,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              Flexible(
+                                                child: Text(
+                                                  r.superiorRole.isNotEmpty
+                                                      ? 'மேலதிகாரி: ${superiorDef?.label ?? r.superiorRole}'
+                                                      : 'Top Authority',
+                                                  style: TextStyle(
+                                                    fontSize: 10.5,
+                                                    color: r.superiorRole.isNotEmpty ? AppColors.textMuted : AppColors.goldDeep,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          const SizedBox(width: 8),
+                                          const SizedBox(height: 6),
                                           Text(
                                             r.label,
-                                            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5, color: AppColors.textMain),
+                                            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13.5, color: AppColors.textMain),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                          const SizedBox(width: 6),
                                           Text(
                                             '(${r.key})',
-                                            style: AppTheme.mono(fontSize: 11, color: AppColors.textMuted),
+                                            style: AppTheme.mono(fontSize: 10, color: AppColors.textMuted),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            r.desc,
+                                            style: const TextStyle(fontSize: 11, color: AppColors.text2),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ],
                                       ),
-                                      if (r.superiorRole.isNotEmpty)
-                                        Text(
-                                          'மேலதிகாரி: ${superiorDef?.label ?? r.superiorRole}',
-                                          style: const TextStyle(fontSize: 11.5, color: AppColors.textMuted, fontWeight: FontWeight.w600),
-                                        )
-                                      else
-                                        const Text(
-                                          'Top Authority (Super Admin)',
-                                          style: TextStyle(fontSize: 11.5, color: AppColors.goldDeep, fontWeight: FontWeight.w800),
-                                        ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    r.desc,
-                                    style: const TextStyle(fontSize: 12.5, color: AppColors.text2),
-                                  ),
-                                  if (subordinates.isNotEmpty) ...[
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      'கீழ் பணிபுரிபவர்கள் (Subordinates): ${subordinates.join(", ")}',
-                                      style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.blue),
-                                    ),
-                                  ],
-                                  const SizedBox(height: 10),
-
-                                  // Module Badges
-                                  Wrap(
-                                    spacing: 6,
-                                    runSpacing: 4,
-                                    crossAxisAlignment: WrapCrossAlignment.center,
-                                    children: [
-                                      const Text('Modules: ', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textMuted)),
-                                      if (r.access == '*')
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.goldSoft,
-                                            borderRadius: BorderRadius.circular(6),
-                                            border: Border.all(color: AppColors.gold),
-                                          ),
-                                          child: const Text(
-                                            'All 15 ERP Modules (*)',
-                                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.goldDeep),
-                                          ),
-                                        )
-                                      else if (r.access is List)
-                                        ...(r.access as List).map((mod) => Container(
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if (r.access == '*')
+                                            Container(
                                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                               decoration: BoxDecoration(
-                                                color: AppColors.surface2,
-                                                borderRadius: BorderRadius.circular(5),
-                                                border: Border.all(color: AppColors.border),
+                                                color: AppColors.goldSoft,
+                                                borderRadius: BorderRadius.circular(4),
+                                                border: Border.all(color: AppColors.gold),
                                               ),
-                                              child: Text(
-                                                mod.toString(),
-                                                style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w600, color: AppColors.forestMedium),
+                                              child: const Text(
+                                                'All 15 ERP Modules (*)',
+                                                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: AppColors.goldDeep),
                                               ),
-                                            )),
+                                            )
+                                          else if (r.access is List)
+                                            Text(
+                                              'Modules: ${(r.access as List).take(3).join(", ")}${(r.access as List).length > 3 ? " +${(r.access as List).length - 3}" : ""}',
+                                              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.forestMedium),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          if (!r.isSystem && auth.isSuperAdmin) ...[
+                                            const SizedBox(height: 4),
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: InkWell(
+                                                onTap: () => _confirmDeleteRole(r, auth),
+                                                child: const Padding(
+                                                  padding: EdgeInsets.symmetric(vertical: 2),
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Icon(Icons.delete_outline, size: 14, color: AppColors.red),
+                                                      SizedBox(width: 2),
+                                                      Text('Delete', style: TextStyle(color: AppColors.red, fontSize: 11, fontWeight: FontWeight.bold)),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ],
+                                      ),
                                     ],
                                   ),
-
-                                  // Non-system role deletion option
-                                  if (!r.isSystem && auth.isSuperAdmin) ...[
-                                    const Divider(height: 16),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        TextButton.icon(
-                                          icon: const Icon(Icons.delete_outline, size: 16, color: AppColors.red),
-                                          label: const Text('Delete Custom Role', style: TextStyle(color: AppColors.red, fontSize: 12, fontWeight: FontWeight.bold)),
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (ctx) => AlertDialog(
-                                                title: const Text('Delete Custom Role', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                                                content: Text('Are you sure you want to delete the custom role "${r.label}"?'),
-                                                actions: [
-                                                  TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-                                                  ElevatedButton(
-                                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.red, foregroundColor: Colors.white),
-                                                    onPressed: () {
-                                                      auth.deleteRole(r.key);
-                                                      Navigator.pop(ctx);
-                                                    },
-                                                    child: const Text('Delete'),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ],
-                              ),
+                                );
+                              },
                             );
                           },
                         ),

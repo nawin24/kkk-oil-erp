@@ -22,7 +22,7 @@ class AppTopbar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(62);
+  Size get preferredSize => const Size.fromHeight(56);
 
   @override
   Widget build(BuildContext context) {
@@ -36,24 +36,33 @@ class AppTopbar extends StatelessWidget implements PreferredSizeWidget {
     final isMobile = screenWidth < 600;
 
     return Container(
-      height: isMobile ? 58 : 62,
-      padding: EdgeInsets.symmetric(horizontal: isMobile ? 12 : 20),
       decoration: const BoxDecoration(
         color: AppColors.surface,
         border: Border(
           bottom: BorderSide(color: AppColors.border, width: 1),
         ),
       ),
-      child: Row(
-        children: [
-          // Mobile Drawer Menu Button
-          if (!isDesktop && onToggleSidebar != null)
-            IconButton(
-              icon: const Icon(Icons.menu, color: AppColors.text),
-              onPressed: onToggleSidebar,
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-            ),
+      child: SafeArea(
+        bottom: false,
+        child: SizedBox(
+          height: isMobile ? 54 : 56,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: isMobile ? 12 : 20),
+            child: Row(
+              children: [
+                // Mobile Drawer Menu Button
+                if (!isDesktop)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: IconButton(
+                      icon: const Icon(Icons.menu, color: AppColors.text),
+                      onPressed: onToggleSidebar ?? () {
+                        Scaffold.maybeOf(context)?.openDrawer();
+                      },
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                    ),
+                  ),
 
           // Title & Crumb
           Expanded(
@@ -201,6 +210,9 @@ class AppTopbar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () => auth.logout(),
           ),
         ],
+      ),
+    ),
+        ),
       ),
     );
   }

@@ -81,8 +81,10 @@ class _AuthGateState extends State<AuthGate> {
       case 'billing_history':
         return const BillingHistoryScreen(forcedBillingType: 'GST');
       case 'nongst_billing':
+      case 'non_gst_billing':
         return auth.isSuperAdmin ? const ErpBillingScreen(forcedBillingType: 'NON_GST') : const ErpBillingScreen(forcedBillingType: 'GST');
       case 'nongst_history':
+      case 'non_gst_history':
         return auth.isSuperAdmin ? const BillingHistoryScreen(forcedBillingType: 'NON_GST') : const BillingHistoryScreen(forcedBillingType: 'GST');
       case 'products':
         return const ProductsScreen();

@@ -56,6 +56,8 @@ class RoleDefinition {
   }
 }
 
+typedef User = AppUser;
+
 class AppUser {
   final String id;
   final String username;
