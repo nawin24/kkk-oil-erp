@@ -22,14 +22,16 @@ class AuthProvider extends ChangeNotifier {
 
   bool get isSuperAdmin =>
       _currentUser?.role == 'super_admin' ||
-      _currentUser?.role == 'super_admin_nongst';
+      _currentUser?.role == 'super_admin_nongst' ||
+      _currentUser?.role == 'executive';
   bool get isNonGstAdmin => isSuperAdmin;
   bool get isAdmin => _currentUser?.role == 'admin' || isSuperAdmin;
   bool get isManager => _currentUser?.role == 'manager';
   bool get isCashier => _currentUser?.role == 'cashier';
   bool get isNonGstSession =>
       _currentUser?.activeMode == BillingMode.nonGst ||
-      _currentUser?.role == 'super_admin_nongst';
+      _currentUser?.role == 'super_admin_nongst' ||
+      (_currentUser?.isNonGstMode ?? false);
   bool get canAccessNonGst => isSuperAdmin;
   bool get canEditPrices => isSuperAdmin || isAdmin;
 

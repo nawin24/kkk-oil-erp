@@ -325,7 +325,10 @@ class _ResponsiveShellState extends State<ResponsiveShell> {
         backgroundColor: AppColors.background,
         drawer: AppDrawer(
           currentRoute: widget.currentRoute,
-          onSelectRoute: widget.onNavigate,
+          onSelectRoute: (route) {
+            _scaffoldKey.currentState?.closeDrawer();
+            widget.onNavigate(route);
+          },
         ),
         appBar: AppTopbar(
           title: _getPageTitle(widget.currentRoute),

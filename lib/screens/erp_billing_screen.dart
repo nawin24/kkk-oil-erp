@@ -614,24 +614,22 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Flexible(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFD97706),
-                                borderRadius: BorderRadius.circular(4),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD97706),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              '${data.company.name.isNotEmpty ? data.company.name.toUpperCase() : "KKK OIL FACTORY"} ERP',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 11,
+                                letterSpacing: 0.5,
                               ),
-                              child: Text(
-                                '${data.company.name.isNotEmpty ? data.company.name.toUpperCase() : "KKK OIL FACTORY"} ERP',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 11,
-                                  letterSpacing: 0.5,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -678,24 +676,22 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                     children: [
                       Row(
                         children: [
-                          Flexible(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFD97706),
-                                borderRadius: BorderRadius.circular(4),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD97706),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              '${data.company.name.isNotEmpty ? data.company.name.toUpperCase() : "KKK OIL FACTORY"} ERP',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 12,
+                                letterSpacing: 0.5,
                               ),
-                              child: Text(
-                                '${data.company.name.isNotEmpty ? data.company.name.toUpperCase() : "KKK OIL FACTORY"} ERP',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 12,
-                                  letterSpacing: 0.5,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -1046,8 +1042,51 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                 ),
                 const SizedBox(height: 8),
 
-                // Responsive Search Bar + Qty + Disc % + Add Item Button
+                // Responsive Search Bar + Product Dropdown + Qty + Disc % + Add Item Button
                 if (isMobile) ...[
+                  // Mobile Row 1: Direct Product Dropdown Selector
+                  Container(
+                    height: 38,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: const Color(0xFFE7E9E5)),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _selectedProduct?.id,
+                        hint: const Text('Select product from list...', style: TextStyle(fontSize: 12, color: AppColors.text3)),
+                        isExpanded: true,
+                        icon: const Icon(Icons.arrow_drop_down, color: Color(0xFFD97706)),
+                        items: activeProducts.map((p) {
+                          final rate = p.getRateFor(_pricingType);
+                          return DropdownMenuItem<String>(
+                            value: p.id,
+                            child: Text(
+                              '${p.name} (${p.code}) — ₹${rate.toStringAsFixed(0)}',
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (prodId) {
+                          if (prodId != null) {
+                            final p = activeProducts.where((prod) => prod.id == prodId).firstOrNull;
+                            if (p != null) {
+                              setState(() {
+                                _selectedProduct = p;
+                                _rateCtrl.text = p.getRateFor(_pricingType).toStringAsFixed(2);
+                              });
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Mobile Row 2: Search Input
                   SizedBox(
                     height: 38,
                     child: TextField(
@@ -1056,7 +1095,7 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                       onSubmitted: (_) => _addItemFromInputs(activeProducts),
                       style: const TextStyle(fontSize: 12.5),
                       decoration: InputDecoration(
-                        hintText: 'Type product name, code (e.g. PRD-101)...',
+                        hintText: 'Or type product name / code / barcode...',
                         hintStyle: const TextStyle(fontSize: 12, color: AppColors.text3),
                         prefixIcon: const Icon(Icons.search, size: 16, color: AppColors.text3),
                         suffixIcon: _itemSearchCtrl.text.isNotEmpty
@@ -1079,6 +1118,7 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
+                  // Mobile Row 3: Qty, Disc %, Add Item
                   Row(
                     children: [
                       Expanded(
@@ -1149,8 +1189,55 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                     ],
                   ),
                 ] else ...[
+                  // Desktop Row: Product Dropdown + Search Box + Qty + Disc % + Add Item
                   Row(
                     children: [
+                      // Product Dropdown
+                      SizedBox(
+                        width: 220,
+                        height: 38,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: const Color(0xFFE7E9E5)),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: _selectedProduct?.id,
+                              hint: const Text('Select Product...', style: TextStyle(fontSize: 12, color: AppColors.text3)),
+                              isExpanded: true,
+                              icon: const Icon(Icons.arrow_drop_down, color: Color(0xFFD97706)),
+                              items: activeProducts.map((p) {
+                                final rate = p.getRateFor(_pricingType);
+                                return DropdownMenuItem<String>(
+                                  value: p.id,
+                                  child: Text(
+                                    '${p.name} — ₹${rate.toStringAsFixed(0)}',
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (prodId) {
+                                if (prodId != null) {
+                                  final p = activeProducts.where((prod) => prod.id == prodId).firstOrNull;
+                                  if (p != null) {
+                                    setState(() {
+                                      _selectedProduct = p;
+                                      _rateCtrl.text = p.getRateFor(_pricingType).toStringAsFixed(2);
+                                    });
+                                  }
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Search Box
                       Expanded(
                         child: SizedBox(
                           height: 38,
@@ -1160,7 +1247,7 @@ class _ErpBillingScreenState extends State<ErpBillingScreen> {
                             onSubmitted: (_) => _addItemFromInputs(activeProducts),
                             style: const TextStyle(fontSize: 12.5),
                             decoration: InputDecoration(
-                              hintText: 'Type product name, code (e.g. PRD-101)...',
+                              hintText: 'Or search name, code (e.g. PRD-101)...',
                               hintStyle: const TextStyle(fontSize: 12, color: AppColors.text3),
                               prefixIcon: const Icon(Icons.search, size: 16, color: AppColors.text3),
                               suffixIcon: _itemSearchCtrl.text.isNotEmpty
