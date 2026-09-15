@@ -278,185 +278,231 @@ class _BillingHistoryScreenState extends State<BillingHistoryScreen> {
     List<SalesOrder> sales,
     DataProvider data,
   ) {
-    return SingleChildScrollView(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          headingRowHeight: 36,
-          dataRowMinHeight: 40,
-          dataRowMaxHeight: 48,
-          columnSpacing: 14,
-          horizontalMargin: 12,
-          headingRowColor: WidgetStateProperty.all(const Color(0xFFFAFBF9)),
-          border: const TableBorder(
-            horizontalInside: BorderSide(color: Color(0xFFF0F2EF), width: 1),
+    return Column(
+      children: [
+        // Responsive Header Row
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          color: const Color(0xFFFAFBF9),
+          child: const Row(
+            children: [
+              Expanded(flex: 2, child: Text('VOUCHER NO', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 3, child: Text('CUSTOMER', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 2, child: Text('DATE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 1, child: Text('PRICING', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 1, child: Text('TYPE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 2, child: Text('BILLED BY', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 2, child: Text('TAXABLE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 1, child: Text('GST', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 2, child: Text('GRAND TOTAL', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 2, child: Text('PAYMENT', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 2, child: Text('STATUS', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              SizedBox(width: 70, child: Center(child: Text('ACTIONS', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3)))),
+            ],
           ),
-          columns: const [
-            DataColumn(label: Text('VOUCHER NO', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('CUSTOMER', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('DATE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('PRICING', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('BILLING TYPE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('BILLED BY', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('TAXABLE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('GST', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('GRAND TOTAL', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('PAYMENT', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('STATUS', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('ACTIONS', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-          ],
-          rows: sales.map((order) {
-            final isCancelled = order.isCancelled;
-
-            return DataRow(
-              cells: [
-                // VOUCHER NO
-                DataCell(
-                  Text(
-                    order.voucherNo,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFFD97706),
-                      decoration: isCancelled ? TextDecoration.lineThrough : null,
-                    ),
-                  ),
-                ),
-                // CUSTOMER
-                DataCell(
-                  Text(
-                    order.customerName?.isNotEmpty == true ? order.customerName! : 'Walk-in Customer',
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.text),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                // DATE
-                DataCell(
-                  Text(
-                    AppFormatters.formatDate(order.date),
-                    style: const TextStyle(fontSize: 11.5, color: AppColors.text),
-                  ),
-                ),
-                // PRICING
-                DataCell(
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFEF3C7),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      order.pricingType.key.toUpperCase(),
-                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFFB45309)),
-                    ),
-                  ),
-                ),
-                // BILLING TYPE
-                DataCell(
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFE6F4EA),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      order.billingType,
-                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF137333)),
-                    ),
-                  ),
-                ),
-                // BILLED BY
-                DataCell(
-                  Text(
-                    order.salesperson.isNotEmpty ? order.salesperson : order.userName,
-                    style: const TextStyle(fontSize: 11.5, color: AppColors.text2),
-                  ),
-                ),
-                // TAXABLE
-                DataCell(
-                  Text(
-                    AppFormatters.inr(order.subtotal),
-                    style: const TextStyle(fontSize: 12, color: AppColors.text),
-                  ),
-                ),
-                // GST
-                DataCell(
-                  Text(
-                    AppFormatters.inr(order.gstTotal),
-                    style: const TextStyle(fontSize: 12, color: AppColors.text),
-                  ),
-                ),
-                // GRAND TOTAL
-                DataCell(
-                  Text(
-                    AppFormatters.inr(order.grandTotal),
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w900,
-                      color: isCancelled ? AppColors.text3 : AppColors.text,
-                      decoration: isCancelled ? TextDecoration.lineThrough : null,
-                    ),
-                  ),
-                ),
-                // PAYMENT
-                DataCell(_buildPaymentBadge(order.payStatus)),
-                // STATUS
-                DataCell(
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
-                    decoration: BoxDecoration(
-                      color: isCancelled ? const Color(0xFFFCE8E6) : const Color(0xFFE6F4EA),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      isCancelled ? 'CANCELLED' : 'ACTIVE',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                        color: isCancelled ? const Color(0xFFC5221F) : const Color(0xFF137333),
-                      ),
-                    ),
-                  ),
-                ),
-                // ACTIONS
-                DataCell(
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.download_outlined, size: 16, color: AppColors.text2),
-                        tooltip: 'Print / Download PDF',
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
-                        onPressed: () {
-                          InvoicePrintDialog.show(
-                            context,
-                            order: order,
-                            company: order.billingType == 'GST'
-                                ? data.company
-                                : data.company.copyWith(gstin: ''),
-                          );
-                        },
-                      ),
-                      if (!isCancelled) ...[
-                        const SizedBox(width: 4),
-                        IconButton(
-                          icon: const Icon(Icons.delete_outline, size: 16, color: Color(0xFFEF4444)),
-                          tooltip: 'Cancel Voucher',
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
-                          onPressed: () => _showCancelDialog(context, order),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
-            );
-          }).toList(),
         ),
-      ),
+        const Divider(height: 1, thickness: 1, color: Color(0xFFF0F2EF)),
+        // Responsive Body List
+        Expanded(
+          child: ListView.separated(
+            itemCount: sales.length,
+            separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.8, color: Color(0xFFF0F2EF)),
+            itemBuilder: (context, idx) {
+              final order = sales[idx];
+              final isCancelled = order.isCancelled;
+
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                color: idx.isOdd ? AppColors.surfaceWarm.withOpacity(0.35) : Colors.white,
+                child: Row(
+                  children: [
+                    // VOUCHER NO
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        order.voucherNo,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFFD97706),
+                          decoration: isCancelled ? TextDecoration.lineThrough : null,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    // CUSTOMER
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        order.customerName?.isNotEmpty == true ? order.customerName! : 'Walk-in Customer',
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.text),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    // DATE
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        AppFormatters.formatDate(order.date),
+                        style: const TextStyle(fontSize: 11.5, color: AppColors.text),
+                      ),
+                    ),
+                    // PRICING
+                    Expanded(
+                      flex: 1,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFEF3C7),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            order.pricingType.key.toUpperCase(),
+                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFFB45309)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // BILLING TYPE
+                    Expanded(
+                      flex: 1,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE6F4EA),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            order.billingType,
+                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFF137333)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // BILLED BY
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        order.salesperson.isNotEmpty ? order.salesperson : order.userName,
+                        style: const TextStyle(fontSize: 11.5, color: AppColors.text2),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    // TAXABLE
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        AppFormatters.inr(order.subtotal),
+                        style: const TextStyle(fontSize: 12, color: AppColors.text),
+                      ),
+                    ),
+                    // GST
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        AppFormatters.inr(order.gstTotal),
+                        style: const TextStyle(fontSize: 12, color: AppColors.text),
+                      ),
+                    ),
+                    // GRAND TOTAL
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        AppFormatters.inr(order.grandTotal),
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w900,
+                          color: isCancelled ? AppColors.text3 : AppColors.text,
+                          decoration: isCancelled ? TextDecoration.lineThrough : null,
+                        ),
+                      ),
+                    ),
+                    // PAYMENT
+                    Expanded(
+                      flex: 2,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: _buildPaymentBadge(order.payStatus),
+                      ),
+                    ),
+                    // STATUS
+                    Expanded(
+                      flex: 2,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: isCancelled ? const Color(0xFFFCE8E6) : const Color(0xFFE6F4EA),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            isCancelled ? 'CANCELLED' : 'ACTIVE',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              color: isCancelled ? const Color(0xFFC5221F) : const Color(0xFF137333),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // ACTIONS
+                    SizedBox(
+                      width: 70,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Tooltip(
+                            message: 'Print / Download PDF',
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(4),
+                              onTap: () {
+                                InvoicePrintDialog.show(
+                                  context,
+                                  order: order,
+                                  company: order.billingType == 'GST'
+                                      ? data.company
+                                      : data.company.copyWith(gstin: ''),
+                                );
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.all(4),
+                                child: Icon(Icons.download_outlined, size: 16, color: AppColors.text2),
+                              ),
+                            ),
+                          ),
+                          if (!isCancelled) ...[
+                            const SizedBox(width: 6),
+                            Tooltip(
+                              message: 'Cancel Voucher',
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(4),
+                                onTap: () => _showCancelDialog(context, order),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(4),
+                                  child: Icon(Icons.delete_outline, size: 16, color: Color(0xFFEF4444)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 

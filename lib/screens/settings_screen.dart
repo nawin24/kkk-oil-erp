@@ -818,111 +818,137 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 },
               )
             else
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(minWidth: 700),
-                  child: DataTable(
-                    columnSpacing: 24,
-                    headingRowHeight: 38,
-                    headingTextStyle: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textMuted,
-                      letterSpacing: 0.6,
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColors.border),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  children: [
+                    // Header Row
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      color: AppColors.surfaceAlt,
+                      child: const Row(
+                        children: [
+                          Expanded(flex: 2, child: Text('USERNAME', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 0.6))),
+                          Expanded(flex: 3, child: Text('NAME', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 0.6))),
+                          Expanded(flex: 2, child: Text('ROLE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 0.6))),
+                          Expanded(flex: 2, child: Text('ACCESS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 0.6))),
+                          SizedBox(width: 80, child: Align(alignment: Alignment.centerRight, child: Text('ACTIONS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 0.6)))),
+                        ],
+                      ),
                     ),
-                    columns: const [
-                      DataColumn(label: Text('USERNAME')),
-                      DataColumn(label: Text('NAME')),
-                      DataColumn(label: Text('ROLE')),
-                      DataColumn(label: Text('ACCESS')),
-                      DataColumn(label: Text('')),
-                    ],
-                    rows: auth.users.map((u) {
+                    const Divider(height: 1, thickness: 1, color: AppColors.border),
+                    ...auth.users.asMap().entries.map((entry) {
+                      final idx = entry.key;
+                      final u = entry.value;
                       final roleDef = auth.roles[u.role];
                       final isYou = u.id == currentUser?.id || u.username.toLowerCase() == currentUser?.username.toLowerCase();
                       final isOwner = u.role == 'super_admin' || u.role == 'super_admin_nongst';
 
-                      return DataRow(
-                        cells: [
-                          DataCell(
-                            Text('@${u.username}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                          ),
-                          DataCell(
-                            Row(
+                      return Column(
+                        children: [
+                          if (idx > 0) const Divider(height: 1, thickness: 0.8, color: AppColors.border),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                            child: Row(
                               children: [
-                                Text(u.name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-                                if (isYou) ...[
-                                  const SizedBox(width: 6),
-                                  const Text('· you', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.green)),
-                                ],
-                              ],
-                            ),
-                          ),
-                          DataCell(
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: AppColors.goldSoft,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                roleDef?.label ?? u.role,
-                                style: const TextStyle(
-                                  fontSize: 11.5,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.goldDeep,
+                                Expanded(
+                                  flex: 2,
+                                  child: Text('@${u.username}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                                 ),
-                              ),
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              roleDef?.access == '*' ? 'All modules' : '${roleDef?.access is List ? (roleDef?.access as List).length : 0} modules',
-                              style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
-                            ),
-                          ),
-                          DataCell(
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit_outlined, size: 16, color: AppColors.textSecondary),
-                                  tooltip: 'Edit / reset password',
-                                  onPressed: () => _showStaffDialog(editUser: u),
-                                ),
-                                if (!isOwner && !isYou)
-                                  IconButton(
-                                    icon: const Icon(Icons.delete_outline, size: 16, color: AppColors.danger),
-                                    tooltip: 'Remove staff',
-                                    onPressed: () async {
-                                      final confirm = await showDialog<bool>(
-                                        context: context,
-                                        builder: (ctx) => AlertDialog(
-                                          title: const Text('Remove staff account?'),
-                                          content: Text('Are you sure you want to remove @${u.username}?'),
-                                          actions: [
-                                            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-                                            ElevatedButton(
-                                              style: ElevatedButton.styleFrom(backgroundColor: AppColors.danger),
-                                              onPressed: () => Navigator.pop(ctx, true),
-                                              child: const Text('Remove'),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                      if (confirm == true) {
-                                        await auth.deleteUser(u.id);
-                                      }
-                                    },
+                                Expanded(
+                                  flex: 3,
+                                  child: Row(
+                                    children: [
+                                      Flexible(child: Text(u.name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis)),
+                                      if (isYou) ...[
+                                        const SizedBox(width: 6),
+                                        const Text('· you', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.green)),
+                                      ],
+                                    ],
                                   ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.goldSoft,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        roleDef?.label ?? u.role,
+                                        style: const TextStyle(
+                                          fontSize: 11.5,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.goldDeep,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    roleDef?.access == '*' ? 'All modules' : '${roleDef?.access is List ? (roleDef?.access as List).length : 0} modules',
+                                    style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 80,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit_outlined, size: 16, color: AppColors.textSecondary),
+                                        tooltip: 'Edit / reset password',
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                                        onPressed: () => _showStaffDialog(editUser: u),
+                                      ),
+                                      if (!isOwner && !isYou)
+                                        IconButton(
+                                          icon: const Icon(Icons.delete_outline, size: 16, color: AppColors.danger),
+                                          tooltip: 'Remove staff',
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                                          onPressed: () async {
+                                            final confirm = await showDialog<bool>(
+                                              context: context,
+                                              builder: (ctx) => AlertDialog(
+                                                title: const Text('Remove staff account?'),
+                                                content: Text('Are you sure you want to remove @${u.username}?'),
+                                                actions: [
+                                                  TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+                                                  ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(backgroundColor: AppColors.danger),
+                                                    onPressed: () => Navigator.pop(ctx, true),
+                                                    child: const Text('Remove'),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                            if (confirm == true) {
+                                              await auth.deleteUser(u.id);
+                                            }
+                                          },
+                                        ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                         ],
                       );
-                    }).toList(),
-                  ),
+                    }),
+                  ],
                 ),
               ),
           ],

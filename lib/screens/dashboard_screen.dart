@@ -428,89 +428,123 @@ class DashboardScreen extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 14),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          headingRowColor: WidgetStateProperty.all(AppColors.surfaceAlt),
-                          columnSpacing: 20,
-                          columns: const [
-                            DataColumn(label: Text('Billing Stream', style: TextStyle(fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Bills Generated', style: TextStyle(fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Total Amount Sold (Month)', style: TextStyle(fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Inventory Status', style: TextStyle(fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Quick Voucher Station', style: TextStyle(fontWeight: FontWeight.bold))),
-                          ],
-                          rows: [
-                            DataRow(
-                              cells: [
-                                const DataCell(StatusBadge(label: 'GST Tax Billing', tone: BadgeTone.success)),
-                                DataCell(Text('${metrics.gstMonthBillsCount} bills', style: const TextStyle(fontWeight: FontWeight.bold))),
-                                DataCell(
-                                  Text(
-                                    AppFormatters.inr(metrics.gstMonthSales),
-                                    style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.goldDeep),
-                                  ),
-                                ),
-                                const DataCell(Text('Shared Products Stock', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))),
-                                DataCell(
-                                  OutlinedButton(
-                                    style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32)),
-                                    onPressed: () => onNavigate('erp_billing'),
-                                    child: const Text('Open Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-                                  ),
-                                ),
-                              ],
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: Column(
+                          children: [
+                            // Header Row
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                              color: AppColors.surfaceAlt,
+                              child: const Row(
+                                children: [
+                                  Expanded(flex: 3, child: Text('Billing Stream', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5))),
+                                  Expanded(flex: 2, child: Text('Bills Generated', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5))),
+                                  Expanded(flex: 3, child: Text('Total Amount Sold (Month)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5))),
+                                  Expanded(flex: 2, child: Text('Inventory Status', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5))),
+                                  Expanded(flex: 2, child: Align(alignment: Alignment.centerRight, child: Text('Action', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5)))),
+                                ],
+                              ),
                             ),
-                            DataRow(
-                              cells: [
-                                const DataCell(StatusBadge(label: 'Non-GST Billing', tone: BadgeTone.purple)),
-                                DataCell(Text('${metrics.nonGstMonthBillsCount} bills', style: const TextStyle(fontWeight: FontWeight.bold))),
-                                DataCell(
-                                  Text(
-                                    AppFormatters.inr(metrics.nonGstMonthSales),
-                                    style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.purple),
-                                  ),
-                                ),
-                                const DataCell(Text('Shared Products Stock', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))),
-                                DataCell(
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.forestMedium,
-                                      foregroundColor: Colors.white,
-                                      minimumSize: const Size(0, 32),
+                            const Divider(height: 1, thickness: 1, color: AppColors.border),
+                            // Row 1: GST
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                              child: Row(
+                                children: [
+                                  const Expanded(flex: 3, child: Align(alignment: Alignment.centerLeft, child: StatusBadge(label: 'GST Tax Billing', tone: BadgeTone.success))),
+                                  Expanded(flex: 2, child: Text('${metrics.gstMonthBillsCount} bills', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5))),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      AppFormatters.inr(metrics.gstMonthSales),
+                                      style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.goldDeep, fontSize: 13),
                                     ),
-                                    onPressed: () => onNavigate('non_gst_billing'),
-                                    child: const Text('Open Non-GST Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                                   ),
-                                ),
-                              ],
+                                  const Expanded(flex: 2, child: Text('Shared Products Stock', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: OutlinedButton(
+                                        style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32), padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6)),
+                                        onPressed: () => onNavigate('erp_billing'),
+                                        child: const Text('Open Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            DataRow(
-                              color: WidgetStateProperty.all(AppColors.goldSoft),
-                              cells: [
-                                const DataCell(
-                                  Text(
-                                    'TOTAL COMBINED (AS OF NOW)',
-                                    style: TextStyle(fontWeight: FontWeight.w900, color: AppColors.goldDeep, fontSize: 13),
+                            const Divider(height: 1, thickness: 0.8, color: AppColors.border),
+                            // Row 2: Non-GST
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                              child: Row(
+                                children: [
+                                  const Expanded(flex: 3, child: Align(alignment: Alignment.centerLeft, child: StatusBadge(label: 'Non-GST Billing', tone: BadgeTone.purple))),
+                                  Expanded(flex: 2, child: Text('${metrics.nonGstMonthBillsCount} bills', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12.5))),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      AppFormatters.inr(metrics.nonGstMonthSales),
+                                      style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.purple, fontSize: 13),
+                                    ),
                                   ),
-                                ),
-                                DataCell(
-                                  Text(
-                                    '${metrics.monthBillsCount} bills',
-                                    style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.goldDeep, fontSize: 13),
+                                  const Expanded(flex: 2, child: Text('Shared Products Stock', style: TextStyle(fontSize: 12, color: AppColors.textSecondary))),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: AppColors.forestMedium,
+                                          foregroundColor: Colors.white,
+                                          minimumSize: const Size(0, 32),
+                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                        ),
+                                        onPressed: () => onNavigate('non_gst_billing'),
+                                        child: const Text('Open Non-GST Billing', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                DataCell(
-                                  Text(
-                                    AppFormatters.inr(metrics.monthSales),
-                                    style: const TextStyle(fontWeight: FontWeight.w900, color: AppColors.goldDeep, fontSize: 15),
+                                ],
+                              ),
+                            ),
+                            const Divider(height: 1, thickness: 0.8, color: AppColors.border),
+                            // Row 3: Total Combined
+                            Container(
+                              color: AppColors.goldSoft,
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                              child: Row(
+                                children: [
+                                  const Expanded(
+                                    flex: 3,
+                                    child: Text('TOTAL COMBINED', style: TextStyle(fontWeight: FontWeight.w900, color: AppColors.goldDeep, fontSize: 12)),
                                   ),
-                                ),
-                                const DataCell(
-                                  Text('Combined Month Sales Snapshot', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.goldDeep)),
-                                ),
-                                const DataCell(SizedBox.shrink()),
-                              ],
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text('${metrics.monthBillsCount} bills', style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.goldDeep, fontSize: 12.5)),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      AppFormatters.inr(metrics.monthSales),
+                                      style: const TextStyle(fontWeight: FontWeight.w900, color: AppColors.goldDeep, fontSize: 14),
+                                    ),
+                                  ),
+                                  const Expanded(
+                                    flex: 2,
+                                    child: Text('Month Sales Snapshot', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.bold, color: AppColors.goldDeep)),
+                                  ),
+                                  const Expanded(flex: 2, child: SizedBox.shrink()),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -640,43 +674,79 @@ class DashboardScreen extends StatelessWidget {
                         },
                       )
                     else
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          headingRowColor: WidgetStateProperty.all(AppColors.surfaceAlt),
-                          columns: const [
-                            DataColumn(label: Text('Cashier / Staff', style: TextStyle(fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Bills Issued', style: TextStyle(fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Cash / Paid Collections', style: TextStyle(fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Credit / Dues Sales', style: TextStyle(fontWeight: FontWeight.bold))),
-                            DataColumn(label: Text('Total Sales Generated', style: TextStyle(fontWeight: FontWeight.bold))),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: Column(
+                          children: [
+                            // Header Row
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                              color: AppColors.surfaceAlt,
+                              child: const Row(
+                                children: [
+                                  Expanded(flex: 3, child: Text('Cashier / Staff', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5))),
+                                  Expanded(flex: 2, child: Text('Bills Issued', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5))),
+                                  Expanded(flex: 3, child: Text('Cash / Paid Collections', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5))),
+                                  Expanded(flex: 3, child: Text('Credit / Dues Sales', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5))),
+                                  Expanded(flex: 3, child: Align(alignment: Alignment.centerRight, child: Text('Total Sales Generated', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11.5)))),
+                                ],
+                              ),
+                            ),
+                            const Divider(height: 1, thickness: 1, color: AppColors.border),
+                            ...cashierStats.asMap().entries.map((entry) {
+                              final idx = entry.key;
+                              final c = entry.value;
+                              return Column(
+                                children: [
+                                  if (idx > 0) const Divider(height: 1, thickness: 0.8, color: AppColors.border),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(c.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
+                                        ),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Text('${c.count} bills', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 12.5)),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            AppFormatters.inr(c.cash),
+                                            style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.success, fontSize: 12.5),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Text(
+                                            AppFormatters.inr(c.credit),
+                                            style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.danger, fontSize: 12.5),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 3,
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              AppFormatters.inr(c.total),
+                                              style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.goldDeep, fontSize: 13.5),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
                           ],
-                          rows: cashierStats.map((c) {
-                            return DataRow(
-                              cells: [
-                                DataCell(Text(c.name, style: const TextStyle(fontWeight: FontWeight.w700))),
-                                DataCell(Text('${c.count} bills', style: const TextStyle(fontWeight: FontWeight.w600))),
-                                DataCell(
-                                  Text(
-                                    AppFormatters.inr(c.cash),
-                                    style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.success),
-                                  ),
-                                ),
-                                DataCell(
-                                  Text(
-                                    AppFormatters.inr(c.credit),
-                                    style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.danger),
-                                  ),
-                                ),
-                                DataCell(
-                                  Text(
-                                    AppFormatters.inr(c.total),
-                                    style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.goldDeep, fontSize: 14),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }).toList(),
                         ),
                       ),
                   ],

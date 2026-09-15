@@ -476,166 +476,198 @@ class _PriceHistoryScreenState extends State<PriceHistoryScreen> {
   }
 
   Widget _buildDesktopPriceHistoryTable(List<PriceHistoryRecord> history) {
-    return SingleChildScrollView(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          headingRowHeight: 36,
-          dataRowMinHeight: 40,
-          dataRowMaxHeight: 46,
-          columnSpacing: 18,
-          horizontalMargin: 12,
-          headingRowColor: WidgetStateProperty.all(const Color(0xFFFAFBF9)),
-          border: const TableBorder(
-            horizontalInside: BorderSide(color: Color(0xFFF0F2EF), width: 1),
+    return Column(
+      children: [
+        // Responsive Header Row
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          color: const Color(0xFFFAFBF9),
+          child: const Row(
+            children: [
+              Expanded(flex: 3, child: Text('PRODUCT NAME', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 2, child: Text('PRICING TIER', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 1, child: Text('OLD RATE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 1, child: Text('NEW RATE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 2, child: Text('CHANGE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 2, child: Text('EFFECTIVE DATE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 2, child: Text('UPDATED BY', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+              Expanded(flex: 2, child: Text('AUDIT TIMESTAMP', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
+            ],
           ),
-          columns: const [
-            DataColumn(label: Text('PRODUCT NAME', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('PRICING TIER', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('OLD RATE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('NEW RATE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('CHANGE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('EFFECTIVE DATE', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('UPDATED BY', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-            DataColumn(label: Text('AUDIT TIMESTAMP', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.text3))),
-          ],
-          rows: history.map((h) {
-            final diff = h.newRate - h.oldRate;
-            final isIncrease = diff > 0;
-            final isDecrease = diff < 0;
-            final pct = h.oldRate > 0 ? ((diff.abs() / h.oldRate) * 100) : 0.0;
-            final diffStr = isIncrease
-                ? '+₹${diff.toStringAsFixed(0)} (+${pct.toStringAsFixed(1)}%)'
-                : (isDecrease
-                    ? '-₹${(-diff).toStringAsFixed(0)} (-${pct.toStringAsFixed(1)}%)'
-                    : '₹0 (0%)');
+        ),
+        const Divider(height: 1, thickness: 1, color: Color(0xFFF0F2EF)),
+        // Responsive List Rows
+        Expanded(
+          child: ListView.separated(
+            itemCount: history.length,
+            separatorBuilder: (_, __) => const Divider(height: 1, thickness: 0.8, color: Color(0xFFF0F2EF)),
+            itemBuilder: (context, idx) {
+              final h = history[idx];
+              final diff = h.newRate - h.oldRate;
+              final isIncrease = diff > 0;
+              final isDecrease = diff < 0;
+              final pct = h.oldRate > 0 ? ((diff.abs() / h.oldRate) * 100) : 0.0;
+              final diffStr = isIncrease
+                  ? '+₹${diff.toStringAsFixed(0)} (+${pct.toStringAsFixed(1)}%)'
+                  : (isDecrease
+                      ? '-₹${(-diff).toStringAsFixed(0)} (-${pct.toStringAsFixed(1)}%)'
+                      : '₹0 (0%)');
 
-            return DataRow(
-              cells: [
-                // PRODUCT NAME
-                DataCell(
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 22,
-                        height: 22,
-                        decoration: BoxDecoration(
-                          color: isIncrease ? AppColors.successBg : AppColors.dangerBg,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Icon(
-                          isIncrease ? Icons.trending_up : Icons.trending_down,
-                          color: isIncrease ? AppColors.success : AppColors.danger,
-                          size: 13,
-                        ),
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                color: idx.isOdd ? AppColors.surfaceWarm.withOpacity(0.35) : Colors.white,
+                child: Row(
+                  children: [
+                    // PRODUCT NAME
+                    Expanded(
+                      flex: 3,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 22,
+                            height: 22,
+                            decoration: BoxDecoration(
+                              color: isIncrease ? AppColors.successBg : AppColors.dangerBg,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Icon(
+                              isIncrease ? Icons.trending_up : Icons.trending_down,
+                              color: isIncrease ? AppColors.success : AppColors.danger,
+                              size: 13,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              h.productName,
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.text),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        h.productName,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.text),
-                      ),
-                    ],
-                  ),
-                ),
-                // PRICING TIER
-                DataCell(
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFEF3C7),
-                      borderRadius: BorderRadius.circular(4),
                     ),
-                    child: Text(
-                      h.pricingType.label.toUpperCase(),
-                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFFB45309)),
-                    ),
-                  ),
-                ),
-                // OLD RATE
-                DataCell(
-                  Text(
-                    '₹${h.oldRate.toStringAsFixed(0)}',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textMuted,
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                ),
-                // NEW RATE
-                DataCell(
-                  Text(
-                    '₹${h.newRate.toStringAsFixed(0)}',
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w800,
-                      color: isIncrease ? AppColors.success : AppColors.danger,
-                    ),
-                  ),
-                ),
-                // CHANGE
-                DataCell(
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
-                    decoration: BoxDecoration(
-                      color: isIncrease ? AppColors.successBg : AppColors.dangerBg,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          isIncrease ? Icons.arrow_upward : Icons.arrow_downward,
-                          size: 11,
-                          color: isIncrease ? AppColors.success : AppColors.danger,
-                        ),
-                        const SizedBox(width: 2),
-                        Text(
-                          diffStr,
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w800,
-                            color: isIncrease ? AppColors.success : AppColors.danger,
+                    // PRICING TIER
+                    Expanded(
+                      flex: 2,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFEF3C7),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            h.pricingType.label.toUpperCase(),
+                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800, color: Color(0xFFB45309)),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                // EFFECTIVE DATE
-                DataCell(
-                  Text(
-                    AppFormatters.formatDate(h.effectiveDate),
-                    style: const TextStyle(fontSize: 11.5, color: AppColors.text),
-                  ),
-                ),
-                // UPDATED BY
-                DataCell(
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF1F5F9),
-                      borderRadius: BorderRadius.circular(4),
+                    // OLD RATE
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        '₹${h.oldRate.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textMuted,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
                     ),
-                    child: Text(
-                      h.updatedBy,
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.text2),
+                    // NEW RATE
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        '₹${h.newRate.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w800,
+                          color: isIncrease ? AppColors.success : AppColors.danger,
+                        ),
+                      ),
                     ),
-                  ),
+                    // CHANGE
+                    Expanded(
+                      flex: 2,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: isIncrease ? AppColors.successBg : AppColors.dangerBg,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                isIncrease ? Icons.arrow_upward : Icons.arrow_downward,
+                                size: 11,
+                                color: isIncrease ? AppColors.success : AppColors.danger,
+                              ),
+                              const SizedBox(width: 2),
+                              Text(
+                                diffStr,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w800,
+                                  color: isIncrease ? AppColors.success : AppColors.danger,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    // EFFECTIVE DATE
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        AppFormatters.formatDate(h.effectiveDate),
+                        style: const TextStyle(fontSize: 11.5, color: AppColors.text),
+                      ),
+                    ),
+                    // UPDATED BY
+                    Expanded(
+                      flex: 2,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF1F5F9),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            h.updatedBy,
+                            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.text2),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // AUDIT TIMESTAMP
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        AppFormatters.formatDateTime(h.updatedAt),
+                        style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
-                // AUDIT TIMESTAMP
-                DataCell(
-                  Text(
-                    AppFormatters.formatDateTime(h.updatedAt),
-                    style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
-                  ),
-                ),
-              ],
-            );
-          }).toList(),
+              );
+            },
+          ),
         ),
-      ),
+      ],
     );
   }
 }

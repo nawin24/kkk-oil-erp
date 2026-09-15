@@ -667,38 +667,32 @@ class _EmployeesScreenState extends State<EmployeesScreen> with SingleTickerProv
                   children: [
                     const Text('LIVE HIERARCHY PREVIEW (அதிகார வரிசை):', style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.w800, color: AppColors.textMuted)),
                     const SizedBox(height: 6),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(color: AppColors.surfaceWarm, borderRadius: BorderRadius.circular(6), border: Border.all(color: AppColors.border)),
-                            child: Text('Superior: [${superiorDef?.label ?? superiorRole}]', style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.textMain)),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(color: AppColors.surfaceWarm, borderRadius: BorderRadius.circular(6), border: Border.all(color: AppColors.border)),
+                          child: Text('Superior: [${superiorDef?.label ?? superiorRole}]', style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppColors.textMain)),
+                        ),
+                        const Icon(Icons.arrow_forward, size: 14, color: AppColors.goldDeep),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(color: _getToneColor(colorTone).withOpacity(0.15), borderRadius: BorderRadius.circular(6), border: Border.all(color: _getToneColor(colorTone))),
+                          child: Text('This: [${labelCtrl.text.isNotEmpty ? labelCtrl.text : "New Role"}]', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: _getToneColor(colorTone))),
+                        ),
+                        const Icon(Icons.arrow_forward, size: 14, color: AppColors.goldDeep),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(color: AppColors.surfaceWarm, borderRadius: BorderRadius.circular(6), border: Border.all(color: AppColors.border)),
+                          child: Text(
+                            'Subordinates: [${subordinates.isNotEmpty ? subordinates.join(", ") : "None"}]',
+                            style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.textMuted),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 6),
-                            child: Icon(Icons.arrow_forward, size: 14, color: AppColors.goldDeep),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(color: _getToneColor(colorTone).withOpacity(0.15), borderRadius: BorderRadius.circular(6), border: Border.all(color: _getToneColor(colorTone))),
-                            child: Text('This: [${labelCtrl.text.isNotEmpty ? labelCtrl.text : "New Role"}]', style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: _getToneColor(colorTone))),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 6),
-                            child: Icon(Icons.arrow_forward, size: 14, color: AppColors.goldDeep),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(color: AppColors.surfaceWarm, borderRadius: BorderRadius.circular(6), border: Border.all(color: AppColors.border)),
-                            child: Text(
-                              'Subordinates: [${subordinates.isNotEmpty ? subordinates.join(", ") : "None"}]',
-                              style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.textMuted),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

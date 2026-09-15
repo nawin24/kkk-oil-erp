@@ -147,6 +147,7 @@ class _PriceManagementScreenState extends State<PriceManagementScreen> {
             final q = modalSearch.toLowerCase();
             return p.name.toLowerCase().contains(q) || p.code.toLowerCase().contains(q);
           }).toList();
+          final isSmallModal = MediaQuery.of(ctx).size.width < 760;
 
           return AlertDialog(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -185,127 +186,223 @@ class _PriceManagementScreenState extends State<PriceManagementScreen> {
                 ),
               ],
             ),
-            content: SizedBox(
-              width: 820,
-              height: 520,
-              child: Column(
-                children: [
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Filter products in bulk editor…',
-                      prefixIcon: const Icon(Icons.search, size: 18),
-                      isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            content: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: 820,
+                maxHeight: MediaQuery.of(ctx).size.height * 0.82,
+              ),
+              child: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Filter products in bulk editor…',
+                        prefixIcon: const Icon(Icons.search, size: 18),
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                      onChanged: (val) => setModalState(() => modalSearch = val),
                     ),
-                    onChanged: (val) => setModalState(() => modalSearch = val),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    height: 36,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceWarm,
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: AppColors.border),
-                    ),
-                    child: const Row(
-                      children: [
-                        Expanded(flex: 3, child: Text('PRODUCT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textSecondary))),
-                        Expanded(flex: 2, child: Text('AGENCY (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFD97706)))),
-                        Expanded(flex: 2, child: Text('WHOLESALE (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF2563EB)))),
-                        Expanded(flex: 2, child: Text('RETAIL (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1F8A5B)))),
-                        Expanded(flex: 2, child: Text('MRP (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textPrimary))),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Expanded(
-                    child: ListView.separated(
-                      itemCount: filtered.length,
-                      separatorBuilder: (_, __) => const Divider(height: 1),
-                      itemBuilder: (context, idx) {
-                        final p = filtered[idx];
-                        final ctrlMap = controllers[p.id]!;
+                    const SizedBox(height: 10),
+                    if (!isSmallModal) ...[
+                      // Desktop 5-Column Header
+                      Container(
+                        height: 36,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceWarm,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: const Row(
+                          children: [
+                            Expanded(flex: 3, child: Text('PRODUCT', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textSecondary))),
+                            Expanded(flex: 2, child: Text('AGENCY (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFFD97706)))),
+                            Expanded(flex: 2, child: Text('WHOLESALE (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF2563EB)))),
+                            Expanded(flex: 2, child: Text('RETAIL (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF1F8A5B)))),
+                            Expanded(flex: 2, child: Text('MRP (₹)', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textPrimary))),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                    ],
+                    Expanded(
+                      child: ListView.separated(
+                        itemCount: filtered.length,
+                        separatorBuilder: (_, __) => const Divider(height: 1),
+                        itemBuilder: (context, idx) {
+                          final p = filtered[idx];
+                          final ctrlMap = controllers[p.id]!;
 
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(p.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
-                                    Text('${p.code} · ${p.pack}', style: const TextStyle(fontSize: 10.5, color: AppColors.textSecondary)),
-                                  ],
-                                ),
+                          if (isSmallModal) {
+                            return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 4),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: AppColors.border),
                               ),
-                              const SizedBox(width: 6),
-                              Expanded(
-                                flex: 2,
-                                child: TextField(
-                                  controller: ctrlMap['agency'],
-                                  keyboardType: TextInputType.number,
-                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(p.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis),
+                                  const SizedBox(height: 2),
+                                  Text('${p.code} · ${p.pack}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: ctrlMap['agency'],
+                                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                          decoration: InputDecoration(
+                                            labelText: 'Agency [A] ₹',
+                                            labelStyle: const TextStyle(fontSize: 11, color: Color(0xFFD97706), fontWeight: FontWeight.bold),
+                                            isDense: true,
+                                            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: TextField(
+                                          controller: ctrlMap['wholesale'],
+                                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                          decoration: InputDecoration(
+                                            labelText: 'Wholesale [W] ₹',
+                                            labelStyle: const TextStyle(fontSize: 11, color: Color(0xFF2563EB), fontWeight: FontWeight.bold),
+                                            isDense: true,
+                                            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          controller: ctrlMap['retail'],
+                                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                          decoration: InputDecoration(
+                                            labelText: 'Retail [R] ₹',
+                                            labelStyle: const TextStyle(fontSize: 11, color: Color(0xFF1F8A5B), fontWeight: FontWeight.bold),
+                                            isDense: true,
+                                            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: TextField(
+                                          controller: ctrlMap['mrp'],
+                                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                          decoration: InputDecoration(
+                                            labelText: 'MRP ₹',
+                                            labelStyle: const TextStyle(fontSize: 11, color: AppColors.textPrimary, fontWeight: FontWeight.bold),
+                                            isDense: true,
+                                            contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(p.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
+                                      Text('${p.code} · ${p.pack}', style: const TextStyle(fontSize: 10.5, color: AppColors.textSecondary)),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 6),
-                              Expanded(
-                                flex: 2,
-                                child: TextField(
-                                  controller: ctrlMap['wholesale'],
-                                  keyboardType: TextInputType.number,
-                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  flex: 2,
+                                  child: TextField(
+                                    controller: ctrlMap['agency'],
+                                    keyboardType: TextInputType.number,
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 6),
-                              Expanded(
-                                flex: 2,
-                                child: TextField(
-                                  controller: ctrlMap['retail'],
-                                  keyboardType: TextInputType.number,
-                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  flex: 2,
+                                  child: TextField(
+                                    controller: ctrlMap['wholesale'],
+                                    keyboardType: TextInputType.number,
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 6),
-                              Expanded(
-                                flex: 2,
-                                child: TextField(
-                                  controller: ctrlMap['mrp'],
-                                  keyboardType: TextInputType.number,
-                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  flex: 2,
+                                  child: TextField(
+                                    controller: ctrlMap['retail'],
+                                    keyboardType: TextInputType.number,
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  flex: 2,
+                                  child: TextField(
+                                    controller: ctrlMap['mrp'],
+                                    keyboardType: TextInputType.number,
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             actions: [
