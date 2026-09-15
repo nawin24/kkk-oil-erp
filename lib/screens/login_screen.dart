@@ -87,128 +87,79 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: AppColors.bg,
       body: Row(
         children: [
-          // Left: Brand Hero Art Side
+          // Left: Official KKK Brand Banner Side (Fitted to Resolution)
           Expanded(
             flex: 11,
             child: Container(
-              decoration: const BoxDecoration(
-                gradient: AppColors.forestGradient,
-              ),
+              color: const Color(0xFFDE0A14),
               child: Stack(
+                fit: StackFit.expand,
                 children: [
-                  // Ambient Gold Radial Glow
-                  Positioned(
-                    right: -120,
-                    bottom: -120,
-                    width: 420,
-                    height: 420,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: RadialGradient(
-                          colors: [
-                            AppColors.gold.withOpacity(0.35),
-                            Colors.transparent,
-                          ],
-                          stops: const [0.0, 0.7],
+                  // Subtle Radial Depth Gradient
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: RadialGradient(
+                        center: Alignment.center,
+                        radius: 1.1,
+                        colors: [
+                          Color(0xFFEA1D27),
+                          Color(0xFFC00710),
+                          Color(0xFFA0050C),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Centered Official KKK Brand Logo Banner (Fits Resolution)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 36),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 640),
+                        child: Image.asset(
+                          'assets/images/kkk_logo.png',
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),
                   ),
-
-                  // Content
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 56, vertical: 56),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  // Bottom System Subtitle & Version Info
+                  Positioned(
+                    left: 36,
+                    right: 36,
+                    bottom: 28,
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Logo & Brand Header
-                        Row(
-                          children: [
-                            Container(
-                              width: 46,
-                              height: 46,
-                              decoration: BoxDecoration(
-                                gradient: AppColors.goldGradient,
-                                borderRadius: BorderRadius.circular(11),
-                                boxShadow: const [AppColors.goldButtonShadow],
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  'KKK',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    color: AppColors.forest,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 14),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'KKK Oil Factory',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 0.2,
-                                  ),
-                                ),
-                                Text(
-                                  'Tamil Nadu · Billing & ERP System',
-                                  style: TextStyle(
-                                    color: Color(0xFF8FA298),
-                                    fontSize: 11.5,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-
-                        // Main Headline
-                        ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 440),
-                          child: const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.35),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.white.withOpacity(0.2)),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
+                              Icon(Icons.verified_outlined, size: 14, color: AppColors.gold),
+                              SizedBox(width: 6),
                               Text(
-                                'Run your entire ERP business from one professional platform.',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w800,
-                                  height: 1.25,
-                                  letterSpacing: -0.5,
-                                ),
-                              ),
-                              SizedBox(height: 14),
-                              Text(
-                                'AWR pricing model (Agency, Wholesale, Retail), effective date pricing, role-based navigation, and official billing vouchers.',
-                                style: TextStyle(
-                                  color: Color(0xFFA9BCB1),
-                                  fontSize: 14.5,
-                                  height: 1.6,
-                                ),
+                                'KKK Oil Factory · Enterprise ERP & Billing',
+                                style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
                         ),
-
-                        // Stats & Chips
-                        Row(
-                          children: [
-                            _buildArtStat('AWR', '3 Pricing Rates'),
-                            const SizedBox(width: 32),
-                            _buildArtStat('ERP', 'Voucher Billing'),
-                            const SizedBox(width: 32),
-                            _buildArtStat('4', 'Primary Roles'),
-                          ],
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.35),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.white.withOpacity(0.2)),
+                          ),
+                          child: const Text(
+                            'Tamil Nadu · Official Portal',
+                            style: TextStyle(color: Colors.white70, fontSize: 11.5, fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ],
                     ),
@@ -240,23 +191,21 @@ class _LoginScreenState extends State<LoginScreen> {
     return Column(
       children: [
         Container(
-          width: 52,
-          height: 52,
+          height: 76,
           decoration: BoxDecoration(
-            gradient: AppColors.goldGradient,
-            borderRadius: BorderRadius.circular(13),
-            boxShadow: const [AppColors.goldButtonShadow],
-          ),
-          child: const Center(
-            child: Text(
-              'KKK',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: AppColors.forest,
+            color: const Color(0xFFDE0A14),
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFDE0A14).withOpacity(0.25),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
-            ),
+            ],
           ),
+          clipBehavior: Clip.antiAlias,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Image.asset('assets/images/kkk_logo.png', fit: BoxFit.contain),
         ),
         const SizedBox(height: 12),
         const Text(

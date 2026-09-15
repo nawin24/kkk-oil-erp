@@ -1,11 +1,11 @@
 {
-    "name": "kkk_oil_erp_flutter",
-    "short_name": "kkk_oil_erp_flutter",
+    "name": "KKK Oil Factory ERP",
+    "short_name": "KKK Oil ERP",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#DE0A14",
+    "theme_color": "#DE0A14",
+    "description": "KKK Oil Factory ERP - Professional Billing & Management System.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

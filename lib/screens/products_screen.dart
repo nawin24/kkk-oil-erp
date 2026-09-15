@@ -2222,17 +2222,18 @@ class _ProductsScreenState extends State<ProductsScreen> {
             vertical: isMobile ? 8 : 12,
           ),
           decoration: BoxDecoration(
-            color: isSelected ? bgColor : Colors.white,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: isSelected ? activeBorder : AppColors.border,
-              width: isSelected ? 2 : 1,
+              color: isSelected ? AppColors.goldDeep : AppColors.border,
+              width: isSelected ? 1.8 : 1.0,
             ),
             boxShadow: [
               if (isSelected)
                 BoxShadow(
-                  color: color.withValues(alpha: 0.18),
-                  blurRadius: 8,
+                  color: AppColors.goldDeep.withOpacity(0.35),
+                  blurRadius: 10,
+                  spreadRadius: 1,
                   offset: const Offset(0, 2),
                 )
               else

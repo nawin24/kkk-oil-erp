@@ -42,31 +42,18 @@ class AppDrawer extends StatelessWidget {
                   width: 38,
                   height: 38,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [AppColors.gold, AppColors.goldDeep],
-                    ),
-                    borderRadius: BorderRadius.circular(11),
+                    color: const Color(0xFFDE0A14),
+                    borderRadius: BorderRadius.circular(9),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.gold.withOpacity(0.35),
-                        blurRadius: 14,
-                        offset: const Offset(0, 4),
+                        color: const Color(0xFFDE0A14).withOpacity(0.35),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
-                  child: const Center(
-                    child: Text(
-                      'KKK',
-                      style: TextStyle(
-                        color: AppColors.forestDark,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 15,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Image.asset('assets/images/kkk_logo_square.png', fit: BoxFit.cover),
                 ),
                 const SizedBox(width: 11),
                 Expanded(

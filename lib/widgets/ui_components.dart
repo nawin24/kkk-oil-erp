@@ -11,6 +11,7 @@ class MetricCard extends StatefulWidget {
   final Color? iconColor;
   final Color? iconBg;
   final VoidCallback? onTap;
+  final bool? isSelected;
 
   const MetricCard({
     super.key,
@@ -23,6 +24,7 @@ class MetricCard extends StatefulWidget {
     this.iconColor,
     this.iconBg,
     this.onTap,
+    this.isSelected,
   });
 
   @override
@@ -32,10 +34,12 @@ class MetricCard extends StatefulWidget {
 class _MetricCardState extends State<MetricCard> {
   bool _isHovered = false;
   bool _isPressed = false;
+  bool _isTapped = false;
 
   @override
   Widget build(BuildContext context) {
-    final isHighlighted = _isHovered || _isPressed;
+    final isMobile = MediaQuery.of(context).size.width < 750;
+    final isHighlighted = (widget.isSelected ?? _isTapped) || _isHovered || _isPressed;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -45,9 +49,25 @@ class _MetricCardState extends State<MetricCard> {
         onTapDown: (_) => setState(() => _isPressed = true),
         onTapUp: (_) => setState(() => _isPressed = false),
         onTapCancel: () => setState(() => _isPressed = false),
-        onTap: widget.onTap,
+        onTap: () {
+          if (widget.onTap != null) {
+            if (isMobile) {
+              // On mobile: if already highlighted, trigger navigation.
+              // If not highlighted yet, toggle highlight so user sees the gold glow!
+              if (isHighlighted) {
+                widget.onTap!();
+              } else {
+                setState(() => _isTapped = true);
+              }
+            } else {
+              widget.onTap!();
+            }
+          } else {
+            setState(() => _isTapped = !_isTapped);
+          }
+        },
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
+          duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -59,9 +79,9 @@ class _MetricCardState extends State<MetricCard> {
             boxShadow: isHighlighted
                 ? [
                     BoxShadow(
-                      color: AppColors.gold.withOpacity(0.25),
-                      blurRadius: 10,
-                      spreadRadius: 1,
+                      color: AppColors.goldDeep.withOpacity(0.35),
+                      blurRadius: 12,
+                      spreadRadius: 1.5,
                       offset: const Offset(0, 3),
                     ),
                   ]
@@ -98,10 +118,15 @@ class _MetricCardState extends State<MetricCard> {
                   Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      color: widget.iconBg ?? AppColors.surfaceAlt,
+                      color: isHighlighted ? AppColors.goldSoft : (widget.iconBg ?? AppColors.surfaceAlt),
                       borderRadius: BorderRadius.circular(7),
+                      border: isHighlighted ? Border.all(color: AppColors.goldDeep.withOpacity(0.3)) : null,
                     ),
-                    child: Icon(widget.icon, size: 15, color: widget.iconColor ?? AppColors.forestLight),
+                    child: Icon(
+                      widget.icon,
+                      size: 15,
+                      color: isHighlighted ? AppColors.goldDeep : (widget.iconColor ?? AppColors.forestLight),
+                    ),
                   ),
                 ],
               ),
@@ -120,47 +145,72 @@ class _MetricCardState extends State<MetricCard> {
                   maxLines: 1,
                 ),
               ),
-              if (widget.delta != null) ...[
-                const SizedBox(height: 2),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (widget.deltaDir == 'up') ...[
-                      const Icon(Icons.arrow_upward_rounded, size: 11, color: AppColors.success),
-                      const SizedBox(width: 2),
-                    ] else if (widget.deltaDir == 'down') ...[
-                      const Icon(Icons.arrow_downward_rounded, size: 11, color: AppColors.danger),
-                      const SizedBox(width: 2),
-                    ],
-                    Flexible(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (widget.delta != null)
+                    Expanded(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (widget.deltaDir == 'up') ...[
+                            const Icon(Icons.arrow_upward_rounded, size: 11, color: AppColors.success),
+                            const SizedBox(width: 2),
+                          ] else if (widget.deltaDir == 'down') ...[
+                            const Icon(Icons.arrow_downward_rounded, size: 11, color: AppColors.danger),
+                            const SizedBox(width: 2),
+                          ],
+                          Flexible(
+                            child: Text(
+                              widget.delta!,
+                              style: TextStyle(
+                                fontSize: 10.5,
+                                fontWeight: FontWeight.w600,
+                                color: widget.deltaDir == 'up'
+                                    ? AppColors.success
+                                    : (widget.deltaDir == 'down' ? AppColors.danger : AppColors.textSecondary),
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else if (widget.subtitle != null)
+                    Expanded(
                       child: Text(
-                        widget.delta!,
-                        style: TextStyle(
+                        widget.subtitle!,
+                        style: const TextStyle(
                           fontSize: 10.5,
-                          fontWeight: FontWeight.w600,
-                          color: widget.deltaDir == 'up'
-                              ? AppColors.success
-                              : (widget.deltaDir == 'down' ? AppColors.danger : AppColors.textSecondary),
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
+                    )
+                  else
+                    const SizedBox.shrink(),
+                  if (isHighlighted && isMobile && widget.onTap != null)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: AppColors.goldSoft,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.goldDeep.withOpacity(0.6)),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Open', style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.bold, color: AppColors.goldDeep)),
+                          SizedBox(width: 2),
+                          Icon(Icons.arrow_forward_rounded, size: 10, color: AppColors.goldDeep),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ] else if (widget.subtitle != null) ...[
-                const SizedBox(height: 2),
-                Text(
-                  widget.subtitle!,
-                  style: const TextStyle(
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondary,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+                ],
+              ),
             ],
           ),
         ),
