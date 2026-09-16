@@ -52,46 +52,30 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!isDesktop) {
       return Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: RadialGradient(
-              center: Alignment(0.0, -0.68),
-              radius: 0.95,
-              colors: [
-                Color(0xFFE89E28),
-                Color(0xFFC87F18),
-                Color(0xFFA05B10),
-                Color(0xFF6E3408),
-                Color(0xFF3A1501),
-                Color(0xFF220A00),
-              ],
-              stops: [0.0, 0.22, 0.44, 0.66, 0.88, 1.0],
-            ),
-          ),
-          child: SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 420),
-                  child: Column(
-                    children: [
-                      _buildMobileBrandHeader(),
-                      const SizedBox(height: 20),
-                      Card(
-                        color: Colors.white,
-                        elevation: 8,
-                        shadowColor: Colors.black.withOpacity(0.35),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: _buildLoginForm(isMobile: true),
-                        ),
+        backgroundColor: const Color(0xFF3A1501),
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Column(
+                  children: [
+                    _buildMobileBrandHeader(),
+                    const SizedBox(height: 20),
+                    Card(
+                      color: Colors.white,
+                      elevation: 8,
+                      shadowColor: Colors.black.withOpacity(0.35),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                    ],
-                  ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: _buildLoginForm(isMobile: true),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -108,21 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Expanded(
             flex: 11,
             child: Container(
-              decoration: const BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment(0.0, -0.05),
-                  radius: 1.15,
-                  colors: [
-                    Color(0xFFE89E28),
-                    Color(0xFFC87F18),
-                    Color(0xFFA05B10),
-                    Color(0xFF6E3408),
-                    Color(0xFF3A1501),
-                    Color(0xFF220A00),
-                  ],
-                  stops: [0.0, 0.22, 0.44, 0.66, 0.88, 1.0],
-                ),
-              ),
+              color: const Color(0xFF3A1501),
               child: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -133,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 680),
                         child: Image.asset(
-                          'assets/images/kkk_logo_transparent.png',
+                          'assets/images/kkk_logo_gold.png',
                           fit: BoxFit.contain,
                           filterQuality: FilterQuality.high,
                         ),
@@ -214,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Image.asset(
-              'assets/images/kkk_logo_transparent.png',
+              'assets/images/kkk_logo_gold.png',
               fit: BoxFit.contain,
               filterQuality: FilterQuality.high,
             ),
