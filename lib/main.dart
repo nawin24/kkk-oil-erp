@@ -200,23 +200,36 @@ class AuthGate extends StatefulWidget {
 
 class _AuthGateState extends State<AuthGate> with WidgetsBindingObserver {
   String _currentRoute = 'dashboard';
+  String? _intendedRoute;
   bool _routeInitialized = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    if (widget.requestedRoute != null &&
-        widget.requestedRoute!.isNotEmpty &&
-        widget.requestedRoute != 'dashboard') {
-      _currentRoute = widget.requestedRoute!;
+    final requested = widget.requestedRoute;
+    if (requested != null && requested.isNotEmpty && requested != 'dashboard') {
+      _currentRoute = requested;
       _routeInitialized = true;
     } else {
       final defaultPath = WidgetsBinding.instance.platformDispatcher.defaultRouteName;
-      if (defaultPath.isNotEmpty && defaultPath != '/') {
+      if (defaultPath.isNotEmpty && defaultPath != '/' && defaultPath != '/dashboard') {
         _currentRoute = pathToRoute(defaultPath);
         _routeInitialized = true;
       }
+    }
+  }
+
+  @override
+  void didUpdateWidget(AuthGate oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.requestedRoute != null &&
+        widget.requestedRoute!.isNotEmpty &&
+        widget.requestedRoute != oldWidget.requestedRoute &&
+        widget.requestedRoute != _currentRoute) {
+      setState(() {
+        _currentRoute = widget.requestedRoute!;
+      });
     }
   }
 
@@ -300,6 +313,8 @@ class _AuthGateState extends State<AuthGate> with WidgetsBindingObserver {
         return const EmployeesScreen();
       case 'settings':
         return const SettingsScreen();
+      case 'login':
+        return const LoginScreen();
       default:
         return DashboardScreen(onNavigate: _onNavigate);
     }
@@ -319,14 +334,29 @@ class _AuthGateState extends State<AuthGate> with WidgetsBindingObserver {
     }
 
     if (!auth.isAuthenticated) {
+      if (_currentRoute != 'login') {
+        _intendedRoute = _currentRoute;
+      }
       _routeInitialized = false;
+      _updateWebUrl('login');
+      return const LoginScreen();
+    }
+
+    // If authenticated user specifically went to /login, show LoginScreen
+    if (_currentRoute == 'login') {
       return const LoginScreen();
     }
 
     if (!_routeInitialized) {
-      if (widget.requestedRoute != null &&
+      if (_intendedRoute != null &&
+          _intendedRoute!.isNotEmpty &&
+          _intendedRoute != 'login') {
+        _currentRoute = _intendedRoute!;
+        _intendedRoute = null;
+      } else if (widget.requestedRoute != null &&
           widget.requestedRoute!.isNotEmpty &&
-          widget.requestedRoute != 'dashboard') {
+          widget.requestedRoute != 'dashboard' &&
+          widget.requestedRoute != 'login') {
         _currentRoute = widget.requestedRoute!;
       } else if (auth.isCashier) {
         _currentRoute = 'erp_billing';

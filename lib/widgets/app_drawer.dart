@@ -39,17 +39,16 @@ class AppDrawer extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  width: 38,
-                  height: 38,
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF7C441F),
-                    borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: const Color(0xFFF5BA00).withOpacity(0.55), width: 1.2),
+                    color: const Color(0xFF3A1501),
+                    borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
+                        color: Colors.black.withOpacity(0.25),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),

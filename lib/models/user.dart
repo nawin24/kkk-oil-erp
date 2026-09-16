@@ -205,6 +205,28 @@ class UserSession {
       activeMode: activeMode ?? this.activeMode,
     );
   }
+
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'username': username,
+    'name': name,
+    'role': role,
+    'roleLabel': roleLabel,
+    'access': access,
+    'activeMode': activeMode == BillingMode.nonGst ? 'nonGst' : 'gst',
+  };
+
+  factory UserSession.fromMap(Map<String, dynamic> map) {
+    return UserSession(
+      id: map['id'] ?? '',
+      username: map['username'] ?? '',
+      name: map['name'] ?? '',
+      role: map['role'] ?? '',
+      roleLabel: map['roleLabel'] ?? '',
+      access: map['access'] ?? '*',
+      activeMode: map['activeMode'] == 'nonGst' ? BillingMode.nonGst : BillingMode.gst,
+    );
+  }
 }
 
 /// Role Hierarchy Permission Rules:

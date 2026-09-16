@@ -129,4 +129,58 @@ void main() {
       expect(bytes.length, greaterThan(1000));
     });
   });
+
+  group('Session Persistence & URL Routing Tests', () {
+    test('UserSession toMap and fromMap serialization round-trips correctly', () {
+      const session = UserSession(
+        id: 'U-super',
+        username: 'admin',
+        name: 'Super Administrator',
+        role: 'super_admin',
+        roleLabel: 'Super Admin',
+        access: '*',
+        activeMode: BillingMode.gst,
+      );
+
+      final map = session.toMap();
+      expect(map['username'], 'admin');
+      expect(map['activeMode'], 'gst');
+
+      final restored = UserSession.fromMap(map);
+      expect(restored.id, session.id);
+      expect(restored.username, session.username);
+      expect(restored.role, session.role);
+      expect(restored.activeMode, BillingMode.gst);
+    });
+
+    test('Login persists user session in SharedPreferences and reloads it', () async {
+      final auth = AuthProvider();
+      await Future.delayed(const Duration(milliseconds: 50));
+
+      final res = await auth.login('admin', 'admin123');
+      expect(res['ok'], isTrue);
+
+      // Create a fresh AuthProvider simulating a browser reload
+      final reloadedAuth = AuthProvider();
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      expect(reloadedAuth.isAuthenticated, isTrue);
+      expect(reloadedAuth.currentUser?.username, 'admin');
+      expect(reloadedAuth.currentUser?.role, 'super_admin');
+    });
+
+    test('Logout clears persisted session so reload starts unauthenticated', () async {
+      final auth = AuthProvider();
+      await Future.delayed(const Duration(milliseconds: 50));
+
+      await auth.login('admin', 'admin123');
+      auth.logout();
+
+      final reloadedAuth = AuthProvider();
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      expect(reloadedAuth.isAuthenticated, isFalse);
+      expect(reloadedAuth.currentUser, isNull);
+    });
+  });
 }

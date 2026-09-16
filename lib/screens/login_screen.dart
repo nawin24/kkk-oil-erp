@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!isDesktop) {
       return Scaffold(
-        backgroundColor: AppColors.bg,
+        backgroundColor: const Color(0xFF3A1501),
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -64,10 +64,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     _buildMobileBrandHeader(),
                     const SizedBox(height: 20),
                     Card(
-                      elevation: 0,
+                      color: Colors.white,
+                      elevation: 8,
+                      shadowColor: Colors.black.withOpacity(0.35),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
-                        side: const BorderSide(color: AppColors.border),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(24),
@@ -87,49 +88,20 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: AppColors.bg,
       body: Row(
         children: [
-          // Left: Official KKK Brand Panel (Soft Saffron Chocolate & Gold Theme)
+          // Left: Official KKK Brand Panel (Unified Deep Dark Brown & Gold Theme)
           Expanded(
             flex: 11,
             child: Container(
-              decoration: const BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment(0.0, -0.05),
-                  radius: 1.15,
-                  colors: [
-                    Color(0xFF925327), // Soft golden saffron chocolate glow
-                    Color(0xFF7C441F), // Rich warm milk chocolate
-                    Color(0xFF653416), // Deep warm chocolate edge
-                  ],
-                  stops: [0.0, 0.55, 1.0],
-                ),
-              ),
+              color: const Color(0xFF3A1501),
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // Subtle ambient background illumination
-                  Positioned.fill(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.black.withOpacity(0.04),
-                            Colors.transparent,
-                            Colors.black.withOpacity(0.35),
-                          ],
-                          stops: const [0.0, 0.65, 1.0],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Center Hero: High-resolution pristine gold logo, perfectly sized
+                  // Center Hero: High-resolution pristine gold logo, seamlessly unified with panel
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 36),
                       child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 640),
+                        constraints: const BoxConstraints(maxWidth: 680),
                         child: Image.asset(
                           'assets/images/kkk_logo_gold.png',
                           fit: BoxFit.contain,
@@ -207,26 +179,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildMobileBrandHeader() {
     return Column(
       children: [
-        Container(
-          height: 76,
-          decoration: BoxDecoration(
-            color: const Color(0xFF7C441F),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFF5BA00).withOpacity(0.55), width: 1.2),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          clipBehavior: Clip.antiAlias,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Image.asset(
-            'assets/images/kkk_logo_gold.png',
-            fit: BoxFit.contain,
-            filterQuality: FilterQuality.high,
+        SizedBox(
+          height: 110,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Image.asset(
+              'assets/images/kkk_logo_gold.png',
+              fit: BoxFit.contain,
+              filterQuality: FilterQuality.high,
+            ),
           ),
         ),
         const SizedBox(height: 12),
@@ -235,15 +196,17 @@ class _LoginScreenState extends State<LoginScreen> {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w800,
-            color: AppColors.text,
+            color: Colors.white,
+            letterSpacing: 0.3,
           ),
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 3),
         const Text(
           'Tamil Nadu · Billing & ERP System',
           style: TextStyle(
             fontSize: 12.5,
-            color: AppColors.text2,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFFD4A373),
           ),
         ),
       ],

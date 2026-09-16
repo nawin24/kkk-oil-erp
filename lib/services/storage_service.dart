@@ -19,6 +19,7 @@ class StorageService {
   static const String _companyKey = 'kkk_flutter_company_v1';
   static const String _priceHistoryKey = 'kkk_flutter_price_history_v1';
   static const String _auditLogsKey = 'kkk_flutter_audit_logs_v1';
+  static const String _userSessionKey = 'kkk_flutter_user_session_v1';
 
   static SharedPreferences? _prefs;
 
@@ -125,6 +126,17 @@ class StorageService {
 
   static Future<void> saveAuditLogs(List<Map<String, dynamic>> list) => saveList(_auditLogsKey, list);
   static Future<List<Map<String, dynamic>>?> loadAuditLogs() => loadList(_auditLogsKey);
+
+  static Future<void> saveUserSession(Map<String, dynamic>? session) async {
+    final prefs = await _getPrefs();
+    if (session == null) {
+      await prefs.remove(_userSessionKey);
+    } else {
+      await prefs.setString(_userSessionKey, jsonEncode(session));
+    }
+  }
+
+  static Future<Map<String, dynamic>?> loadUserSession() => loadObject(_userSessionKey);
 
   static Future<void> clearAll() async {
     final prefs = await _getPrefs();

@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:959332742121:android:87fe3420e13815b28b1178",
+        "mobilesdk_app_id": "1:959332742121:android:b80060a3c5f9dcd68b1178",
         "android_client_info": {
           "package_name": "in.kkkoil.kkk_oil_erp_flutter"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC6674SxdJIGOlmyIdZZK0PTS3VK55Srks"
+          "current_key": "AIzaSyAV0gqdyY487XPNROrX1xjb672VJGPRA-4"
         }
       ],
       "services": {

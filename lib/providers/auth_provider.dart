@@ -134,6 +134,23 @@ class AuthProvider extends ChangeNotifier {
     await _persistUsers();
     await _persistRoles();
 
+    // Restore persistent session if available and user is active
+    final savedSessionMap = await StorageService.loadUserSession();
+    if (savedSessionMap != null) {
+      final restored = UserSession.fromMap(savedSessionMap);
+      final matchedUser = _users.cast<AppUser?>().firstWhere(
+            (u) =>
+                u?.id == restored.id ||
+                u?.username.toLowerCase() == restored.username.toLowerCase(),
+            orElse: () => null,
+          );
+      if (matchedUser != null && matchedUser.active) {
+        _currentUser = restored;
+      } else {
+        await StorageService.saveUserSession(null);
+      }
+    }
+
     _initialized = true;
     notifyListeners();
 
@@ -358,6 +375,8 @@ class AuthProvider extends ChangeNotifier {
       activeMode: mode,
     );
 
+    await StorageService.saveUserSession(_currentUser!.toMap());
+
     notifyListeners();
     return {'ok': true, 'mode': mode == BillingMode.nonGst ? 'NON_GST' : 'GST'};
   }
@@ -380,6 +399,7 @@ class AuthProvider extends ChangeNotifier {
           roleLabel: 'Super Admin (Non-GST)',
           activeMode: BillingMode.nonGst,
         );
+        await StorageService.saveUserSession(_currentUser!.toMap());
         notifyListeners();
         return {'ok': true, 'mode': 'NON_GST'};
       }
@@ -397,6 +417,7 @@ class AuthProvider extends ChangeNotifier {
       roleLabel: 'Super Admin',
       activeMode: BillingMode.gst,
     );
+    StorageService.saveUserSession(_currentUser!.toMap());
     notifyListeners();
   }
 
@@ -410,12 +431,14 @@ class AuthProvider extends ChangeNotifier {
         roleLabel: 'Super Admin (Non-GST)',
         activeMode: BillingMode.nonGst,
       );
+      StorageService.saveUserSession(_currentUser!.toMap());
       notifyListeners();
     }
   }
 
   void logout() {
     _currentUser = null;
+    StorageService.saveUserSession(null);
     notifyListeners();
   }
 

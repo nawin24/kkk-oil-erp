@@ -9,6 +9,9 @@ class FirebaseService {
   static const String storageBucket = 'kkk-oil-erp.firebasestorage.app';
   static const String messagingSenderId = '959332742121';
   static const String appId = '1:959332742121:web:87fe3420e13815b28b1178';
+  static const String webAppId = '1:959332742121:web:87fe3420e13815b28b1178';
+  static const String androidAppId = '1:959332742121:android:b80060a3c5f9dcd68b1178';
+  static const String iosAppId = '1:959332742121:ios:8f37b66a90af28968b1178';
 
   static const String _baseUrl =
       'https://firestore.googleapis.com/v1/projects/$projectId/databases/(default)/documents';
