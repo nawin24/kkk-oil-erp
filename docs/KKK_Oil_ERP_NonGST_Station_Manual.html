@@ -520,6 +520,255 @@
         color: black;
       }
     }
+  
+    /* --- Official Logo & Brand Header Styles --- */
+    .bar-logo-img {
+      height: 38px;
+      width: auto;
+      border-radius: 6px;
+      vertical-align: middle;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .hero-brand-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .hero-logo-img {
+      max-height: 120px;
+      width: auto;
+      filter: drop-shadow(0 6px 20px rgba(217, 119, 6, 0.45));
+      margin-bottom: 16px;
+      transition: transform 0.3s ease;
+    }
+
+    .hero-logo-img:hover {
+      transform: scale(1.02);
+    }
+
+    /* --- Device Mockup & Screenshot Showcase Frames --- */
+    .screenshot-showcase {
+      margin: 24px 0 28px 0;
+      background: #0F172A;
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid #1E293B;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .showcase-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .showcase-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .showcase-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 12px;
+      background: rgba(217, 119, 6, 0.2);
+      color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    /* Side-by-Side Dual Device Grid (Desktop + Mobile) */
+    .dual-device-grid {
+      display: grid;
+      grid-template-columns: 2.3fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .dual-device-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Desktop Browser Frame */
+    .browser-frame {
+      background: #1E293B;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      border: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .browser-titlebar {
+      background: #182234;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .browser-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background-color: #EF4444; }
+    .dot-yellow { background-color: #F59E0B; }
+    .dot-green { background-color: #10B981; }
+
+    .browser-url-bar {
+      flex: 1;
+      background: #0B1120;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #1E293B;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .browser-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .browser-screen {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #000;
+    }
+
+    /* Mobile Smartphone Frame */
+    .mobile-phone-frame {
+      background: #020617;
+      border-radius: 28px;
+      padding: 8px 8px 12px 8px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      border: 3px solid #334155;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .mobile-notch {
+      width: 60px;
+      height: 14px;
+      background: #1E293B;
+      border-radius: 0 0 10px 10px;
+      margin-bottom: 6px;
+    }
+
+    .mobile-screen-wrap {
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #1E293B;
+    }
+
+    .mobile-screen {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .mobile-device-tag {
+      margin-top: 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #94A3B8;
+      text-align: center;
+    }
+
+    /* Single Desktop Browser Frame (Full Width) */
+    .single-browser-wrap {
+      width: 100%;
+    }
+
+    /* Multi Mobile Gallery Grid */
+    .mobile-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    @media print {
+      .screenshot-showcase {
+        background: #FAFAFA !important;
+        border: 1px solid #CBD5E1 !important;
+        padding: 12px !important;
+        page-break-inside: avoid !important;
+      }
+      .browser-titlebar {
+        background: #E2E8F0 !important;
+        border-bottom: 1px solid #CBD5E1 !important;
+      }
+      .browser-url-bar {
+        background: #FFFFFF !important;
+        color: #334155 !important;
+        border: 1px solid #CBD5E1 !important;
+      }
+      .browser-tag {
+        color: #475569 !important;
+      }
+      .mobile-phone-frame {
+        border-color: #94A3B8 !important;
+        background: #F1F5F9 !important;
+      }
+      .mobile-notch {
+        background: #94A3B8 !important;
+      }
+      .mobile-device-tag {
+        color: #334155 !important;
+      }
+      .browser-screen, .mobile-screen {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+      .hero-logo-img {
+        max-height: 90px !important;
+      }
+      .bar-logo-img {
+        display: none !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -527,7 +776,7 @@
   <!-- Top Sticky Bar -->
   <header class="top-action-bar">
     <div class="bar-brand">
-      <div class="bar-logo-badge">NON-GST</div>
+      <img src="screenshots/kkk_logo_gold.png" alt="KKK Oil Factory" class="bar-logo-img">
       <div>
         <div class="bar-title">KKK Oil Factory — Station Manual</div>
         <div class="bar-subtitle">Dedicated Non-GST Commercial Billing Station · v2.5.0</div>
@@ -549,6 +798,9 @@
 
     <!-- Hero Card -->
     <section class="hero-card">
+      <div class="hero-brand-header">
+        <img src="screenshots/kkk_logo_gold.png" alt="KKK Oil Factory" class="hero-logo-img">
+      </div>
       <span class="hero-badge">Dedicated Subsystem Release</span>
       <h1 class="hero-title">KKK Oil Factory — Non-GST Billing Station Manual</h1>
       <p class="hero-desc">
@@ -601,6 +853,42 @@
         <h2 class="section-title"><span class="section-title-num">01</span> Executive Overview &amp; Statutory Firewall</h2>
         <span class="badge badge-amber">Operational Rationale</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Dedicated Non-GST Station Operational Cockpit
+          </div>
+          <span class="showcase-badge">Desktop &amp; Mobile Synchronized</span>
+        </div>
+        <div class="dual-device-grid">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/dashboard?station=nongst
+              </div>
+              <div class="browser-tag">Desktop (1920×1080)</div>
+            </div>
+            <img src="screenshots/desktop_nongst_dashboard.png" alt="Dedicated Non-GST Station Operational Cockpit Desktop View" class="browser-screen" loading="lazy">
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_nongst_dashboard.png" alt="Dedicated Non-GST Station Operational Cockpit Mobile App View" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📱 Mobile App (390×844)</div>
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 1.1: Dedicated Non-GST executive station overview on desktop workstation and mobile phone showing isolated non-tax revenue and vouchers.</em></p>
+      </div>
+
       <p>
         The <strong>Dedicated Non-GST Billing Station</strong> provides an isolated environment for managing physical trade transactions that operate outside the statutory GST tax regime under Indian agricultural marketing guidelines.
       </p>
@@ -619,6 +907,42 @@
         <h2 class="section-title"><span class="section-title-num">02</span> Access Control &amp; Visual Theme</h2>
         <span class="badge badge-amber">Station Security</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Non-GST Gate Access & Authentication Gateway
+          </div>
+          <span class="showcase-badge">Desktop &amp; Mobile Synchronized</span>
+        </div>
+        <div class="dual-device-grid">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/login
+              </div>
+              <div class="browser-tag">Desktop (1920×1080)</div>
+            </div>
+            <img src="screenshots/desktop_login.png" alt="Non-GST Gate Access & Authentication Gateway Desktop View" class="browser-screen" loading="lazy">
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_login.png" alt="Non-GST Gate Access & Authentication Gateway Mobile App View" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📱 Mobile App (390×844)</div>
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 2.1: Login gateway with dedicated 'Super Admin (Non-GST Login)' button providing 1-click access to the non-tax station.</em></p>
+      </div>
+
       <p>
         To prevent accidental cross-billing and maintain strict segregation, the Non-GST station enforces dedicated security gates and visual styling:
       </p>
@@ -642,6 +966,42 @@
         <span class="path-url">Path: /nongst-billing · Route: nongst_billing</span>
         <span class="path-role-tag">Super Admin Only</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Non-GST Sales Voucher Station (NG-XXXX)
+          </div>
+          <span class="showcase-badge">Desktop &amp; Mobile Synchronized</span>
+        </div>
+        <div class="dual-device-grid">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/nongst-billing
+              </div>
+              <div class="browser-tag">Desktop (1920×1080)</div>
+            </div>
+            <img src="screenshots/desktop_nongst_billing.png" alt="Non-GST Sales Voucher Station (NG-XXXX) Desktop View" class="browser-screen" loading="lazy">
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_nongst_billing.png" alt="Non-GST Sales Voucher Station (NG-XXXX) Mobile App View" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📱 Mobile App (390×844)</div>
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 3.1: Non-GST Billing Voucher interface featuring warm amber highlight, 'NG-' voucher series, and hard-locked 0.0% GST rate.</em></p>
+      </div>
+
       <p>
         The primary voucher creation interface for non-tax commercial trade, cash sales, and mandi farmer settlements.
       </p>
@@ -687,6 +1047,42 @@
         <span class="path-url">Path: /nongst-history · Route: nongst_history</span>
         <span class="path-role-tag">Super Admin Only</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Non-GST History & Isolation Records
+          </div>
+          <span class="showcase-badge">Desktop &amp; Mobile Synchronized</span>
+        </div>
+        <div class="dual-device-grid">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/nongst-history
+              </div>
+              <div class="browser-tag">Desktop (1920×1080)</div>
+            </div>
+            <img src="screenshots/desktop_nongst_history.png" alt="Non-GST History & Isolation Records Desktop View" class="browser-screen" loading="lazy">
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_nongst_history.png" alt="Non-GST History & Isolation Records Mobile App View" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📱 Mobile App (390×844)</div>
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 4.1: Audit ledger of all Non-GST vouchers with 1-click delivery memo reprinting and Private Godown inventory-restoring cancellation.</em></p>
+      </div>
+
       <p>
         Audit repository containing all historical Non-GST vouchers. Provides live searching, reprinting, and stock-restoring cancellation.
       </p>
@@ -833,6 +1229,43 @@
         <h2 class="section-title"><span class="section-title-num">09</span> Mobile App Field Workflows</h2>
         <span class="badge badge-amber">Handheld Operations</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5z"/></svg>
+            Non-GST Mobile Station Touch Experience
+          </div>
+          <span class="showcase-badge">Field Mandi Procurement &amp; Cash Billing</span>
+        </div>
+        <div class="mobile-gallery-grid">
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_nongst_dashboard.png" alt="Non-GST Mobile Dashboard" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📊 Non-GST Station Cockpit</div>
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_nongst_billing.png" alt="Non-GST Mobile Voucher" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">🧾 Fast Non-GST Voucher</div>
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_nongst_history.png" alt="Non-GST Mobile History" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📜 Non-Tax History Log</div>
+          </div>
+        </div>
+        <p style="margin-top: 14px; font-size: 12.5px; color: #94A3B8;">
+          <em>Figure 9.1: Field operatives and station supervisors can generate zero-tax delivery memos and record mandi farmer procurement directly from handheld smartphones.</em>
+        </p>
+      </div>
+
       <p>
         Mobile tablet and smartphone workflows for field procurement agents and mandi operations:
       </p>

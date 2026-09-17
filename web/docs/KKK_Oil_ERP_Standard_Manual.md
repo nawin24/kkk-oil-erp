@@ -1,4 +1,7 @@
 # KKK Oil Factory — Standard GST & All Roles Operational Manual
+
+<p align="center"><img src="screenshots/kkk_logo_gold.png" alt="KKK Oil Factory Logo" width="320"></p>
+
 ## Complete Path-Wise, Button-Wise & Functional System Manual for Web & Mobile
 **Version:** 2.5.0 (Production Release)  
 **Enterprise:** KKK Oil Factory, Tamil Nadu, India  
@@ -50,6 +53,11 @@ The system enforces strict operational boundaries to prevent unauthorized price 
 ## 3. Path-by-Path & Button-by-Button System Manual
 
 ### 3.1. Authentication & Session Gate (`/login`)
+
+| Desktop Web (1920x1080) | Mobile Touch (390x844) |
+| :---: | :---: |
+| ![Desktop Login](screenshots/desktop_login.png) | ![Mobile Login](screenshots/mobile_login.png) |
+
 - **Route Path**: `/login`
 - **Internal Route**: `login`
 - **Purpose**: Authenticates personnel, securely decrypts access tokens, sets active role context, and restores last active station.
@@ -92,6 +100,11 @@ The system enforces strict operational boundaries to prevent unauthorized price 
 ---
 
 ### 3.3. Standard B2B GST Invoicing (`/billing`)
+
+| Desktop Web (1920x1080) | Mobile Touch (390x844) |
+| :---: | :---: |
+| ![Desktop Billing](screenshots/desktop_billing.png) | ![Mobile Billing](screenshots/mobile_billing.png) |
+
 - **Route Path**: `/billing` (Aliases: `/gst-billing`, `/erp-billing`)
 - **Internal Route**: `erp_billing`
 - **Purpose**: Generates statutory GST Tax Invoices compliant with Rule 46 of CGST Rules 2017 for wholesale dealers, distributors, supermarkets, and institutions.
@@ -185,6 +198,9 @@ The system enforces strict operational boundaries to prevent unauthorized price 
 ---
 
 ### 3.6. Master Product Catalog (`/products`)
+
+![Desktop Products Master](screenshots/desktop_products.png)
+
 - **Route Path**: `/products`
 - **Internal Route**: `products`
 - **Purpose**: Master database of all manufactured oils, packaged SKUs, and oil cake byproducts with multi-tier pricing and safety stock thresholds.
@@ -320,8 +336,10 @@ The system enforces strict operational boundaries to prevent unauthorized price 
   - `Packaging & Consumables Cost (₹)`: Tins, labels, and cartons.
   - `Labour & Power Cost (₹)`: Factory operational overhead.
 - **Extraction Yield Calculations**:
-  - $	ext{Oil Extraction Yield (\%)} = \left( rac{	ext{Oil Produced (kg)}}{	ext{Seed Input (kg)}} ight) 	imes 100$
-  - $	ext{Oil Cake Recovery (\%)} = \left( rac{	ext{Oil Cake Produced (kg)}}{	ext{Seed Input (kg)}} ight) 	imes 100$
+  - $	ext{Oil Extraction Yield (\%)} = \left( rac{	ext{Oil Produced (kg)}}{	ext{Seed Input (kg)}} 
+ight) 	imes 100$
+  - $	ext{Oil Cake Recovery (\%)} = \left( rac{	ext{Oil Cake Produced (kg)}}{	ext{Seed Input (kg)}} 
+ight) 	imes 100$
   - $	ext{Processing Loss (\%)} = 100\% - (	ext{Oil Yield \%} + 	ext{Cake Yield \%})$
 - **Batch Ledger Cards / Table**:
   - Shows Batch ID (`PRD-BXXXX`), Target Product, Net Output, Yield %, Date, Expiry Date, Unit Cost per Liter, and Status (`Completed`, `In Progress`).

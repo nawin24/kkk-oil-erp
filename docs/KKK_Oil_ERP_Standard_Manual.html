@@ -538,6 +538,255 @@
         color: black;
       }
     }
+  
+    /* --- Official Logo & Brand Header Styles --- */
+    .bar-logo-img {
+      height: 38px;
+      width: auto;
+      border-radius: 6px;
+      vertical-align: middle;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .hero-brand-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .hero-logo-img {
+      max-height: 120px;
+      width: auto;
+      filter: drop-shadow(0 6px 20px rgba(217, 119, 6, 0.45));
+      margin-bottom: 16px;
+      transition: transform 0.3s ease;
+    }
+
+    .hero-logo-img:hover {
+      transform: scale(1.02);
+    }
+
+    /* --- Device Mockup & Screenshot Showcase Frames --- */
+    .screenshot-showcase {
+      margin: 24px 0 28px 0;
+      background: #0F172A;
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid #1E293B;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .showcase-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .showcase-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .showcase-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 12px;
+      background: rgba(217, 119, 6, 0.2);
+      color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    /* Side-by-Side Dual Device Grid (Desktop + Mobile) */
+    .dual-device-grid {
+      display: grid;
+      grid-template-columns: 2.3fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .dual-device-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Desktop Browser Frame */
+    .browser-frame {
+      background: #1E293B;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      border: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .browser-titlebar {
+      background: #182234;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .browser-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background-color: #EF4444; }
+    .dot-yellow { background-color: #F59E0B; }
+    .dot-green { background-color: #10B981; }
+
+    .browser-url-bar {
+      flex: 1;
+      background: #0B1120;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #1E293B;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .browser-tag {
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .browser-screen {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #000;
+    }
+
+    /* Mobile Smartphone Frame */
+    .mobile-phone-frame {
+      background: #020617;
+      border-radius: 28px;
+      padding: 8px 8px 12px 8px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      border: 3px solid #334155;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .mobile-notch {
+      width: 60px;
+      height: 14px;
+      background: #1E293B;
+      border-radius: 0 0 10px 10px;
+      margin-bottom: 6px;
+    }
+
+    .mobile-screen-wrap {
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #1E293B;
+    }
+
+    .mobile-screen {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .mobile-device-tag {
+      margin-top: 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #94A3B8;
+      text-align: center;
+    }
+
+    /* Single Desktop Browser Frame (Full Width) */
+    .single-browser-wrap {
+      width: 100%;
+    }
+
+    /* Multi Mobile Gallery Grid */
+    .mobile-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    @media print {
+      .screenshot-showcase {
+        background: #FAFAFA !important;
+        border: 1px solid #CBD5E1 !important;
+        padding: 12px !important;
+        page-break-inside: avoid !important;
+      }
+      .browser-titlebar {
+        background: #E2E8F0 !important;
+        border-bottom: 1px solid #CBD5E1 !important;
+      }
+      .browser-url-bar {
+        background: #FFFFFF !important;
+        color: #334155 !important;
+        border: 1px solid #CBD5E1 !important;
+      }
+      .browser-tag {
+        color: #475569 !important;
+      }
+      .mobile-phone-frame {
+        border-color: #94A3B8 !important;
+        background: #F1F5F9 !important;
+      }
+      .mobile-notch {
+        background: #94A3B8 !important;
+      }
+      .mobile-device-tag {
+        color: #334155 !important;
+      }
+      .browser-screen, .mobile-screen {
+        max-width: 100% !important;
+        height: auto !important;
+      }
+      .hero-logo-img {
+        max-height: 90px !important;
+      }
+      .bar-logo-img {
+        display: none !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -545,7 +794,7 @@
   <!-- Top Sticky Bar with Print & Download Actions -->
   <header class="top-action-bar">
     <div class="bar-brand">
-      <div class="bar-logo-badge">KKK</div>
+      <img src="screenshots/kkk_logo_gold.png" alt="KKK Oil Factory" class="bar-logo-img">
       <div>
         <div class="bar-title">KKK Oil Factory — System Documentation</div>
         <div class="bar-subtitle">Standard GST &amp; All Roles Operational Manual · v2.5.0</div>
@@ -567,6 +816,9 @@
 
     <!-- Hero Card -->
     <section class="hero-card">
+      <div class="hero-brand-header">
+        <img src="screenshots/kkk_logo_gold.png" alt="KKK Oil Factory" class="hero-logo-img">
+      </div>
       <span class="hero-badge">Official Production Release</span>
       <h1 class="hero-title">KKK Oil Factory Enterprise ERP &amp; Billing System</h1>
       <p class="hero-desc">
@@ -626,6 +878,42 @@
     </nav>
 
     <!-- SECTION 1 -->
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Executive Dashboard & Responsive Shell
+          </div>
+          <span class="showcase-badge">Desktop &amp; Mobile Synchronized</span>
+        </div>
+        <div class="dual-device-grid">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/dashboard
+              </div>
+              <div class="browser-tag">Desktop (1920×1080)</div>
+            </div>
+            <img src="screenshots/desktop_dashboard.png" alt="Executive Dashboard & Responsive Shell Desktop View" class="browser-screen" loading="lazy">
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_dashboard.png" alt="Executive Dashboard & Responsive Shell Mobile App View" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📱 Mobile App (390×844)</div>
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 1.1: Desktop layout with full sidebar and KPI analytics alongside mobile phone layout with bottom navigation.</em></p>
+      </div>
+
     <article id="sec-overview" class="section-card">
       <div class="section-header">
         <h2 class="section-title"><span class="section-title-num">01</span> Executive Summary &amp; Responsive Layout</h2>
@@ -727,6 +1015,42 @@
         <span class="path-url">Path: /login · Route: login</span>
         <span class="path-role-tag">Public / All Personnel</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Authentication & Security Gateway
+          </div>
+          <span class="showcase-badge">Desktop &amp; Mobile Synchronized</span>
+        </div>
+        <div class="dual-device-grid">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/login
+              </div>
+              <div class="browser-tag">Desktop (1920×1080)</div>
+            </div>
+            <img src="screenshots/desktop_login.png" alt="Authentication & Security Gateway Desktop View" class="browser-screen" loading="lazy">
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_login.png" alt="Authentication & Security Gateway Mobile App View" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📱 Mobile App (390×844)</div>
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 3.1: Desktop dark-gold brand split login screen alongside mobile single-column card with quick test role buttons.</em></p>
+      </div>
+
       <p>
         Authenticates company personnel, verifies cryptographically hashed passwords, creates session tokens in local storage, and loads permissions.
       </p>
@@ -752,6 +1076,42 @@
         <span class="path-url">Path: /dashboard (or /) · Route: dashboard</span>
         <span class="path-role-tag">Super Admin, Admin, Manager</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Operations Dashboard Cockpit
+          </div>
+          <span class="showcase-badge">Desktop &amp; Mobile Synchronized</span>
+        </div>
+        <div class="dual-device-grid">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/dashboard
+              </div>
+              <div class="browser-tag">Desktop (1920×1080)</div>
+            </div>
+            <img src="screenshots/desktop_dashboard.png" alt="Operations Dashboard Cockpit Desktop View" class="browser-screen" loading="lazy">
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_dashboard.png" alt="Operations Dashboard Cockpit Mobile App View" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📱 Mobile App (390×844)</div>
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 4.1: Real-time sales counters, cash register balance, silo bulk oil levels, and stock alert indicators.</em></p>
+      </div>
+
       <p>
         Real-time operational dashboard providing instant visibility into daily mill throughput, cash balances, silo tank levels, and inventory alerts.
       </p>
@@ -782,6 +1142,42 @@
         <span class="path-url">Path: /billing (Aliases: /gst-billing, /erp-billing) · Route: erp_billing</span>
         <span class="path-role-tag">Super Admin, Admin, Manager, Cashier</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Standard B2B GST Invoicing Voucher
+          </div>
+          <span class="showcase-badge">Desktop &amp; Mobile Synchronized</span>
+        </div>
+        <div class="dual-device-grid">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/billing
+              </div>
+              <div class="browser-tag">Desktop (1920×1080)</div>
+            </div>
+            <img src="screenshots/desktop_billing.png" alt="Standard B2B GST Invoicing Voucher Desktop View" class="browser-screen" loading="lazy">
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_billing.png" alt="Standard B2B GST Invoicing Voucher Mobile App View" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📱 Mobile App (390×844)</div>
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 5.1: High-speed barcode/SKU entry, AWR rate switcher, multi-tab dispatch details, and voucher bill totals.</em></p>
+      </div>
+
       <p>
         The central enterprise billing engine for wholesale orders, dealers, distributors, supermarkets, and institutions. Formats tax invoices strictly conforming to <strong>Rule 46 of CGST Rules, 2017</strong>.
       </p>
@@ -836,6 +1232,42 @@
         <span class="path-url">Path: /billing-history (Alias: /bills) · Route: billing_history</span>
         <span class="path-role-tag">Super Admin, Admin, Manager, Cashier</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — GST Invoices Audit & History
+          </div>
+          <span class="showcase-badge">Desktop &amp; Mobile Synchronized</span>
+        </div>
+        <div class="dual-device-grid">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/billing-history
+              </div>
+              <div class="browser-tag">Desktop (1920×1080)</div>
+            </div>
+            <img src="screenshots/desktop_billing_history.png" alt="GST Invoices Audit & History Desktop View" class="browser-screen" loading="lazy">
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_history.png" alt="GST Invoices Audit & History Mobile App View" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📱 Mobile App (390×844)</div>
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 6.1: Comprehensive chronological invoice audit records with 1-click A4 PDF re-prints and thermal slips.</em></p>
+      </div>
+
       <p>
         Chronological audit repository of all issued GST tax invoices. Allows searching, reprinting, and inventory-restoring cancellations.
       </p>
@@ -904,6 +1336,35 @@
         <span class="path-url">Path: /products · Route: products</span>
         <span class="path-role-tag">Super Admin, Admin, Manager</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Master Product Catalog & SKU Management
+          </div>
+          <span class="showcase-badge">Desktop Web Workstation (1920×1080)</span>
+        </div>
+        <div class="single-browser-wrap">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/products
+              </div>
+              <div class="browser-tag">Full Keyboard &amp; Data Entry Mode</div>
+            </div>
+            <img src="screenshots/desktop_products.png" alt="Master Product Catalog & SKU Management Full Table View" class="browser-screen" loading="lazy">
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 8.1: Central catalog of 66 SKUs, brand filtering (KKK, Ruchi Gold, Sunrich), stock badges, and AWR selling rates.</em></p>
+      </div>
+
       <p>
         Central master registry of all edible oils, packaged SKUs, and byproduct oil cakes. Manages tier pricing (AWR architecture), HSN codes, and safety reorder levels.
       </p>
@@ -941,6 +1402,35 @@
         <span class="path-url">Path: /price-management · Route: price_management</span>
         <span class="path-role-tag">Super Admin, Admin</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Dynamic Margin & Commodity Price Engine
+          </div>
+          <span class="showcase-badge">Desktop Web Workstation (1920×1080)</span>
+        </div>
+        <div class="single-browser-wrap">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/price-management
+              </div>
+              <div class="browser-tag">Full Keyboard &amp; Data Entry Mode</div>
+            </div>
+            <img src="screenshots/desktop_price_management.png" alt="Dynamic Margin & Commodity Price Engine Full Table View" class="browser-screen" loading="lazy">
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 9.1: Agency, Wholesale, and Retail margin engine with instant multi-tier price updates across all channels.</em></p>
+      </div>
+
       <p>
         Dynamic commodity pricing engine that protects mill profit margins against daily agricultural seed market fluctuations.
       </p>
@@ -965,6 +1455,35 @@
         <span class="path-url">Path: /price-history · Route: price_history</span>
         <span class="path-role-tag">Super Admin, Admin, Manager</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Commodity Price Fluctuation History & Market Trends
+          </div>
+          <span class="showcase-badge">Desktop Web Workstation (1920×1080)</span>
+        </div>
+        <div class="single-browser-wrap">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/price-history
+              </div>
+              <div class="browser-tag">Full Keyboard &amp; Data Entry Mode</div>
+            </div>
+            <img src="screenshots/desktop_price_history.png" alt="Commodity Price Fluctuation History & Market Trends Full Table View" class="browser-screen" loading="lazy">
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 10.1: Historical price movement audits tracking raw oil seed mandi spikes and price revision logs.</em></p>
+      </div>
+
       <p>
         Historical analytics comparing regional mandi raw seed arrival prices against finished packaged oil wholesale rates. Features audit logs detailing which administrator modified product prices.
       </p>
@@ -980,6 +1499,42 @@
         <span class="path-url">Path: /inventory (Alias: /stock) · Route: inventory</span>
         <span class="path-role-tag">Super Admin, Admin, Manager, Warehouse Head</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Bulk Silo Tanks & Warehouse Stock
+          </div>
+          <span class="showcase-badge">Desktop &amp; Mobile Synchronized</span>
+        </div>
+        <div class="dual-device-grid">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/inventory
+              </div>
+              <div class="browser-tag">Desktop (1920×1080)</div>
+            </div>
+            <img src="screenshots/desktop_inventory.png" alt="Bulk Silo Tanks & Warehouse Stock Desktop View" class="browser-screen" loading="lazy">
+          </div>
+          <div class="mobile-phone-frame">
+            <div class="mobile-notch"></div>
+            <div class="mobile-screen-wrap">
+              <img src="screenshots/mobile_inventory.png" alt="Bulk Silo Tanks & Warehouse Stock Mobile App View" class="mobile-screen" loading="lazy">
+            </div>
+            <div class="mobile-device-tag">📱 Mobile App (390×844)</div>
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 11.1: Live metric dip gauges for Raw Oil, Filtered Oil, Packaged Pouches/Tins, and Oil Cake Byproducts.</em></p>
+      </div>
+
       <p>
         Dual-mode inventory tracking covering both bulk oil silos (via physical dip stick calibration) and packaged finished goods.
       </p>
@@ -1006,6 +1561,35 @@
         <span class="path-url">Path: /purchase (Alias: /inward) · Route: purchase</span>
         <span class="path-role-tag">Super Admin, Admin, Manager</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Seed Inward Procurement & Weighbridge Logistics
+          </div>
+          <span class="showcase-badge">Desktop Web Workstation (1920×1080)</span>
+        </div>
+        <div class="single-browser-wrap">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/purchase
+              </div>
+              <div class="browser-tag">Full Keyboard &amp; Data Entry Mode</div>
+            </div>
+            <img src="screenshots/desktop_purchase.png" alt="Seed Inward Procurement & Weighbridge Logistics Full Table View" class="browser-screen" loading="lazy">
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 12.1: Mandi raw seed intake logging vehicle gross weight, tare weight, moisture deduction, and APMC cess.</em></p>
+      </div>
+
       <p>
         Manages raw oil seed procurement from agricultural mandis and farmer suppliers with weighbridge gross/tare tracking and QC grading.
       </p>
@@ -1034,6 +1618,35 @@
         <span class="path-url">Path: /production (Alias: /milling) · Route: production</span>
         <span class="path-role-tag">Super Admin, Admin, Manager, Production Supervisor</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Expeller Milling Runs & Manufacturing Yield
+          </div>
+          <span class="showcase-badge">Desktop Web Workstation (1920×1080)</span>
+        </div>
+        <div class="single-browser-wrap">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/production
+              </div>
+              <div class="browser-tag">Full Keyboard &amp; Data Entry Mode</div>
+            </div>
+            <img src="screenshots/desktop_production.png" alt="Expeller Milling Runs & Manufacturing Yield Full Table View" class="browser-screen" loading="lazy">
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 13.1: Expeller crushing batch logging input seed quintals, filtered oil yield %, cake bags, and recovery efficiency.</em></p>
+      </div>
+
       <p>
         Monitors expeller crushing runs, calculating extraction recovery yields, byproduct cake generation, and processing moisture loss.
       </p>
@@ -1063,6 +1676,35 @@
         <span class="path-url">Path: /customers · Route: customers</span>
         <span class="path-role-tag">Super Admin, Admin, Manager, Cashier</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Customer Ledger, Credit Limits & GSTIN Registry
+          </div>
+          <span class="showcase-badge">Desktop Web Workstation (1920×1080)</span>
+        </div>
+        <div class="single-browser-wrap">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/customers
+              </div>
+              <div class="browser-tag">Full Keyboard &amp; Data Entry Mode</div>
+            </div>
+            <img src="screenshots/desktop_customers.png" alt="Customer Ledger, Credit Limits & GSTIN Registry Full Table View" class="browser-screen" loading="lazy">
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 14.1: Customer credit profiles, legal names, GSTIN validation, delivery corridors, and outstanding debt balances.</em></p>
+      </div>
+
       <p>
         Comprehensive customer registry tracking retail stores, wholesale dealers, GSTIN numbers, delivery routes, and credit limits.
       </p>
@@ -1090,6 +1732,35 @@
         <span class="path-url">Path: /suppliers · Route: suppliers</span>
         <span class="path-role-tag">Super Admin, Admin, Manager</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Raw Seed Suppliers & Agricultural Mandis
+          </div>
+          <span class="showcase-badge">Desktop Web Workstation (1920×1080)</span>
+        </div>
+        <div class="single-browser-wrap">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/suppliers
+              </div>
+              <div class="browser-tag">Full Keyboard &amp; Data Entry Mode</div>
+            </div>
+            <img src="screenshots/desktop_suppliers.png" alt="Raw Seed Suppliers & Agricultural Mandis Full Table View" class="browser-screen" loading="lazy">
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 15.1: Supplier accounts directory tracking seed vendors, mandi brokers, and APMC transaction histories.</em></p>
+      </div>
+
       <p>
         Directory of agricultural mandi brokers, farmer cooperatives, tin manufacturers, and packaging suppliers. Tracks outstanding mill payables.
       </p>
@@ -1133,6 +1804,35 @@
         <span class="path-url">Path: /reports (Alias: /analytics) · Route: reports</span>
         <span class="path-role-tag">Super Admin, Admin, Manager</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Statutory Tax Analytics & GSTR-1 Audit Reports
+          </div>
+          <span class="showcase-badge">Desktop Web Workstation (1920×1080)</span>
+        </div>
+        <div class="single-browser-wrap">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/reports
+              </div>
+              <div class="browser-tag">Full Keyboard &amp; Data Entry Mode</div>
+            </div>
+            <img src="screenshots/desktop_reports.png" alt="Statutory Tax Analytics & GSTR-1 Audit Reports Full Table View" class="browser-screen" loading="lazy">
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 17.1: Automated GST liability breakdowns (CGST/SGST/IGST), monthly revenue trends, and statutory export tools.</em></p>
+      </div>
+
       <p>
         Financial analytics, cashier daybook cash reconciliation, and statutory GSTR-1 tax compliance summaries.
       </p>
@@ -1160,6 +1860,35 @@
         <span class="path-url">Path: /employees (Alias: /staff) · Route: employees</span>
         <span class="path-role-tag">Super Admin, Admin</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Staff Directory & Role-Based Access Privileges (RBAC)
+          </div>
+          <span class="showcase-badge">Desktop Web Workstation (1920×1080)</span>
+        </div>
+        <div class="single-browser-wrap">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/employees
+              </div>
+              <div class="browser-tag">Full Keyboard &amp; Data Entry Mode</div>
+            </div>
+            <img src="screenshots/desktop_employees.png" alt="Staff Directory & Role-Based Access Privileges (RBAC) Full Table View" class="browser-screen" loading="lazy">
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 18.1: Employee master directory showing account status, departmental assignments, and role permissions.</em></p>
+      </div>
+
       <p>
         User account administration, staff password provisioning, and the 15-module fine-grained permissions matrix.
       </p>
@@ -1184,6 +1913,35 @@
         <span class="path-url">Path: /settings · Route: settings</span>
         <span class="path-role-tag">Super Admin, Admin</span>
       </div>
+
+      <div class="screenshot-showcase">
+        <div class="showcase-header">
+          <div class="showcase-title">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2z"/></svg>
+            Live Screen Capture — Company Profile, Thermal Printers & Hardware Setup
+          </div>
+          <span class="showcase-badge">Desktop Web Workstation (1920×1080)</span>
+        </div>
+        <div class="single-browser-wrap">
+          <div class="browser-frame">
+            <div class="browser-titlebar">
+              <div class="browser-dots">
+                <span class="browser-dot dot-red"></span>
+                <span class="browser-dot dot-yellow"></span>
+                <span class="browser-dot dot-green"></span>
+              </div>
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
+                https://kkkoilerp.internal/settings
+              </div>
+              <div class="browser-tag">Full Keyboard &amp; Data Entry Mode</div>
+            </div>
+            <img src="screenshots/desktop_settings.png" alt="Company Profile, Thermal Printers & Hardware Setup Full Table View" class="browser-screen" loading="lazy">
+          </div>
+        </div>
+        <p style="margin-top: 12px; font-size: 12.5px; color: #94A3B8;"><em>Figure 19.1: Master company configuration, bank account details for invoice footers, and ESC/POS printer pairing.</em></p>
+      </div>
+
       <p>
         Global enterprise profile, statutory registration details, printer hardware preferences, and database backup tools.
       </p>

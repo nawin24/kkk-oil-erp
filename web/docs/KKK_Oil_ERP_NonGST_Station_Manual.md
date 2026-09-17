@@ -1,4 +1,7 @@
 # KKK Oil Factory — Dedicated Non-GST Billing Station Manual
+
+<p align="center"><img src="screenshots/kkk_logo_gold.png" alt="KKK Oil Factory Logo" width="320"></p>
+
 ## Operational Guide for Non-Tax Regional Trade, Mandi Cash Settlements & Private Godown Stock
 **Version:** 2.5.0 (Dedicated Station Release)  
 **Enterprise:** KKK Oil Factory, Tamil Nadu, India  
@@ -68,7 +71,8 @@ To eliminate any possibility of staff confusion or accidental cross-billing betw
 - **Columns**: S.No, Product Code, Product Name, Unit/Pack, Qty, Applied Rate, Discount Amt, Net Taxable Base, GST Rate, GST Amount, Final Line Total, Actions.
 - **Strict 0.0% GST Engine**:
   - $	ext{Gross Line Total} = 	ext{Qty} 	imes 	ext{Rate}$
-  - $	ext{Discount Amount} = 	ext{Gross} 	imes \left(rac{	ext{Disc \%}}{100}ight)$
+  - $	ext{Discount Amount} = 	ext{Gross} 	imes \left(rac{	ext{Disc \%}}{100}
+ight)$
   - $	ext{Net Amount} = 	ext{Gross} - 	ext{Discount Amount}$
   - $	ext{GST Rate} \equiv 0.0\%$ (Locked)
   - $	ext{GST Amount} \equiv ₹0.00$ (Locked)
