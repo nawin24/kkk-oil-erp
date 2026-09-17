@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
   <meta charset="UTF-8">
-  <title>KKK Oil Factory — Dedicated Non-GST Station Operational Manual</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KKK Oil Factory - Dedicated Non-GST Station Manual (Tamil &amp; English)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
 
     @page {
@@ -26,31 +27,24 @@
       --amber-bg: #FEF3C7;
       --choco-dark: #3A1501;
       --choco-medium: #5A3116;
-      --bg-base: #FDFBF7;
       --surface: #FFFFFF;
-      --border: #E2E8F0;
-      --border-dark: #CBD5E1;
+      --border: #CBD5E1;
+      --border-light: #E2E8F0;
       --text-main: #0F172A;
-      --text-muted: #475569;
-      --text-light: #94A3B8;
-      --blue-accent: #2563EB;
-      --green-accent: #16A34A;
-      --red-accent: #DC2626;
+      --text-muted: #334155;
+      --text-light: #64748B;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: var(--bg-base);
+      font-family: 'Noto Sans Tamil', 'Tamil Sangam MN', 'Nirmala UI', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #FDFBF7;
       color: var(--text-main);
       -webkit-font-smoothing: antialiased;
-      line-height: 1.45;
+      line-height: 1.38;
     }
 
-    /* Top Sticky Action Bar (Hidden in Print) */
+    /* Top Action Bar (Web Only) */
     .top-action-bar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
       background: var(--choco-dark);
       color: white;
       padding: 10px 24px;
@@ -59,6 +53,7 @@
       align-items: center;
       box-shadow: 0 4px 16px rgba(0,0,0,0.25);
       border-bottom: 2px solid var(--amber-primary);
+      margin-bottom: 16px;
     }
 
     .bar-brand {
@@ -74,7 +69,7 @@
     }
 
     .bar-title {
-      font-size: 14.5px;
+      font-size: 14px;
       font-weight: 700;
       color: white;
     }
@@ -119,13 +114,13 @@
       gap: 20px;
     }
 
-    /* Strict A4 Page Definition */
+    /* Strict Single A4 Sheet Definition */
     .manual-page {
       width: 210mm;
       height: 297mm;
       max-height: 297mm;
       box-sizing: border-box;
-      padding: 8mm 10mm;
+      padding: 6mm 8mm 5mm 8mm;
       background: #FFFFFF;
       page-break-after: always;
       page-break-inside: avoid;
@@ -138,24 +133,24 @@
       border-radius: 4px;
     }
 
-    /* Page Header */
+    /* Header */
     .page-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 6px;
-      border-bottom: 2px solid var(--amber-primary);
-      margin-bottom: 6px;
+      padding-bottom: 4px;
+      border-bottom: 2px solid var(--choco-medium);
+      margin-bottom: 5px;
     }
 
     .header-brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .header-logo {
-      height: 32px;
+      height: 30px;
       width: auto;
     }
 
@@ -165,15 +160,15 @@
     }
 
     .header-screen-num {
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 800;
       color: var(--amber-primary);
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.6px;
     }
 
     .header-screen-name {
-      font-size: 15px;
+      font-size: 13.5px;
       font-weight: 800;
       color: var(--choco-dark);
       line-height: 1.2;
@@ -183,58 +178,58 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 3px;
+      gap: 2px;
     }
 
     .badge-route {
-      background: #3A1501;
+      background: #2D1500;
       color: #FBBF24;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      padding: 2px 7px;
+      font-size: 9px;
+      padding: 2px 6px;
       border-radius: 4px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .badge-roles {
       background: #FEF3C7;
       color: #92400E;
-      font-size: 9.5px;
-      padding: 2px 7px;
+      font-size: 8.5px;
+      padding: 2px 6px;
       border-radius: 4px;
       font-weight: 700;
       border: 1px solid #FCD34D;
     }
 
-    /* Desktop Browser Mockup Frame */
+    /* Desktop Screenshot Frame */
     .browser-frame {
-      background: #180D05;
-      border-radius: 8px;
+      background: #1C0D02;
+      border-radius: 6px;
       overflow: hidden;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-      border: 1px solid #5A3116;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+      border: 1px solid #3E1E08;
       display: flex;
       flex-direction: column;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
 
     .browser-bar {
-      background: #2D1405;
-      padding: 6px 10px;
+      background: #2E1504;
+      padding: 4px 8px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid #5A3116;
+      gap: 8px;
+      border-bottom: 1px solid #4A2207;
     }
 
     .browser-dots {
       display: flex;
-      gap: 5px;
+      gap: 4px;
     }
 
     .dot {
-      width: 9px;
-      height: 9px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
     }
     .dot-red { background: #EF4444; }
@@ -243,146 +238,174 @@
 
     .browser-url {
       flex: 1;
-      background: #0B0502;
-      color: #FBBF24;
-      padding: 2px 10px;
+      background: #140801;
+      color: #D4A373;
+      padding: 2px 8px;
       border-radius: 4px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
+      font-size: 8.5px;
       display: flex;
       align-items: center;
       gap: 6px;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .browser-tag {
-      color: #F59E0B;
-      font-size: 9px;
+      color: #FBBF24;
+      font-size: 8px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     .browser-screenshot {
       width: 100%;
-      max-height: 130mm;
+      max-height: 124mm;
       object-fit: contain;
-      background: #0B0502;
+      background: #140801;
       display: block;
     }
 
-    /* Mobile Smartphone Frame */
+    /* Mobile Phone Frame */
     .mobile-phone-center {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
 
     .phone-mockup {
-      width: 78mm;
-      background: #180D05;
-      border-radius: 24px;
-      padding: 6px 6px 10px 6px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-      border: 3px solid #5A3116;
+      width: 72mm;
+      background: #020617;
+      border-radius: 18px;
+      padding: 4px 4px 7px 4px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      border: 2.5px solid #4A2207;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
     .phone-notch {
-      width: 45px;
-      height: 10px;
-      background: #3A1501;
-      border-radius: 0 0 8px 8px;
-      margin-bottom: 4px;
+      width: 38px;
+      height: 7px;
+      background: #1E293B;
+      border-radius: 0 0 6px 6px;
+      margin-bottom: 3px;
     }
 
     .phone-screen {
       width: 100%;
-      max-height: 145mm;
+      max-height: 138mm;
       object-fit: contain;
-      border-radius: 18px;
+      border-radius: 12px;
       display: block;
     }
 
-    .phone-tag {
-      color: #FBBF24;
-      font-size: 9.5px;
-      font-weight: 700;
-      margin-top: 5px;
-    }
-
-    /* Bottom Info & Button Grid */
-    .info-grid {
+    /* Operational Cards Grid (3 Columns) */
+    .op-grid-3col {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      background: #FFFDF9;
-      border: 1px solid #FDE68A;
+      grid-template-columns: 1fr 1.05fr 1fr;
+      gap: 6px;
+      background: #FEFDFB;
+      border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 8px 12px;
-      font-size: 11px;
-      line-height: 1.4;
+      padding: 5px 7px;
+      font-size: 9.5px;
+      line-height: 1.32;
     }
 
-    .info-grid-3col {
-      grid-template-columns: 1.1fr 1.1fr 0.9fr;
+    .op-col {
+      display: flex;
+      flex-direction: column;
     }
 
-    .info-col h4 {
-      font-size: 10.5px;
+    .op-col h4 {
+      font-size: 9.5px;
       font-weight: 800;
-      color: var(--amber-dark);
+      color: var(--choco-dark);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
+      letter-spacing: 0.3px;
+      margin-bottom: 3px;
+      padding-bottom: 2px;
+      border-bottom: 1.5px solid #CBD5E1;
       display: flex;
       align-items: center;
-      gap: 5px;
-      border-bottom: 1px solid #FCD34D;
-      padding-bottom: 2px;
+      gap: 4px;
     }
 
-    .info-col ul {
-      list-style-type: none;
+    .op-col ul {
+      list-style: none;
     }
 
-    .info-col ul li {
-      margin-bottom: 3px;
+    .op-col ul.fields-list li {
+      margin-bottom: 2.5px;
       display: flex;
       align-items: flex-start;
-      gap: 5px;
+      gap: 3px;
     }
 
-    .info-col ul li strong {
-      color: var(--text-main);
+    .op-col ul.chips-list li {
+      margin-bottom: 3px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5px;
     }
 
     .bullet-dot {
       color: var(--amber-primary);
       font-weight: 900;
+      font-size: 10px;
+      line-height: 1;
     }
 
-    /* Action Buttons Chips */
-    .btn-chips-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 4px;
-    }
-
-    .btn-chip {
-      font-size: 9px;
+    .op-col strong {
+      color: var(--text-main);
       font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 4px;
+    }
+
+    .workflow-list {
+      list-style: none;
+      counter-reset: wf-counter;
+    }
+
+    .workflow-list li {
+      counter-increment: wf-counter;
+      margin-bottom: 2.5px;
+      position: relative;
+      padding-left: 17px;
+      display: block !important;
+      line-height: 1.35;
+    }
+
+    .workflow-list li::before {
+      content: counter(wf-counter);
+      position: absolute;
+      left: 0;
+      top: 1.5px;
+      width: 12px;
+      height: 12px;
+      background: var(--choco-dark);
+      color: #FCD34D;
+      font-size: 7.5px;
+      font-weight: 800;
+      border-radius: 50%;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* English Button Chip */
+    .btn-chip {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 8.5px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 3.5px;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
     }
 
     .btn-chip-amber {
@@ -409,29 +432,35 @@
       border: 1px solid #FECACA;
     }
 
-    /* Page Footer */
+    .btn-chip-dark {
+      background: #3A1501;
+      color: #FDFBF7;
+      border: 1px solid #5A3116;
+    }
+
+    /* Footer */
     .page-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 4px;
-      border-top: 1px solid #FCD34D;
-      font-size: 9.5px;
+      padding-top: 3px;
+      border-top: 1px solid #CBD5E1;
+      font-size: 8.5px;
       color: var(--text-light);
     }
 
     .footer-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .footer-page-num {
       font-weight: 800;
-      color: var(--amber-dark);
+      color: var(--choco-dark);
     }
 
-    /* Cover Page Styles */
+    /* Cover Page Elements */
     .cover-hero-wrap {
       flex: 1;
       display: flex;
@@ -439,71 +468,67 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 20px;
+      padding: 12px;
     }
 
     .cover-logo-img {
-      max-height: 140px;
+      max-height: 115px;
       width: auto;
-      filter: drop-shadow(0 8px 24px rgba(217, 119, 6, 0.5));
-      margin-bottom: 24px;
+      filter: drop-shadow(0 6px 18px rgba(180, 83, 9, 0.45));
+      margin-bottom: 14px;
     }
 
     .cover-badge {
-      background: var(--choco-dark);
-      color: #FBBF24;
+      display: inline-block;
+      background: #FEF3C7;
+      color: #78350F;
+      font-size: 10.5px;
       font-weight: 800;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 6px 16px;
+      padding: 3px 12px;
       border-radius: 20px;
-      border: 1px solid #D97706;
-      margin-bottom: 16px;
+      border: 1px solid #FCD34D;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
     }
 
     .cover-title {
-      font-size: 26px;
+      font-size: 22px;
       font-weight: 900;
       color: var(--choco-dark);
       line-height: 1.25;
-      margin-bottom: 10px;
-      letter-spacing: -0.5px;
+      margin-bottom: 6px;
     }
 
     .cover-subtitle {
-      font-size: 13.5px;
-      color: var(--text-muted);
-      max-width: 170mm;
-      margin-bottom: 24px;
-      line-height: 1.5;
+      font-size: 11.5px;
+      color: #475569;
+      max-width: 630px;
+      line-height: 1.45;
+      margin-bottom: 14px;
     }
 
     .cover-meta-table {
       width: 100%;
+      max-width: 580px;
       border-collapse: collapse;
-      margin-top: 16px;
-      background: #FFFDF9;
-      border-radius: 8px;
+      font-size: 10px;
+      text-align: left;
+      border: 1px solid #CBD5E1;
+      border-radius: 6px;
       overflow: hidden;
-      border: 1px solid #FCD34D;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
     }
 
     .cover-meta-table td {
-      padding: 8px 12px;
-      font-size: 11px;
-      border-bottom: 1px solid #FDE68A;
-    }
-
-    .cover-meta-table tr:last-child td {
-      border-bottom: none;
+      padding: 5px 9px;
+      border-bottom: 1px solid #E2E8F0;
     }
 
     .cover-meta-label {
       font-weight: 800;
-      color: var(--amber-dark);
+      color: var(--choco-dark);
       width: 32%;
-      background: #FEF3C7;
+      background: #FDFBF7;
     }
 
     /* Print Styles */
@@ -531,82 +556,78 @@
   </style>
 </head>
 <body>
-
-  <header class="top-action-bar">
+  <!-- Top Action Bar (Web Only) -->
+  <div class="top-action-bar">
     <div class="bar-brand">
-      <img src="screenshots/kkk_logo_gold.png" alt="KKK Oil Factory" class="bar-logo-img">
+      <img src="screenshots/kkk_logo_gold.png" class="bar-logo-img" alt="KKK Logo">
       <div>
-        <div class="bar-title">KKK Oil Factory — Dedicated Non-GST Station Manual</div>
-        <div class="bar-subtitle">Statutory Firewall &amp; Station Guide · 10 Single Pages · v2.5.0</div>
+        <div class="bar-title">கே.கே.கே ஆயில் மில் - மண்டி &amp; நேரடி விநியோக கையேடு (Non-GST Station)</div>
+        <div class="bar-subtitle">10 பக்கங்கள் · பிரத்யேக தமிழ் செயல்பாட்டு கையேடு (Isolated Mandi Edition)</div>
       </div>
     </div>
     <div class="bar-actions">
-      <a href="KKK_Oil_ERP_NonGST_Station_Manual.pdf" class="btn-action btn-secondary" download>
-        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
-        Download PDF (10 Pages)
-      </a>
-      <button class="btn-action" onclick="window.print()">
-        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></svg>
-        Print / Save PDF
-      </button>
+      <button class="btn-action btn-secondary" onclick="window.print()">அச்சிடு / PDF சேமி (Print / Save PDF)</button>
+      <a href="KKK_Oil_ERP_NonGST_Station_Manual.pdf" class="btn-action" download>PDF பதிவிறக்கம் (Download PDF)</a>
+      <a href="index.html" class="btn-action btn-secondary">முகப்புக்கு செல் (Portal Hub)</a>
     </div>
-  </header>
+  </div>
 
-  <main class="pages-container">
+  <div class="pages-container">
 
     <div class="manual-page" id="page-1">
       <div class="page-header">
         <div class="header-brand">
           <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
           <div class="header-title-block">
-            <span class="header-screen-num">DEDICATED STATION DOSSIER</span>
-            <span class="header-screen-name">KKK Oil Factory — Non-GST Station Manual</span>
+            <span class="header-screen-num">ISOLATED STATION MANUAL · பிரத்யேக கையேடு</span>
+            <span class="header-screen-name">கே.கே.கே ஆயில் மில் · Non-GST Station Manual</span>
           </div>
         </div>
         <div class="header-badges">
-          <span class="badge-route">ISOLATED EDITION</span>
-          <span class="badge-roles">SUPER ADMIN EXCLUSIVE</span>
+          <span class="badge-route">மண்டி பிரிவு: v2.5.0</span>
+          <span class="badge-roles">விவசாயிகள் கொள்முதல் &amp; நேரடி விநியோகம்</span>
         </div>
       </div>
 
       <div class="cover-hero-wrap">
         <img src="screenshots/kkk_logo_gold.png" class="cover-logo-img" alt="KKK Oil Factory">
-        <span class="cover-badge">Statutory Firewall &amp; Station Guide</span>
-        <h1 class="cover-title">Dedicated Non-GST Station Operational Manual</h1>
+        <span class="cover-badge">விவசாயிகள் நேரடி வரவு &amp; சில்லறை விநியோக வழிகாட்டி</span>
+        <h1 class="cover-title">உள்நாட்டு மண்டி கொள்முதல் &amp; நேரடி விற்பனை கையேடு</h1>
         <p class="cover-subtitle">
-          Complete Screen-by-Screen &amp; Button-by-Button Guide for Isolated Non-Tax Operations.
-          Covers agricultural mandi procurement, local unbranded loose oil counter settlements, private godown isolation, and dual customer ledgers.
+          கிராமப்புற விவசாயிகள் நேரடி விதை கொள்முதல், எடையிட்டு ரொக்க பட்டுவாடா செய்தல், 
+          மற்றும் ஆலை வாசலில் பாத்திரங்களில் சில்லறையாக எண்ணெய் வாங்குபவர்களுக்கான நேரடி தெர்மல் டோக்கன் விநியோகம்.
+          திரை வாரியான உண்மை புகைப்படங்கள் மற்றும் பொத்தான் செயல்பாடுகள் எளிய தமிழில் விளக்கப்பட்டுள்ளது.
         </p>
 
         <table class="cover-meta-table">
           <tr>
-            <td class="cover-meta-label">Station Designation</td>
-            <td><strong>Dedicated Non-GST Station</strong> (Firewalled from GSTR-1 &amp; Audited Books)</td>
+            <td class="cover-meta-label">பிரிவின் பெயர் (Section)</td>
+            <td><strong>கே.கே.கே ஆயில் மில் - உள்நாட்டு மண்டி கவுண்டர்</strong> (Non-GST Isolated Station)</td>
           </tr>
           <tr>
-            <td class="cover-meta-label">Authorized Access</td>
-            <td>Exclusively <code>super_admin</code> and <code>super_admin_nongst</code></td>
+            <td class="cover-meta-label">முக்கிய செயல்பாடுகள் (Operations)</td>
+            <td>விவசாயிகள் விதை எடைபோடுதல், ரொக்க பட்டுவாடா வவுச்சர்கள், நேரடி பாத்திர சில்லறை விநியோகம்</td>
           </tr>
           <tr>
-            <td class="cover-meta-label">Tax Rate Enforcement</td>
-            <td><strong>Hard-Locked 0.0% GST</strong> (Taxable Amount = ₹0.00, GST = ₹0.00)</td>
+            <td class="cover-meta-label">ரசீது வகை (Receipt Types)</td>
+            <td>நேரடி தெர்மல் டோக்கன்கள் (Thermal Weigh Slip &amp; Loose Dispensing Cash Vouchers)</td>
           </tr>
           <tr>
-            <td class="cover-meta-label">Voucher Sequence</td>
-            <td>Permanent Prefix <code>NG-YYYY-XXXX</code> (Completely separate from <code>GST-XXXX</code>)</td>
+            <td class="cover-meta-label">பயன்பாட்டு தளங்கள் (Platforms)</td>
+            <td>எடைமேடை டெஸ்க்டாப் கணினி, கவுண்டர் டேப்லெட் &amp; புளூடூத் மொபைல் ஆப்</td>
           </tr>
           <tr>
-            <td class="cover-meta-label">Stock &amp; Ledger Isolation</td>
-            <td>Stock strictly deducts from <code>Private Godown</code>; transactions post to Private Non-GST Ledger</td>
+            <td class="cover-meta-label">கையேட்டின் பக்கங்கள் (Total Pages)</td>
+            <td>10 பக்கங்கள் (பொருளடக்கம், 3 டெஸ்க்டாப் திரைகள், 3 மொபைல் திரைகள், பொத்தான்கள் அட்டவணை, மண்டி SOP)</td>
           </tr>
         </table>
       </div>
 
       <div class="page-footer">
         <div class="footer-left">
-          <span>KKK Oil Factory Enterprise ERP · Non-GST Station Documentation</span>
+          <span>KKK Oil Factory ERP · Dedicated Non-GST Station Manual</span>
         </div>
-        <span class="footer-page-num">Cover Page · Page 1 of 10</span>
+        <span class="footer-page-num">முகப்புப் பக்கம் · Page 1 of 10</span>
       </div>
     </div>
     
@@ -615,518 +636,615 @@
         <div class="header-brand">
           <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
           <div class="header-title-block">
-            <span class="header-screen-num">STATUTORY FIREWALL SPECIFICATION</span>
-            <span class="header-screen-name">Non-GST Legal Architecture &amp; Rationale</span>
+            <span class="header-screen-num">NON-GST STATION CATALOG</span>
+            <span class="header-screen-name">மண்டி செயல்பாடுகள் &amp; பக்க வழிகாட்டி</span>
           </div>
         </div>
         <div class="header-badges">
-          <span class="badge-route">FIREWALL RULES</span>
-          <span class="badge-roles">SUPER ADMIN ONLY</span>
+          <span class="badge-route">INDEX GUIDE</span>
+          <span class="badge-roles">மண்டி பணியாளர்கள்</span>
         </div>
       </div>
 
-      <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 6px 0;">
-        <div style="background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 8px; padding: 12px; margin-bottom: 8px;">
-          <h3 style="font-size: 11.5px; font-weight: 800; color: #92400E; text-transform: uppercase; margin-bottom: 4px;">
-            Statutory Firewall Guarantee
+      <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 6px 0;">
+        <div style="background: #FEFDFB; border: 1px solid var(--border); border-radius: 6px; padding: 10px;">
+          <h3 style="font-size: 11px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 3px; margin-bottom: 6px;">
+            கணினி டெஸ்க்டாப் திரைகள் (Desktop Screens NG-01 to NG-03)
           </h3>
-          <p style="font-size: 10px; color: #78350F; line-height: 1.45;">
-            Under the Central Goods and Services Tax Act, 2017, transactions created within the Dedicated Non-GST Station are completely excluded from GSTR-1, GSTR-3B, e-Way bill portals, and formal tax liability computations. The system enforces cryptographic isolation between commercial tax invoices and local agricultural trade.
-          </p>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1;">
-          <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
-            <h4 style="font-size: 11px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 3px; margin-bottom: 6px;">
-              1. Agricultural Mandi Procurement
-            </h4>
-            <p style="font-size: 9.5px; color: #334155; line-height: 1.45;">
-              Local smallholder farmers selling groundnut pods, sesame seeds, and copra directly at factory gates are exempt from mandatory GST registration. The Non-GST Station allows logging physical weighbridge arrivals, net weights, and instant cash settlements without generating statutory tax invoices.
-            </p>
-          </div>
-
-          <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
-            <h4 style="font-size: 11px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 3px; margin-bottom: 6px;">
-              2. Unbranded Loose Oil Sales
-            </h4>
-            <p style="font-size: 9.5px; color: #334155; line-height: 1.45;">
-              Village retail customers purchasing unbranded edible oil dispensed into their own containers at the mill gate require rapid cash receipts. The Non-GST counter prints 0% tax delivery memos without requiring buyer GSTIN or statutory E-invoice IRN numbers.
-            </p>
-          </div>
-
-          <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
-            <h4 style="font-size: 11px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 3px; margin-bottom: 6px;">
-              3. Private Godown Inventory Isolation
-            </h4>
-            <p style="font-size: 9.5px; color: #334155; line-height: 1.45;">
-              All Non-GST vouchers automatically deduct quantities from <code>Private Godown</code> or <code>Local Yard</code>. Statutory warehouses (<code>Main Godown</code>, <code>Packaging Depot</code>) are untouchable from this station, preventing audited stock discrepancies.
-            </p>
-          </div>
-
-          <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
-            <h4 style="font-size: 11px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 3px; margin-bottom: 6px;">
-              4. Dual Customer Credit Architecture
-            </h4>
-            <p style="font-size: 9.5px; color: #334155; line-height: 1.45;">
-              Dealers purchasing both statutory tax-invoiced packaged goods and non-tax raw seeds maintain two distinct ledgers:
-              <br>• <strong>GST Credit Balance</strong> (Subject to legal tax statements).
-              <br>• <strong>Non-GST Balance</strong> (Private mandi trading ledger).
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="page-footer">
-        <div class="footer-left">
-          <span>KKK Oil Factory Enterprise ERP · Non-GST Legal Architecture</span>
-        </div>
-        <span class="footer-page-num">Architecture Sheet · Page 2 of 10</span>
-      </div>
-    </div>
-    
-    <div class="manual-page" id="page-3">
-      <div class="page-header">
-        <div class="header-brand">
-          <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
-          <div class="header-title-block">
-            <span class="header-screen-num">SCREEN NG-01 · STATION ACCESS GATE</span>
-            <span class="header-screen-name">Non-GST Station Authentication Gateway</span>
-          </div>
-        </div>
-        <div class="header-badges">
-          <span class="badge-route">Path: /login · Route: login</span>
-          <span class="badge-roles">Super Admin Only</span>
-        </div>
-      </div>
-
-      <div class="browser-frame">
-        <div class="browser-bar">
-          <div class="browser-dots">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
-          </div>
-          <div class="browser-url">
-            <svg width="11" height="11" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
-            https://kkkoilerp.internal/login
-          </div>
-          <span class="browser-tag">Non-GST Access Button (1920×1080)</span>
-        </div>
-        <img src="screenshots/desktop_login.png" alt="Desktop Login Screen" class="browser-screenshot" loading="lazy">
-      </div>
-
-      <div class="info-grid info-grid-3col">
-        <div class="info-col">
-          <h4>Dedicated Station Trigger</h4>
-          <ul>
-            <li><span class="bullet-dot">•</span> <strong>Access Button</strong>: Click <code>🔒 Super Admin (Non-GST Login)</code>.</li>
-            <li><span class="bullet-dot">•</span> <strong>Credentials</strong>: <code>admin</code> / <code>admin123n</code>.</li>
-            <li><span class="bullet-dot">•</span> <strong>Session Flag</strong>: Initializes <code>isNonGstMode = true</code>.</li>
-          </ul>
-        </div>
-
-        <div class="info-col">
-          <h4>Visual Theme Transition</h4>
-          <ul>
-            <li><span class="bullet-dot">•</span> Navigation changes from Forest Green to <strong>Warm Amber &amp; Chocolate</strong>.</li>
-            <li><span class="bullet-dot">•</span> Drawer highlights <code>NON-GST BILLING STATION</code>.</li>
-            <li><span class="bullet-dot">•</span> User chip indicates <code>Super Admin (Non-GST)</code>.</li>
-          </ul>
-        </div>
-
-        <div class="info-col">
-          <h4>Access Control Matrix</h4>
-          <ul>
-            <li><span class="bullet-dot">•</span> Standard cashiers cannot access this station.</li>
-            <li><span class="bullet-dot">•</span> Direct URL typing by unauthorized accounts redirects to <code>/dashboard</code>.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="page-footer">
-        <div class="footer-left">
-          <span>KKK Oil Factory Enterprise ERP · Non-GST Station Access</span>
-        </div>
-        <span class="footer-page-num">Screen NG-01 · Page 3 of 10</span>
-      </div>
-    </div>
-    
-    <div class="manual-page" id="page-4">
-      <div class="page-header">
-        <div class="header-brand">
-          <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
-          <div class="header-title-block">
-            <span class="header-screen-num">SCREEN NG-02 · DEDICATED STATION COCKPIT</span>
-            <span class="header-screen-name">Non-GST Executive Operations Dashboard</span>
-          </div>
-        </div>
-        <div class="header-badges">
-          <span class="badge-route">Path: /dashboard · Non-GST Mode</span>
-          <span class="badge-roles">Super Admin Non-GST</span>
-        </div>
-      </div>
-
-      <div class="browser-frame">
-        <div class="browser-bar">
-          <div class="browser-dots">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
-          </div>
-          <div class="browser-url">
-            <svg width="11" height="11" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
-            https://kkkoilerp.internal/dashboard?station=nongst
-          </div>
-          <span class="browser-tag">Non-GST Station Overview (1920×1080)</span>
-        </div>
-        <img src="screenshots/desktop_nongst_dashboard.png" alt="Non-GST Dashboard" class="browser-screenshot" loading="lazy">
-      </div>
-
-      <div class="info-grid info-grid-3col">
-        <div class="info-col">
-          <h4>Isolated Station Metrics</h4>
-          <ul>
-            <li><span class="bullet-dot">•</span> <strong>Non-GST Turnover</strong>: Total non-tax trade value in current month.</li>
-            <li><span class="bullet-dot">•</span> <strong>Private Cash Balance</strong>: Cash collected from non-tax sales.</li>
-            <li><span class="bullet-dot">•</span> <strong>Private Godown Stock</strong>: Seed bags &amp; loose oil litres.</li>
-          </ul>
-        </div>
-
-        <div class="info-col">
-          <h4>Station Shortcuts</h4>
-          <div class="btn-chips-wrap">
-            <span class="btn-chip btn-chip-amber">+ New Non-GST Voucher</span>
-            <span class="btn-chip btn-chip-green">View Non-GST History</span>
-            <span class="btn-chip btn-chip-blue">Private Tank Gauges</span>
-          </div>
-        </div>
-
-        <div class="info-col">
-          <h4>Firewall Verification</h4>
-          <ul>
-            <li><span class="bullet-dot">•</span> Tax metric cards (CGST/SGST/IGST) are suppressed.</li>
-            <li><span class="bullet-dot">•</span> Top bar displays <code>Non-GST Station Active</code>.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="page-footer">
-        <div class="footer-left">
-          <span>KKK Oil Factory Enterprise ERP · Non-GST Station Cockpit</span>
-        </div>
-        <span class="footer-page-num">Screen NG-02 · Page 4 of 10</span>
-      </div>
-    </div>
-    
-    <div class="manual-page" id="page-5">
-      <div class="page-header">
-        <div class="header-brand">
-          <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
-          <div class="header-title-block">
-            <span class="header-screen-num">SCREEN NG-03 · VOUCHER GENERATOR</span>
-            <span class="header-screen-name">Non-GST Sales Voucher Station (NG-XXXX)</span>
-          </div>
-        </div>
-        <div class="header-badges">
-          <span class="badge-route">Path: /nongst-billing · Route: nongst_billing</span>
-          <span class="badge-roles">Super Admin Only</span>
-        </div>
-      </div>
-
-      <div class="browser-frame">
-        <div class="browser-bar">
-          <div class="browser-dots">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
-          </div>
-          <div class="browser-url">
-            <svg width="11" height="11" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
-            https://kkkoilerp.internal/nongst-billing
-          </div>
-          <span class="browser-tag">Non-GST Voucher (1920×1080)</span>
-        </div>
-        <img src="screenshots/desktop_nongst_billing.png" alt="Non-GST Billing Screen" class="browser-screenshot" loading="lazy">
-      </div>
-
-      <div class="info-grid info-grid-3col">
-        <div class="info-col">
-          <h4>Voucher Series &amp; Zero-Tax</h4>
-          <ul>
-            <li><span class="bullet-dot">•</span> <strong>Series</strong>: Auto-generates <code>NG-2627-XXXX</code>.</li>
-            <li><span class="bullet-dot">•</span> <strong>Tax Rate</strong>: Strictly locked to <strong>0.0% GST</strong>.</li>
-            <li><span class="bullet-dot">•</span> <strong>Output Tax</strong>: Displays <code>₹0 (Non-GST)</code>.</li>
-            <li><span class="bullet-dot">•</span> <strong>Godown</strong>: Auto-locks to <code>Private Godown</code>.</li>
-          </ul>
-        </div>
-
-        <div class="info-col">
-          <h4>Action Buttons &amp; Hotkeys</h4>
-          <div class="btn-chips-wrap">
-            <span class="btn-chip btn-chip-amber">Save Voucher (F2)</span>
-            <span class="btn-chip btn-chip-blue">Print Delivery Memo</span>
-            <span class="btn-chip btn-chip-green">Print Slip (F4)</span>
-            <span class="btn-chip btn-chip-red">Clear Form (Esc)</span>
-          </div>
-        </div>
-
-        <div class="info-col">
-          <h4>Document Format</h4>
-          <ul>
-            <li><span class="bullet-dot">•</span> Emits A4 "Delivery Memo / Estimate Slip".</li>
-            <li><span class="bullet-dot">•</span> Omit corporate GSTIN, IRN, &amp; E-Way Bill fields.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="page-footer">
-        <div class="footer-left">
-          <span>KKK Oil Factory Enterprise ERP · Non-GST Voucher Generator</span>
-        </div>
-        <span class="footer-page-num">Screen NG-03 · Page 5 of 10</span>
-      </div>
-    </div>
-    
-    <div class="manual-page" id="page-6">
-      <div class="page-header">
-        <div class="header-brand">
-          <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
-          <div class="header-title-block">
-            <span class="header-screen-num">SCREEN NG-04 · AUDIT REPOSITORY</span>
-            <span class="header-screen-name">Non-GST History &amp; Stock-Restoring Cancellation</span>
-          </div>
-        </div>
-        <div class="header-badges">
-          <span class="badge-route">Path: /nongst-history · Route: nongst_history</span>
-          <span class="badge-roles">Super Admin Only</span>
-        </div>
-      </div>
-
-      <div class="browser-frame">
-        <div class="browser-bar">
-          <div class="browser-dots">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
-          </div>
-          <div class="browser-url">
-            <svg width="11" height="11" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 0-2 2v2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zm-1 4V3a1 1 0 1 1 2 0v2H7z"/></svg>
-            https://kkkoilerp.internal/nongst-history
-          </div>
-          <span class="browser-tag">Non-GST History Ledger (1920×1080)</span>
-        </div>
-        <img src="screenshots/desktop_nongst_history.png" alt="Non-GST History" class="browser-screenshot" loading="lazy">
-      </div>
-
-      <div class="info-grid info-grid-3col">
-        <div class="info-col">
-          <h4>Voucher Ledger Audit</h4>
-          <ul>
-            <li><span class="bullet-dot">•</span> Complete chronological audit of all <code>NG-</code> vouchers.</li>
-            <li><span class="bullet-dot">•</span> Real-time search by voucher number, date, or customer.</li>
-            <li><span class="bullet-dot">•</span> Status indicators for Paid, Credit, and Cancelled.</li>
-          </ul>
-        </div>
-
-        <div class="info-col">
-          <h4>Row Actions</h4>
-          <div class="btn-chips-wrap">
-            <span class="btn-chip btn-chip-blue">Reprint Delivery Memo</span>
-            <span class="btn-chip btn-chip-green">Reprint Thermal Slip</span>
-            <span class="btn-chip btn-chip-red">Cancel Voucher</span>
-          </div>
-        </div>
-
-        <div class="info-col">
-          <h4>Inventory Rollback Guarantee</h4>
-          <ul>
-            <li><span class="bullet-dot">•</span> Cancellation automatically restores quantities into <strong>Private Godown</strong>.</li>
-            <li><span class="bullet-dot">•</span> Reverses debit in customer's Non-GST ledger.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="page-footer">
-        <div class="footer-left">
-          <span>KKK Oil Factory Enterprise ERP · Non-GST History &amp; Cancellation</span>
-        </div>
-        <span class="footer-page-num">Screen NG-04 · Page 6 of 10</span>
-      </div>
-    </div>
-    
-    <div class="manual-page" id="page-7">
-      <div class="page-header">
-        <div class="header-brand">
-          <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
-          <div class="header-title-block">
-            <span class="header-screen-num">FINANCIAL SEGREGATION MODEL</span>
-            <span class="header-screen-name">Dual Customer Credit Architecture &amp; Godown Isolation</span>
-          </div>
-        </div>
-        <div class="header-badges">
-          <span class="badge-route">FINANCIAL CONTROLS</span>
-          <span class="badge-roles">SUPER ADMIN ONLY</span>
-        </div>
-      </div>
-
-      <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 6px 0;">
-        <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
-          <h3 style="font-size: 11.5px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 4px; margin-bottom: 8px;">
-            Dual Customer Credit Balance Architecture
-          </h3>
-          <p style="font-size: 10px; color: #334155; line-height: 1.5; margin-bottom: 8px;">
-            Commercial dealers frequently engage in two distinct streams of commerce with KKK Oil Mill:
-          </p>
-          <div style="background: white; border: 1px solid #E2E8F0; border-radius: 6px; padding: 8px; margin-bottom: 8px;">
-            <div style="font-weight: 800; font-size: 10.5px; color: var(--forest-medium);">1. Statutory GST Credit Ledger</div>
-            <p style="font-size: 9.5px; color: var(--text-muted);">Debited by <code>GST-XXXX</code> invoices. Formally reported on monthly buyer statements and subject to legal recovery and audited accounts.</p>
-          </div>
-          <div style="background: #FFFDF9; border: 1px solid #FDE68A; border-radius: 6px; padding: 8px;">
-            <div style="font-weight: 800; font-size: 10.5px; color: #92400E;">2. Private Non-GST Credit Ledger</div>
-            <p style="font-size: 9.5px; color: var(--text-muted);">Debited exclusively by <code>NG-XXXX</code> vouchers. Tracks informal mandi trade, loose oil barrels, and local cash settlements privately.</p>
-          </div>
-        </div>
-
-        <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 12px;">
-          <h3 style="font-size: 11.5px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 4px; margin-bottom: 8px;">
-            Private Godown Inventory Isolation
-          </h3>
-          <p style="font-size: 10px; color: #334155; line-height: 1.5; margin-bottom: 8px;">
-            Inventory is partitioned into two air-gapped physical and digital domains:
-          </p>
-          <table style="width: 100%; border-collapse: collapse; font-size: 9.5px; line-height: 1.4; border: 1px solid var(--border); background: white;">
-            <tr style="background: #F1F5F9;">
-              <th style="padding: 5px; text-align: left;">Warehouse Domain</th>
-              <th style="padding: 5px; text-align: left;">Accessible From</th>
-              <th style="padding: 5px; text-align: left;">Audit Impact</th>
-            </tr>
-            <tr style="border-bottom: 1px solid #E2E8F0;">
-              <td><strong>Main Godown &amp; Packaging</strong></td>
-              <td>GST Billing (/billing)</td>
-              <td>Subject to physical auditor inspection &amp; GSTR-9 balance sheets.</td>
-            </tr>
-            <tr style="background: #FFFDF9;">
-              <td><strong>Private Godown &amp; Mandi Yard</strong></td>
-              <td>Non-GST Billing (/nongst-billing)</td>
-              <td>Excluded from statutory stock valuation. Tracks raw farm lots.</td>
-            </tr>
+          <table style="width: 100%; font-size: 9.5px; line-height: 1.6; border-collapse: collapse;">
+            <tr><td><strong>பக்கம் 3</strong></td><td>NG-01 · /nongst-dashboard — உள்நாட்டு மண்டி கட்டுப்பாட்டு பலகை</td></tr>
+            <tr><td><strong>பக்கம் 4</strong></td><td>NG-02 · /nongst-billing — மண்டி எடை மேடை &amp; நேரடி எண்ணெய் கவுண்டர்</td></tr>
+            <tr><td><strong>பக்கம் 5</strong></td><td>NG-03 · /nongst-history — உள்நாட்டு ரசீதுகள் பதிவேடு &amp; தணிக்கை</td></tr>
           </table>
-          <div style="margin-top: 10px; background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 6px; padding: 8px; font-size: 9.5px; color: #92400E;">
-            <strong>Safeguard:</strong> The system strictly prohibits selecting the Main Godown while in Non-GST Billing mode.
+
+          <h3 style="font-size: 11px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 3px; margin-top: 14px; margin-bottom: 6px;">
+            மொபைல் செயலி திரைகள் (Mobile Screens NGM-01 to NGM-03)
+          </h3>
+          <table style="width: 100%; font-size: 9.5px; line-height: 1.6; border-collapse: collapse;">
+            <tr><td><strong>பக்கம் 6</strong></td><td>NGM-01 · Mobile Non-GST Dashboard (மொபைல் மண்டி பலகை)</td></tr>
+            <tr><td><strong>பக்கம் 7</strong></td><td>NGM-02 · Mobile Non-GST Fast Billing (மொபைல் நேரடி சில்லறை விற்பனை)</td></tr>
+            <tr><td><strong>பக்கம் 8</strong></td><td>NGM-03 · Mobile Non-GST History (மொபைல் டோக்கன் வரலாறு &amp; ரசீது)</td></tr>
+          </table>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="background: #FEFDFB; border: 1px solid var(--border); border-radius: 6px; padding: 10px; flex: 1;">
+            <h3 style="font-size: 11px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 3px; margin-bottom: 6px;">
+              முதன்மை குறிப்பு &amp; மண்டி SOP விதிமுறைகள்
+            </h3>
+            <table style="width: 100%; font-size: 9.5px; line-height: 1.6; border-collapse: collapse;">
+              <tr><td><strong>பக்கம் 9</strong></td><td>Non-GST Master Buttons Reference (மண்டி முக்கிய பொத்தான்கள் அட்டவணை)</td></tr>
+              <tr><td><strong>பக்கம் 10</strong></td><td>Mandi Procurement &amp; Loose Oil SOP (விவசாயிகள் விதை வரவு &amp; நேரடி விநியோகம் SOP)</td></tr>
+            </table>
+
+            <div style="margin-top: 12px; background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 4px; padding: 8px; font-size: 9px; line-height: 1.4; color: #92400E;">
+              <strong>முக்கிய குறிப்பு:</strong> இந்த கையேடு ஆலை வாசலில் நடைபெறும் நேரடி விதை கொள்முதல் மற்றும் சில்லறை எண்ணெய் விநியோகத்திற்கு மட்டுமே உரியது. அனைத்து வணிக பில்களுக்கும் தனியான பொது கையேட்டை பார்க்கவும்.
+            </div>
           </div>
         </div>
       </div>
 
       <div class="page-footer">
         <div class="footer-left">
-          <span>KKK Oil Factory Enterprise ERP · Financial Segregation Model</span>
+          <span>KKK Oil Factory ERP · Non-GST Station Index</span>
         </div>
-        <span class="footer-page-num">Architecture Sheet · Page 7 of 10</span>
+        <span class="footer-page-num">பொருளடக்கம் · Page 2 of 10</span>
       </div>
     </div>
     
-    <div class="manual-page" id="page-8">
-      <div class="page-header">
-        <div class="header-brand">
-          <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
-          <div class="header-title-block">
-            <span class="header-screen-num">SCREEN NG-M01 · MOBILE NON-GST COCKPIT</span>
-            <span class="header-screen-name">Mobile Non-GST Station Cockpit</span>
+        <div class="manual-page" id="page-3">
+          <div class="page-header">
+            <div class="header-brand">
+              <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
+              <div class="header-title-block">
+                <span class="header-screen-num">SCREEN NG-01 · மண்டி டெஸ்க்டாப் திரை</span>
+                <span class="header-screen-name">Mandi Overview & Counter Cash Desk — உள்நாட்டு மண்டி கட்டுப்பாட்டு பலகை</span>
+              </div>
+            </div>
+            <div class="header-badges">
+              <span class="badge-route">/nongst-dashboard</span>
+              <span class="badge-roles">மண்டி காசாளர் & ஆலை வாசல் மேற்பார்வையாளர்</span>
+            </div>
+          </div>
+
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <div class="browser-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <div class="browser-url">
+                <span class="browser-tag">ISOLATED MANDI STATION</span>
+                <span>https://kkkoilerp.internal/nongst-dashboard</span>
+              </div>
+            </div>
+            <img src="screenshots/desktop_nongst_dashboard.png" class="browser-screenshot" alt="Mandi Overview & Counter Cash Desk">
+          </div>
+
+          <div class="op-grid-3col">
+            <div class="op-col">
+              <h4>மண்டி புள்ளிவிவரங்கள் (Metrics)</h4>
+              <ul class="fields-list">
+                <li><span class='bullet-dot'>•</span> <div><strong>Mandi Seed Inward</strong>: விவசாயிகள் கொண்டுவந்த நிலக்கடலை &amp; எள் மூட்டைகள் அளவு.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Counter Loose Oil Sales</strong>: கேன் மற்றும் பாத்திரங்களில் விற்கப்பட்ட நேரடி எண்ணெய் அளவு.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Petty Cash Drawer ₹</strong>: மண்டி கவுண்டர் கல்லாப்பெட்டியில் உள்ள ரொக்க இருப்பு.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Pending Settlements</strong>: விவசாயிகளுக்கு பட்டுவாடா செய்ய வேண்டிய ரொக்க தொகை.</div></li>
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>பொத்தான்கள் & செயல்பாடுகள்</h4>
+              <ul class="chips-list">
+                
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-amber">New Voucher (F1)</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">புதிய மண்டி கொள்முதல் அல்லது விற்பனை சீட்டு போடும் பக்கத்திற்கு செல்ல</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-green">Direct Loose Billing</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">பாத்திர சில்லறை விற்பனை கவுண்டருக்கு உடனே செல்ல</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-blue">Refresh Mandi Totals</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">இன்றைய விதை வரவு மற்றும் ரொக்க அளவை புதுப்பிக்க</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-dark">Day End Cash Close</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">மாலையில் கல்லாப்பெட்டி ரொக்கத்தை கணக்கிட்டு முடிக்க</div>
+            </li>
+            
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>வேலை செய்யும் முறை (Workflow)</h4>
+              <ul class="workflow-list">
+                <li>காலையில் கவுண்டர் திறந்ததும் முந்தைய நாள் ரொக்க இருப்பை சரிபார்க்கவும்.</li><li>புதிய வவுச்சர் போட விசைப்பலகையில் <strong>F1</strong> அல்லது <strong>New Voucher</strong> அழுத்தவும்.</li><li>மாலையில் கல்லா ரொக்கத்தை சரிபார்க்க <strong>Day End Cash Close</strong> பயன்படுத்தவும்.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="page-footer">
+            <div class="footer-left">
+              <span>கே.கே.கே ஆயில் மில் · பிரத்யேக மண்டி செயல்பாட்டு கையேடு</span>
+            </div>
+            <span class="footer-page-num">பக்கம் 3 / 10 · Page 3 of 10</span>
           </div>
         </div>
-        <div class="header-badges">
-          <span class="badge-route">Mobile App · 390×844</span>
-          <span class="badge-roles">SUPER ADMIN ONLY</span>
-        </div>
-      </div>
+        
+        <div class="manual-page" id="page-4">
+          <div class="page-header">
+            <div class="header-brand">
+              <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
+              <div class="header-title-block">
+                <span class="header-screen-num">SCREEN NG-02 · மண்டி டெஸ்க்டாப் திரை</span>
+                <span class="header-screen-name">Weighbridge Procurement & Loose Oil POS — மண்டி எடை மேடை & நேரடி எண்ணெய் கவுண்டர்</span>
+              </div>
+            </div>
+            <div class="header-badges">
+              <span class="badge-route">/nongst-billing</span>
+              <span class="badge-roles">எடைமேடை காசாளர் & நேரடி எண்ணெய் விநியோகஸ்தர்</span>
+            </div>
+          </div>
 
-      <div class="mobile-phone-center">
-        <div class="phone-mockup">
-          <div class="phone-notch"></div>
-          <img src="screenshots/mobile_nongst_dashboard.png" alt="Mobile Non-GST Dashboard" class="phone-screen" loading="lazy">
-          <span class="phone-tag">Non-GST Handheld Cockpit</span>
-        </div>
-      </div>
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <div class="browser-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <div class="browser-url">
+                <span class="browser-tag">ISOLATED MANDI STATION</span>
+                <span>https://kkkoilerp.internal/nongst-billing</span>
+              </div>
+            </div>
+            <img src="screenshots/desktop_nongst_billing.png" class="browser-screenshot" alt="Weighbridge Procurement & Loose Oil POS">
+          </div>
 
-      <div class="info-grid">
-        <div class="info-col">
-          <h4>Station Rationale &amp; Mobile Metrics</h4>
-          <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">Enables factory executives to monitor private mandi trading directly on smartphone.</p>
-          <ul>
-            <li><span class="bullet-dot">•</span> <strong>Non-Tax Order Count</strong>: Vouchers billed in Non-GST station.</li>
-            <li><span class="bullet-dot">•</span> <strong>Private Cash Turnover</strong>: Total cash receipts from loose oil sales.</li>
-            <li><span class="bullet-dot">•</span> <strong>Quick Station Toggle</strong>: Instant return to Standard GST mode.</li>
-          </ul>
-        </div>
+          <div class="op-grid-3col">
+            <div class="op-col">
+              <h4>மண்டி கவுண்டர் படிவ விவரங்கள்</h4>
+              <ul class="fields-list">
+                <li><span class='bullet-dot'>•</span> <div><strong>Farmer / Buyer Name</strong>: விவசாயி அல்லது எண்ணெய் வாங்கும் வாடிக்கையாளர் பெயர்.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Village / Location</strong>: விவசாயியின் ஊர் பெயர் மற்றும் தொலைபேசி எண்.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Weight (Gross / Tare / Net)</strong>: விதை எடை அல்லது எண்ணெய் கேன் எடை அளவுகள்.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Oil Variety (Loose)</strong>: வடிக்கட்டிய நேரடி கடலை எண்ணெய் / நல்லெண்ணெய்.</div></li>
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>பொத்தான்கள் & செயல்பாடுகள்</h4>
+              <ul class="chips-list">
+                
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-amber">Save Voucher (F2)</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">வவுச்சரை சேமித்து, ரொக்க கணக்கை புதுப்பித்து, சீட்டு தயார் செய்ய</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-green">Read Counter Scale (F4)</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">எலக்ட்ரானிக் எடை தராசிலிருந்து எடையை தானாக திரையில் கொண்டுவர</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-blue">Print Thermal Token</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">சிறிய 3-இன்ச் தெர்மல் பிரிண்டரில் உடனடி ரசீது டோக்கன் வழங்க</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-dark">Cash Outflow Pay</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">விவசாயிக்கு விதைக்கான ரொக்கம் வழங்கியதை பதிவு செய்ய</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-red">Clear Ticket</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">படிவ விவரங்களை உடனே அழித்து புதிதாக்க</div>
+            </li>
+            
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>வேலை செய்யும் முறை (Workflow)</h4>
+              <ul class="workflow-list">
+                <li>விவசாயி விதை கொண்டுவந்தால் எடையை தராசில் வைத்து <strong>F4 (Read Scale)</strong> அழுத்தவும்.</li><li>விதை தரத்திற்கு ஏற்ப தொகையை கணக்கிட்டு <strong>Save Voucher (F2)</strong> மூலம் சீட்டு போடவும்.</li><li>சில்லறை எண்ணெய் விற்பனை எனில் <strong>Print Thermal Token</strong> வழங்கி ரொக்கம் பெறவும்.</li>
+              </ul>
+            </div>
+          </div>
 
-        <div class="info-col">
-          <h4>Touch Controls</h4>
-          <div class="btn-chips-wrap">
-            <span class="btn-chip btn-chip-amber">Billing Tab (NG-POS)</span>
-            <span class="btn-chip btn-chip-blue">History Tab (NG-Log)</span>
-            <span class="btn-chip btn-chip-green">Station Toggle</span>
+          <div class="page-footer">
+            <div class="footer-left">
+              <span>கே.கே.கே ஆயில் மில் · பிரத்யேக மண்டி செயல்பாட்டு கையேடு</span>
+            </div>
+            <span class="footer-page-num">பக்கம் 4 / 10 · Page 4 of 10</span>
           </div>
         </div>
-      </div>
+        
+        <div class="manual-page" id="page-5">
+          <div class="page-header">
+            <div class="header-brand">
+              <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
+              <div class="header-title-block">
+                <span class="header-screen-num">SCREEN NG-03 · மண்டி டெஸ்க்டாப் திரை</span>
+                <span class="header-screen-name">Mandi Cash Register & Voucher Reprints — உள்நாட்டு ரசீதுகள் பதிவேடு & தணிக்கை</span>
+              </div>
+            </div>
+            <div class="header-badges">
+              <span class="badge-route">/nongst-history</span>
+              <span class="badge-roles">மண்டி கணக்காளர் & தலைமை மேற்பார்வையாளர்</span>
+            </div>
+          </div>
 
-      <div class="page-footer">
-        <div class="footer-left">
-          <span>KKK Oil Factory Enterprise ERP · Mobile Non-GST Station</span>
+          <div class="browser-frame">
+            <div class="browser-bar">
+              <div class="browser-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+              </div>
+              <div class="browser-url">
+                <span class="browser-tag">ISOLATED MANDI STATION</span>
+                <span>https://kkkoilerp.internal/nongst-history</span>
+              </div>
+            </div>
+            <img src="screenshots/desktop_nongst_history.png" class="browser-screenshot" alt="Mandi Cash Register & Voucher Reprints">
+          </div>
+
+          <div class="op-grid-3col">
+            <div class="op-col">
+              <h4>ரசீது பட்டியல் விவரங்கள்</h4>
+              <ul class="fields-list">
+                <li><span class='bullet-dot'>•</span> <div><strong>Voucher Number</strong>: மண்டி சீட்டு எண் (எ.கா. NG-2026-0158).</div></li><li><span class='bullet-dot'>•</span> <div><strong>Farmer / Customer</strong>: விவசாயி அல்லது வாடிக்கையாளர் பெயர் மற்றும் ஊர்.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Commodity & Qty</strong>: விதை மூட்டை அல்லது பாத்திர எண்ணெய் அளவு.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Net Amount ₹</strong>: பட்டுவாடா செய்த ரொக்கம் அல்லது வசூலான தொகை.</div></li>
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>பொத்தான்கள் & செயல்பாடுகள்</h4>
+              <ul class="chips-list">
+                
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-amber">Reprint Token (F3)</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">பழைய டோக்கன் சீட்டை மீண்டும் தெர்மல் பிரிண்டரில் அச்சிட</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-red">Cancel Ticket</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">தவறான மண்டி சீட்டை ரத்து செய்ய (மேற்பார்வையாளர் அனுமதி தேவை)</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-green">Export Cash Register</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">இன்றைய மண்டி வரவு செலவுகளை எக்செல் கோப்பாக பதிவிறக்க</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-blue">Filter by Farmer</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">குறிப்பிட்ட விவசாயியின் முந்தைய வரவுகளை மட்டும் தேட</div>
+            </li>
+            
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>வேலை செய்யும் முறை (Workflow)</h4>
+              <ul class="workflow-list">
+                <li>விவசாயி மறு சீட்டு கேட்டால் வவுச்சர் எண்ணை உள்ளிட்டு <strong>Reprint Token (F3)</strong> அழுத்தவும்.</li><li>மாலை மண்டி முடிந்ததும் <strong>Export Cash Register</strong> கொடுத்து கணக்குகளை சரிபார்க்கவும்.</li><li>தவறான சீட்டை ரத்து செய்ய <strong>Cancel Ticket</strong> பொத்தானை அழுத்தவும்.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="page-footer">
+            <div class="footer-left">
+              <span>கே.கே.கே ஆயில் மில் · பிரத்யேக மண்டி செயல்பாட்டு கையேடு</span>
+            </div>
+            <span class="footer-page-num">பக்கம் 5 / 10 · Page 5 of 10</span>
+          </div>
         </div>
-        <span class="footer-page-num">Screen NG-M01 · Page 8 of 10</span>
-      </div>
-    </div>
-    
+        
+        <div class="manual-page" id="page-6">
+          <div class="page-header">
+            <div class="header-brand">
+              <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
+              <div class="header-title-block">
+                <span class="header-screen-num">SCREEN NGM-01 · மண்டி மொபைல் திரை</span>
+                <span class="header-screen-name">Mobile Mandi Dashboard — மொபைல் மண்டி கட்டுப்பாட்டு பலகை</span>
+              </div>
+            </div>
+            <div class="header-badges">
+              <span class="badge-route">MANDI MOBILE</span>
+              <span class="badge-roles">ஆலை வாசல் எடை மேற்பார்வையாளர்</span>
+            </div>
+          </div>
+
+          <div class="mobile-phone-center">
+            <div class="phone-mockup">
+              <div class="phone-notch"></div>
+              <img src="screenshots/mobile_nongst_dashboard.png" class="phone-screen" alt="Mobile Mandi Dashboard">
+            </div>
+          </div>
+
+          <div class="op-grid-3col">
+            <div class="op-col">
+              <h4>மொபைல் மண்டி விவரங்கள்</h4>
+              <ul class="fields-list">
+                <li><span class='bullet-dot'>•</span> <div><strong>Live Cash Till ₹</strong>: மண்டி கவுண்டரில் உள்ள தற்போதைய ரொக்க இருப்பு.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Seed Bags Received</strong>: இன்று விவசாயிகளிடமிருந்து வந்த மூட்டைகளின் எண்ணிக்கை.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Loose Dispensed</strong>: செக்கு வாசலில் சில்லறையாக ஊற்றிய எண்ணெய் அளவு (லிட்டர்).</div></li><li><span class='bullet-dot'>•</span> <div><strong>Gate Status</strong>: ஆலை வாசல் மற்றும் எடைமேடை இயங்கும் நிலை.</div></li>
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>பொத்தான்கள் & செயல்பாடுகள்</h4>
+              <ul class="chips-list">
+                
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-amber">Fast Loose Billing</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">உடனடி மொபைல் நேரடி விற்பனை பில்லிங்கிற்கு செல்ல</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-green">Weighbridge Check</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">எடைமேடையின் தற்போதைய எடையை மொபைலில் பார்க்க</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-blue">Refresh Till Balance</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">ரொக்க நிலவரத்தை உடனுக்குடன் புதுப்பிக்க</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-dark">Record Cash Out</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">விவசாயிக்கு ரொக்கம் கொடுத்ததை கைபேசியில் பதிய</div>
+            </li>
+            
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>வேலை செய்யும் முறை (Workflow)</h4>
+              <ul class="workflow-list">
+                <li>கைபேசியில் மண்டி செயலியை திறந்ததும் இன்றைய ரொக்கம் மற்றும் மூட்டை வரவு தெரியும்.</li><li>நேரடி எண்ணெய் விற்க கீழே உள்ள <strong>Fast Loose Billing</strong> பட்டனை அழுத்தவும்.</li><li>விதை மூட்டைகளை சரிபார்க்க <strong>Weighbridge Check</strong> கொடுக்கவும்.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="page-footer">
+            <div class="footer-left">
+              <span>கே.கே.கே ஆயில் மில் · மண்டி மொபைல் கையேடு</span>
+            </div>
+            <span class="footer-page-num">பக்கம் 6 / 10 · Page 6 of 10</span>
+          </div>
+        </div>
+        
+        <div class="manual-page" id="page-7">
+          <div class="page-header">
+            <div class="header-brand">
+              <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
+              <div class="header-title-block">
+                <span class="header-screen-num">SCREEN NGM-02 · மண்டி மொபைல் திரை</span>
+                <span class="header-screen-name">Mobile Direct Loose Billing POS — மொபைல் நேரடி சில்லறை விற்பனை</span>
+              </div>
+            </div>
+            <div class="header-badges">
+              <span class="badge-route">MANDI MOBILE</span>
+              <span class="badge-roles">கவுண்டர் பில்லிங் பணியாளர்</span>
+            </div>
+          </div>
+
+          <div class="mobile-phone-center">
+            <div class="phone-mockup">
+              <div class="phone-notch"></div>
+              <img src="screenshots/mobile_nongst_billing.png" class="phone-screen" alt="Mobile Direct Loose Billing POS">
+            </div>
+          </div>
+
+          <div class="op-grid-3col">
+            <div class="op-col">
+              <h4>மொபைல் நேரடி படிவ விவரங்கள்</h4>
+              <ul class="fields-list">
+                <li><span class='bullet-dot'>•</span> <div><strong>Oil Selection Cards</strong>: கடலை எண்ணெய், நல்லெண்ணெய், புண்ணாக்கு தேர்வு.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Quantity (Kg / Liters)</strong>: வாடிக்கையாளர் பாத்திரத்தின் அளவு.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Direct Price Calculator</strong>: லிட்டருக்குரிய விலை தானாக கணக்கிடப்படும்.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Cash Mode</strong>: முழு தொகையும் ரொக்கமாக கல்லாப்பெட்டியில் சேரும்.</div></li>
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>பொத்தான்கள் & செயல்பாடுகள்</h4>
+              <ul class="chips-list">
+                
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-amber">Issue Loose Token</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">சில்லறை எண்ணெய் விற்பனை டோக்கனை உருவாக்க</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-green">Print Bluetooth Slip</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">கையில் உள்ள புளூடூத் பிரிண்டரில் டோக்கன் அச்சிட</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-blue">Cash Received</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">ரொக்கம் பெற்றதை உறுதி செய்து கல்லாவில் சேர்க்க</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-red">Clear Amount</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">அளவை அழித்து புதிய வாடிக்கையாளருக்கு தயார் செய்ய</div>
+            </li>
+            
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>வேலை செய்யும் முறை (Workflow)</h4>
+              <ul class="workflow-list">
+                <li>வாடிக்கையாளர் கொண்டுவந்த பாத்திரத்தின் அளவை (1L, 2L, 5L) தொட்டு தேர்ந்தெடுக்கவும்.</li><li><strong>Issue Loose Token</strong> பொத்தானை அழுத்தவும்.</li><li><strong>Print Bluetooth Slip</strong> அழுத்தினால் உடனே கையில் டோக்கன் வரும்; ரொக்கம் பெற்றுக்கொள்ளவும்.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="page-footer">
+            <div class="footer-left">
+              <span>கே.கே.கே ஆயில் மில் · மண்டி மொபைல் கையேடு</span>
+            </div>
+            <span class="footer-page-num">பக்கம் 7 / 10 · Page 7 of 10</span>
+          </div>
+        </div>
+        
+        <div class="manual-page" id="page-8">
+          <div class="page-header">
+            <div class="header-brand">
+              <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
+              <div class="header-title-block">
+                <span class="header-screen-num">SCREEN NGM-03 · மண்டி மொபைல் திரை</span>
+                <span class="header-screen-name">Mobile Voucher Register & Reprints — மொபைல் டோக்கன் வரலாறு & ரசீது</span>
+              </div>
+            </div>
+            <div class="header-badges">
+              <span class="badge-route">MANDI MOBILE</span>
+              <span class="badge-roles">கவுண்டர் காசாளர் & மேற்பார்வையாளர்</span>
+            </div>
+          </div>
+
+          <div class="mobile-phone-center">
+            <div class="phone-mockup">
+              <div class="phone-notch"></div>
+              <img src="screenshots/mobile_nongst_history.png" class="phone-screen" alt="Mobile Voucher Register & Reprints">
+            </div>
+          </div>
+
+          <div class="op-grid-3col">
+            <div class="op-col">
+              <h4>மொபைல் ரசீது பட்டியல்</h4>
+              <ul class="fields-list">
+                <li><span class='bullet-dot'>•</span> <div><strong>Token Number</strong>: டோக்கன் எண் (எ.கா. NGM-0842).</div></li><li><span class='bullet-dot'>•</span> <div><strong>Time & Liters</strong>: வழங்கிய நேரம் மற்றும் எண்ணெய் லிட்டர் அளவு.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Cash Collected ₹</strong>: வசூலிக்கப்பட்ட ரொக்க தொகை.</div></li><li><span class='bullet-dot'>•</span> <div><strong>Status Badge</strong>: ரொக்கம் வரவு வைக்கப்பட்டது (Settled).</div></li>
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>பொத்தான்கள் & செயல்பாடுகள்</h4>
+              <ul class="chips-list">
+                
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-amber">Reprint Bluetooth Slip</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">புளூடூத் பிரிண்டரில் மீண்டும் டோக்கன் ரசீது எடுக்க</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-green">Daily Cash Total</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">இன்றைய மொத்த ரொக்க வசூலை மொபைலில் பார்க்க</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-blue">Filter by Hour</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">குறிப்பிட்ட மணிநேர விற்பனையை மட்டும் வடிகட்ட</div>
+            </li>
+            
+            <li style="display: flex; flex-direction: column; gap: 2px; margin-bottom: 3px;">
+              <div><span class="btn-chip btn-chip-dark">End of Day Close</span></div>
+              <div style="font-size: 8.5px; color: var(--text-muted); padding-left: 2px;">இன்றைய கணக்கை முடித்து சேமிக்க</div>
+            </li>
+            
+              </ul>
+            </div>
+            <div class="op-col">
+              <h4>வேலை செய்யும் முறை (Workflow)</h4>
+              <ul class="workflow-list">
+                <li>வாடிக்கையாளர் டோக்கன் நகல் கேட்டால் பட்டியலில் அந்த வரிசையை தொடவும்.</li><li><strong>Reprint Bluetooth Slip</strong> அழுத்தினால் புதிய டோக்கன் வரும்.</li><li>மாலை ஆலை மூடும் முன் <strong>Daily Cash Total</strong> பார்த்து பணத்தை ஒப்படைக்கவும்.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="page-footer">
+            <div class="footer-left">
+              <span>கே.கே.கே ஆயில் மில் · மண்டி மொபைல் கையேடு</span>
+            </div>
+            <span class="footer-page-num">பக்கம் 8 / 10 · Page 8 of 10</span>
+          </div>
+        </div>
+        
     <div class="manual-page" id="page-9">
       <div class="page-header">
         <div class="header-brand">
           <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
           <div class="header-title-block">
-            <span class="header-screen-num">SCREEN NG-M02 · MOBILE NON-GST VOUCHER</span>
-            <span class="header-screen-name">Mobile Non-GST Sales Voucher (NG-XXXX)</span>
+            <span class="header-screen-num">NON-GST MASTER BUTTON INDEX</span>
+            <span class="header-screen-name">மண்டி முக்கிய பொத்தான்கள் &amp; சுருக்குவழிகள் (Hotkeys)</span>
           </div>
         </div>
         <div class="header-badges">
-          <span class="badge-route">Mobile App · 390×844</span>
-          <span class="badge-roles">SUPER ADMIN ONLY</span>
+          <span class="badge-route">BUTTON DIRECTORY</span>
+          <span class="badge-roles">மண்டி பணியாளர்கள்</span>
         </div>
       </div>
 
-      <div class="mobile-phone-center">
-        <div class="phone-mockup">
-          <div class="phone-notch"></div>
-          <img src="screenshots/mobile_nongst_billing.png" alt="Mobile Non-GST Billing" class="phone-screen" loading="lazy">
-          <span class="phone-tag">Fast Touch Non-GST POS</span>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 8px; font-size: 9.5px; line-height: 1.4;">
+        <div style="background: #FEFDFB; border: 1px solid var(--border); border-radius: 6px; padding: 8px;">
+          <h3 style="font-size: 10.5px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 2px; margin-bottom: 6px;">
+            மண்டி விசைப்பலகை சுருக்குவழிகள் (Mandi Keyboard Shortcuts)
+          </h3>
+          <table style="width: 100%; border-collapse: collapse; font-size: 9.2px;">
+            <tr style="background: #FEF3C7; font-weight: 800; text-align: left;">
+              <th style="padding: 4px 8px;">சுருக்குவழி (Hotkey)</th>
+              <th style="padding: 4px 8px;">பொத்தான் பெயர் (Button Name)</th>
+              <th style="padding: 4px 8px;">பயன்படும் திரை (Screen)</th>
+              <th style="padding: 4px 8px;">செயல்முறை விளக்கம் (Tamil Action Description)</th>
+            </tr>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 4px 8px;"><kbd style="background:#3A1501; color:#FBBF24; padding:1px 5px; border-radius:3px; font-weight:700;">F1</kbd></td>
+              <td style="padding: 4px 8px;"><span class="btn-chip btn-chip-amber">New Voucher</span></td>
+              <td style="padding: 4px 8px;">/nongst-dashboard</td>
+              <td style="padding: 4px 8px;">புதிய மண்டி விதை வரவு அல்லது சில்லறை சீட்டு போடும் பக்கத்திற்கு செல்லும்.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 4px 8px;"><kbd style="background:#3A1501; color:#FBBF24; padding:1px 5px; border-radius:3px; font-weight:700;">F2</kbd></td>
+              <td style="padding: 4px 8px;"><span class="btn-chip btn-chip-amber">Save Voucher</span></td>
+              <td style="padding: 4px 8px;">/nongst-billing</td>
+              <td style="padding: 4px 8px;">வவுச்சரை சேமித்து, எடையை உறுதி செய்து, உடனடியாக டோக்கன் அச்சிடும்.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 4px 8px;"><kbd style="background:#3A1501; color:#FBBF24; padding:1px 5px; border-radius:3px; font-weight:700;">F4</kbd></td>
+              <td style="padding: 4px 8px;"><span class="btn-chip btn-chip-green">Read Counter Scale</span></td>
+              <td style="padding: 4px 8px;">/nongst-billing</td>
+              <td style="padding: 4px 8px;">தராசில் உள்ள விதை மூட்டை அல்லது எண்ணெய் பாத்திரத்தின் எடையை தானாக திரையில் கொண்டுவரும்.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 4px 8px;"><kbd style="background:#3A1501; color:#FBBF24; padding:1px 5px; border-radius:3px; font-weight:700;">F3</kbd></td>
+              <td style="padding: 4px 8px;"><span class="btn-chip btn-chip-blue">Reprint Token</span></td>
+              <td style="padding: 4px 8px;">/nongst-history</td>
+              <td style="padding: 4px 8px;">முந்தைய மண்டி டோக்கன் அல்லது எடை ரசீதை உடனே தெர்மல் பிரிண்டரில் மறுபதிப்பு எடுக்கும்.</td>
+            </tr>
+          </table>
         </div>
-      </div>
 
-      <div class="info-grid">
-        <div class="info-col">
-          <h4>High-Speed Floor Billing</h4>
-          <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">Optimized for tablet counters dispensing loose oil at mill gates.</p>
-          <ul>
-            <li><span class="bullet-dot">•</span> <strong>Auto NG- Series</strong>: Sequentially increments <code>NG-2627-XXXX</code>.</li>
-            <li><span class="bullet-dot">•</span> <strong>0.0% GST Locked</strong>: Taxes completely zeroed out automatically.</li>
-            <li><span class="bullet-dot">•</span> <strong>Private Godown Deduction</strong>: Protects statutory inventory.</li>
-          </ul>
-        </div>
-
-        <div class="info-col">
-          <h4>Action Triggers</h4>
-          <div class="btn-chips-wrap">
-            <span class="btn-chip btn-chip-amber">Save &amp; Print</span>
-            <span class="btn-chip btn-chip-gold">Retail Rate</span>
-            <span class="btn-chip btn-chip-blue">Wholesale Tier</span>
-            <span class="btn-chip btn-chip-red">Clear Form</span>
-          </div>
+        <div style="background: #FEFDFB; border: 1px solid var(--border); border-radius: 6px; padding: 8px; flex: 1;">
+          <h3 style="font-size: 10.5px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 2px; margin-bottom: 6px;">
+            மண்டி முதன்மை பொத்தான்கள் விளக்கம் (Core Mandi Action Buttons)
+          </h3>
+          <table style="width: 100%; border-collapse: collapse; font-size: 9.2px;">
+            <tr style="background: #FEF3C7; font-weight: 800; text-align: left;">
+              <th style="padding: 4px 8px;">ஆங்கில பொத்தான் (Button)</th>
+              <th style="padding: 4px 8px;">திரை (Screen)</th>
+              <th style="padding: 4px 8px;">விளக்கம் &amp; பயன்பாடு (Tamil Operational Description)</th>
+            </tr>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 4px 8px;"><span class="btn-chip btn-chip-amber">Direct Loose Billing</span></td>
+              <td style="padding: 4px 8px;">Dashboard</td>
+              <td style="padding: 4px 8px;">பாத்திர சில்லறை கவுண்டர் பில்லிங் பக்கத்தை உடனடியாக திறக்கும்.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 4px 8px;"><span class="btn-chip btn-chip-green">Print Thermal Token</span></td>
+              <td style="padding: 4px 8px;">Billing Counter</td>
+              <td style="padding: 4px 8px;">எண்ணெய் ஊற்றுபவருக்கு கைக்கு அடக்கமான சிறிய டோக்கன் சீட்டை அச்சிட்டு தரும்.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 4px 8px;"><span class="btn-chip btn-chip-dark">Cash Outflow Pay</span></td>
+              <td style="padding: 4px 8px;">Billing Counter</td>
+              <td style="padding: 4px 8px;">விவசாயிக்கு விதை கொள்முதலுக்கான ரொக்க தொகையை வழங்கியதை கல்லாவில் கழிக்கும்.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 4px 8px;"><span class="btn-chip btn-chip-green">Export Cash Register</span></td>
+              <td style="padding: 4px 8px;">Voucher History</td>
+              <td style="padding: 4px 8px;">இன்றைய அனைத்து மண்டி ரொக்க வரவு செலவுகளை எக்செல் கோப்பாக பதிவிறக்கும்.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #E2E8F0;">
+              <td style="padding: 4px 8px;"><span class="btn-chip btn-chip-dark">Day End Cash Close</span></td>
+              <td style="padding: 4px 8px;">Dashboard</td>
+              <td style="padding: 4px 8px;">மாலையில் கல்லாப்பெட்டி ரொக்கத்தை கணக்கிட்டு இறுதி செய்து லெட்ஜரை பூட்டும்.</td>
+            </tr>
+          </table>
         </div>
       </div>
 
       <div class="page-footer">
         <div class="footer-left">
-          <span>KKK Oil Factory Enterprise ERP · Mobile Non-GST Voucher</span>
+          <span>KKK Oil Factory ERP · Non-GST Master Buttons</span>
         </div>
-        <span class="footer-page-num">Screen NG-M02 · Page 9 of 10</span>
+        <span class="footer-page-num">பொத்தான்கள் அட்டவணை · Page 9 of 10</span>
       </div>
     </div>
     
@@ -1135,65 +1253,60 @@
         <div class="header-brand">
           <img src="screenshots/kkk_logo_gold.png" class="header-logo" alt="KKK Logo">
           <div class="header-title-block">
-            <span class="header-screen-num">SCREEN NG-M03 · NON-GST AUDIT &amp; SOPS</span>
-            <span class="header-screen-name">Mobile Non-GST History &amp; Mandi Procurement SOP</span>
+            <span class="header-screen-num">MANDI OPERATING PROCEDURES (SOP)</span>
+            <span class="header-screen-name">மண்டி விதை கொள்முதல் &amp; நேரடி விநியோகம் செயல்முறை</span>
           </div>
         </div>
         <div class="header-badges">
-          <span class="badge-route">AUDIT &amp; SOPS</span>
-          <span class="badge-roles">SUPER ADMIN ONLY</span>
+          <span class="badge-route">MANDI SOP</span>
+          <span class="badge-roles">மண்டி காசாளர்கள் &amp; எடை ஆப்பரேட்டர்கள்</span>
         </div>
       </div>
 
-      <div style="flex: 1; display: grid; grid-template-columns: 1fr 1.3fr; gap: 12px; padding: 4px 0; align-items: start;">
-        <div style="display: flex; flex-direction: column; align-items: center;">
-          <div class="phone-mockup" style="width: 68mm;">
-            <div class="phone-notch"></div>
-            <img src="screenshots/mobile_nongst_history.png" alt="Mobile Non-GST History" class="phone-screen" style="max-height: 125mm;" loading="lazy">
-            <span class="phone-tag">NG- History Ledger</span>
+      <div style="flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 9.5px; line-height: 1.45;">
+        <div style="background: #FEFDFB; border: 1px solid var(--border); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 6px;">
+          <h3 style="font-size: 11px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 3px; margin-bottom: 4px;">
+            பகுதி A: விவசாயிகள் நேரடி விதை கொள்முதல் செயல்முறை
+          </h3>
+          <ul class="workflow-list" style="font-size: 9.2px;">
+            <li><strong>விவசாயி வருகை &amp; பதிவு</strong>: விவசாயி நிலக்கடலை அல்லது எள் மூட்டைகளுடன் வரும்போது பெயர் மற்றும் ஊரை கணினியில் பதியவும்.</li>
+            <li><strong>மூட்டை எடை சரிபார்ப்பு</strong>: எலக்ட்ரானிக் தராசில் மூட்டைகளை வைத்து விசைப்பலகையில் <strong>F4 (Read Counter Scale)</strong> அழுத்தவும்.</li>
+            <li><strong>ஈரப்பதம் &amp; கழிவு கழித்தல்</strong>: விதை மாதிரியை எடுத்து ஈரப்பதம் பரிசோதித்து, கழிவு சதவீதத்தை உள்ளிடவும்.</li>
+            <li><strong>கொள்முதல் வவுச்சர் தயாரிப்பு</strong>: இன்றைய மண்டி விலைக்கு ஏற்ப தொகையை கணக்கிட்டு <strong>Save Voucher (F2)</strong> அழுத்தவும்.</li>
+            <li><strong>ரொக்க பட்டுவாடா</strong>: கல்லாப்பெட்டியிலிருந்து விவசாயிக்கு ரொக்கத்தை கொடுத்து, கையொப்பம் பெற்று <strong>Print Thermal Token</strong> சீட்டை வழங்கவும்.</li>
+          </ul>
+
+          <div style="margin-top: 6px; background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 4px; padding: 6px; font-size: 8.8px; color: #78350F;">
+            <strong>கவனிக்க:</strong> விவசாயிக்கு ரொக்கம் பட்டுவாடா செய்தவுடன் <strong>Cash Outflow Pay</strong> பட்டனை அழுத்தி கல்லா கணக்கை உடனே கழிக்க வேண்டும்.
           </div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
-            <h4 style="font-size: 11px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 3px; margin-bottom: 4px;">
-              SOP NG-1: Mandi Smallholder Farmer Settlement
-            </h4>
-            <ol style="font-size: 9px; line-height: 1.45; padding-left: 12px; color: #334155;">
-              <li>Verify farmer agricultural exemption under GST Notification No. 12/2017.</li>
-              <li>Record net seed weight at weighbridge and route inward to <code>Private Godown</code>.</li>
-              <li>Create settlement voucher in Non-GST station with zero tax.</li>
-              <li>Disburse cash or rural account transfer. Hand over delivery memo.</li>
-            </ol>
-          </div>
+        <div style="background: #FEFDFB; border: 1px solid var(--border); border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 6px;">
+          <h3 style="font-size: 11px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 3px; margin-bottom: 4px;">
+            பகுதி B: ஆலை வாசல் பாத்திர சில்லறை விநியோகம் செயல்முறை
+          </h3>
+          <ul class="workflow-list" style="font-size: 9.2px;">
+            <li><strong>வாடிக்கையாளர் பாத்திரம் பெறுதல்</strong>: சில்லறை வாடிக்கையாளர் கொண்டுவரும் கேன் அல்லது பாத்திரத்தை பெற்றுக்கொள்ளவும்.</li>
+            <li><strong>எண்ணெய் வகை &amp; அளவு தேர்வு</strong>: செக்கு கடலை எண்ணெய் அல்லது நல்லெண்ணெயை தேர்ந்தெடுத்து தேவையான லிட்டரை உள்ளிடவும்.</li>
+            <li><strong>நேரடி தெர்மல் டோக்கன் வழங்கல்</strong>: <strong>Issue Loose Token</strong> கொடுத்து சிறிய புளூடூத் ரசீதை அச்சிட்டு வாடிக்கையாளரிடம் வழங்கவும்.</li>
+            <li><strong>எண்ணெய் அளந்து ஊற்றுதல்</strong>: விநியோக கவுண்டரில் வாடிக்கையாளர் டோக்கனை காண்பித்தவுடன் சரியான அளவு எண்ணெய் ஊற்றி தரவும்.</li>
+            <li><strong>மாலை ரொக்க ஒப்படைப்பு</strong>: ஆலை மூடும் போது கல்லாவில் உள்ள மொத்த ரொக்கத்தை கணக்கிட்டு <strong>Day End Cash Close</strong> மூலம் மேலாளரிடம் ஒப்படைக்கவும்.</li>
+          </ul>
 
-          <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
-            <h4 style="font-size: 11px; font-weight: 800; color: var(--choco-dark); text-transform: uppercase; border-bottom: 2px solid var(--amber-primary); padding-bottom: 3px; margin-bottom: 4px;">
-              SOP NG-2: Mill Gate Loose Oil Dispensing
-            </h4>
-            <ol style="font-size: 9px; line-height: 1.45; padding-left: 12px; color: #334155;">
-              <li>Tare customer's container on electronic scale.</li>
-              <li>Fill requested volume (e.g. 5kg unbranded groundnut oil).</li>
-              <li>Select <code>Walk-in / Cash Customer</code> on mobile POS. Press <code>Save &amp; Print</code>.</li>
-              <li>Hand over thermal delivery receipt with hard-coded 0% tax.</li>
-            </ol>
-          </div>
-
-          <div style="background: #FEF3C7; border: 1px solid #FCD34D; border-radius: 6px; padding: 8px; font-size: 9px; color: #92400E;">
-            <strong>Statutory Compliance Confirmation:</strong> The mill's chartered accountant only accesses standard GST reports. Non-GST records remain completely isolated from tax audits.
+          <div style="margin-top: 6px; background: #DCFCE7; border: 1px solid #86EFAC; border-radius: 4px; padding: 6px; font-size: 8.8px; color: #166534;">
+            <strong>பாதுகாப்பு விதி:</strong> தெர்மல் பிரிண்டர் காகிதம் முடிந்தால் உடனே புதிய ரோல் மாற்றவும். ஆப்-லைன் பில்களை தினமும் மாலை சர்வரில் சின்க் செய்ய மறக்காதீர்கள்.
           </div>
         </div>
       </div>
 
       <div class="page-footer">
         <div class="footer-left">
-          <span>KKK Oil Factory Enterprise ERP · Non-GST Station Documentation</span>
+          <span>KKK Oil Factory ERP · Mandi Operating Procedures</span>
         </div>
-        <span class="footer-page-num">Screen NG-M03 · Page 10 of 10</span>
+        <span class="footer-page-num">மண்டி SOP வழிகாட்டி · Page 10 of 10</span>
       </div>
     </div>
     
-  </main>
-
+  </div>
 </body>
 </html>

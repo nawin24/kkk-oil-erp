@@ -1,625 +1,270 @@
-# KKK Oil Factory — Standard GST & All Roles Operational Manual
+# கே.கே.கே ஆயில் மில் - விற்பனை & பொது பயன்பாட்டு கையேடு
+## KKK Oil Factory Enterprise ERP · Standard Operations Manual (v2.5.0)
 
-<p align="center"><img src="screenshots/kkk_logo_gold.png" alt="KKK Oil Factory Logo" width="320"></p>
-
-## Complete Path-Wise, Button-Wise & Functional System Manual for Web & Mobile
-**Version:** 2.5.0 (Production Release)  
-**Enterprise:** KKK Oil Factory, Tamil Nadu, India  
-**System Classification:** Enterprise Resource Planning (ERP), Manufacturing Floor Operations, Statutory GST Invoicing & Supply Chain Management  
-**Target Audience:** Super Admin, ERP Administrator, Plant Manager, Billing Cashier, Production Supervisor, Logistics Supervisor & Driver, Warehouse Incharge  
-**Supported Platforms:** Web Browser (Chrome/Edge/Safari/Firefox), Mobile App (Android APK & iOS)
+> **முக்கிய குறிப்பு (Important Note):** இந்த கையேடு ஆலை பணியாளர்கள், பில்லிங் காசாளர்கள் மற்றும் மேற்பார்வையாளர்களுக்கான நேரடி செயல்பாட்டு வழிகாட்டியாகும். விளக்கங்கள் அனைத்தும் எளிய தமிழில் வழங்கப்பட்டுள்ளன; மென்பொருளில் உள்ள பொத்தான்கள் (Buttons) மற்றும் விசைப்பலகை குறுக்குவழிகள் (Hotkeys) எளிதாக அடையாளம் காணும் வகையில் ஆங்கிலத்தில் கொடுக்கப்பட்டுள்ளன.
 
 ---
 
-## 1. Executive Summary & Application Overview
+## பொருளடக்கம் & பக்க வழிகாட்டி (Table of Contents)
 
-**KKK Oil Factory Enterprise ERP** is a high-performance industrial management and tax-compliant billing software specifically developed for commercial oil mills, seed expeller crushing plants, and distribution depots.
+### பகுதி 1: கணினி டெஸ்க்டாப் திரைகள் (Desktop Screens 01 to 15)
+1. [பக்கம் 3] `01 · /login` — உள்நுழைவு & பாதுகாப்பு வாயில் (User Authentication Gate)
+2. [பக்கம் 4] `02 · /dashboard` — முதன்மை கட்டுப்பாட்டு பலகை (Executive Overview)
+3. [பக்கம் 5] `03 · /billing` — மொத்த & சில்லறை விற்பனை பில்லிங் (B2B GST POS)
+4. [பக்கம் 6] `04 · /billing-history` — பில் வரலாறு & மறுபதிப்பு (Invoices & Cancel)
+5. [பக்கம் 7] `05 · /products` — எண்ணெய் ரகங்கள் பட்டியல் (Product Catalog Master)
+6. [பக்கம் 8] `06 · /price-management` — தினசரி விலை நிர்ணயம் (Daily Price Engine)
+7. [பக்கம் 9] `07 · /price-history` — விலை மாற்ற வரலாறு (Price Audit & Trends)
+8. [பக்கம் 10] `08 · /inventory` — சைலோ தொட்டிகள் & இருப்பு (Silo Tanks & Warehouse)
+9. [பக்கம் 11] `09 · /purchase` — விதை வரவு & எடை மேடை (Seed Inward & Weighbridge)
+10. [பக்கம் 12] `10 · /production` — ஆலை உற்பத்தி & புண்ணாக்கு (Expeller Milling Batches)
+11. [பக்கம் 13] `11 · /customers` — வாடிக்கையாளர்கள் கணக்கு (Customer Ledgers & Credit)
+12. [பக்கம் 14] `12 · /suppliers` — விதை சப்ளையர்கள் கணக்கு (Vendor & Mandi Directory)
+13. [பக்கம் 15] `13 · /reports` — விற்பனை & ஜிஎஸ்டி அறிக்கைகள் (Tax Analytics & GSTR-1)
+14. [பக்கம் 16] `14 · /employees` — ஊழியர்கள் & அனுமதி அமைப்புகள் (Staff & Access Roles)
+15. [பக்கம் 17] `15 · /settings` — கணினி & பிரிண்டர் அமைப்புகள் (Hardware & System Setup)
 
-The platform links physical manufacturing operations—raw seed intake, moisture testing, weighbridge recording, expeller milling batches, oil settling, bulk silo tank dip monitoring, and packaged SKU inventory—with commercial business functions including statutory B2B GST invoicing (HSN 1508/1515/2306), high-speed retail POS counter checkout, customer credit ledgers, multi-tier pricing, and logistics fleet dispatch.
+### பகுதி 2: மொபைல் செயலி திரைகள் (Mobile Screens M-01 to M-06)
+16. [பக்கம் 18] `M-01` — Mobile Login Gateway (மொபைல் உள்நுழைவு திரை)
+17. [பக்கம் 19] `M-02` — Mobile Operations Dashboard (மொபைல் கட்டுப்பாட்டு பலகை)
+18. [பக்கம் 20] `M-03` — Mobile Fast Billing POS (மொபைல் விரைவு பில்லிங் கவுண்டர்)
+19. [பக்கம் 21] `M-04` — Mobile Silo Tanks & Stock Gauges (மொபைல் ஆயில் தொட்டி இருப்பு)
+20. [பக்கம் 22] `M-05` — Mobile Voucher History & Reprints (மொபைல் பில் வரலாறு & ரசீது)
+21. [பக்கம் 23] `M-06` — Mobile More Modules Navigation Hub (மொபைல் கூடுதல் மெனு அமைப்புகள்)
 
-### Supported Platforms & Responsive Layout Engine
-- **Web & Desktop Workspace (Screen Width ≥ 860px)**:
-  - **Left Application Drawer (244px)**: Categorized navigation (`MAIN`, `BILLING & OPERATIONS`, `MASTERS`, `PEOPLE & SETTINGS`), brand emblem, company state identifier, logged-in user card, and sign-out action.
-  - **Top Application Bar**: Global search bar, Quick-action shortcuts, Active Role tone badge, Notification bell, and User profile avatar menu.
-  - **Body Workspace**: Responsive data grids, statistical metric cards, tabbed billing layouts, and floating action buttons.
-- **Mobile Application Workspace (Screen Width < 860px)**:
-  - **Top Mobile Header**: Brand logo, screen title, hamburger drawer trigger, and role badge.
-  - **Bottom Navigation Bar (5 Primary Stations)**:
-    1. `Dashboard` (Index 0): Key operational metrics and quick actions.
-    2. `Billing POS` (Index 1): High-speed counter sales or B2B invoicing.
-    3. `Inventory` (Index 2): Bulk tank dip levels and packaged finished stock.
-    4. `History` (Index 3): Invoices, reprints, and cancellations.
-    5. `More Modules` (Index 4): Draggable modal sheet providing instant access to all 15 ERP modules.
-  - **Force Desktop Mode**: Topbar toggle button (`Desktop View`) that allows mobile/tablet users to force full desktop layout for complex multi-column billing tables.
-
----
-
-## 2. Role-Based Access Control (RBAC) Matrix
-
-The system enforces strict operational boundaries to prevent unauthorized price alterations, financial overrides, or inventory tampering:
-
-| Role Key | Display Name | Tone Badge | Access Scope | Operational Modules & Responsibilities |
-| :--- | :--- | :---: | :---: | :--- |
-| `super_admin` | **Super Admin** | Gold | `*` (Full System) | Executive command, master pricing approval, GST & Non-GST station toggles, employee administration, financial audit, and database backups. |
-| `admin` | **ERP Administrator** | Gold | 15 Core Modules | Master catalog configuration, employee account creation, customer credit limits, inventory adjustments, and company profile. |
-| `manager` | **Plant / Shift Manager** | Blue | 12 Operations Modules | Day-to-day mill operations, cashier shift reconciliation, expeller yield validation, customer statements, and purchase orders. |
-| `cashier` | **Billing Cashier / POS** | Green | Sales & Invoicing | High-speed POS counter billing, B2B GST tax invoices, payment collection (Cash/UPI/NEFT/Cheque/Credit), thermal receipts, and customer ledger viewing. |
-| `production_staff` | **Production Supervisor** | Amber | Manufacturing Floor | Machine run logging, raw seed input (Groundnut/Sesame/Mustard), filtered oil recovery tracking, oil cake byproduct bagging, and machine maintenance. |
-| `logistics_staff` / `driver` | **Logistics Driver** | Purple | Fleet & Dispatch | Gate pass verification, vehicle loading, driver trip sheets, delivery route execution, and Proof of Delivery (POD) mobile confirmation. |
-| `inventory_incharge` | **Warehouse Head** | Forest | Inventory & Silos | Bulk tank dip stick measurements, packaged SKU counts, packing material tracking (tins/bottles/pouches), and stock transfer notes. |
+### பகுதி 3: முதன்மை குறிப்பு & SOP விதிமுறைகள்
+22. [பக்கம் 24] Master Button Reference Index (முக்கிய பொத்தான்கள் & சுருக்குவழிகள் பட்டியல்)
+23. [பக்கம் 25] Standard Operating Procedures (காலை முதல் இரவு வரை தினசரி SOP)
 
 ---
 
-## 3. Path-by-Path & Button-by-Button System Manual
-
-### 3.1. Authentication & Session Gate (`/login`)
-
-| Desktop Web (1920x1080) | Mobile Touch (390x844) |
-| :---: | :---: |
-| ![Desktop Login](screenshots/desktop_login.png) | ![Mobile Login](screenshots/mobile_login.png) |
-
-- **Route Path**: `/login`
-- **Internal Route**: `login`
-- **Purpose**: Authenticates personnel, securely decrypts access tokens, sets active role context, and restores last active station.
-- **Visual Interface**:
-  - **Desktop Layout**: Unified dark brown brand panel (`#3A1501`) featuring high-resolution gold KKK logo on the left; clean white login card on the right.
-  - **Mobile Layout**: Vertical flow with gold KKK logo header, brand badge, and centered login card.
-- **Input Fields**:
-  1. `Username` (Text): Staff username (`admin`, `admin_staff`, `mgr`, `cashier`, `driver`).
-  2. `Password` (Password): Cryptographically verified staff password.
-  3. `Password Visibility Toggle` (Eye Icon): Toggles between obscured dots and readable text.
-- **Action Buttons**:
-  - `Sign In to ERP System` (Gold Button): Validates credentials, creates encrypted local session in `StorageService`, initializes reactive state via `AuthProvider`, and navigates to default screen.
-  - `Super Admin (admin)` (Quick Demo Chip): Instantly populates credentials for Super Admin.
-  - `ERP Admin (admin_staff)` (Quick Demo Chip): Instantly populates credentials for Administrator.
-  - `Manager (mgr)` (Quick Demo Chip): Instantly populates credentials for Operations Manager.
-  - `Cashier (cashier)` (Quick Demo Chip): Instantly populates credentials for Billing Cashier.
+## 01 · Authentication & Session Gate (`/login`)
+![Desktop Login Screen](screenshots/desktop_login.png)
+- **நோக்கம்**: ஆலை ஊழியர்கள் மற்றும் நிர்வாகிகள் தங்களின் கணக்கில் பாதுகாப்பாக உள்நுழைய பயன்படும் முகப்பு திரை.
+- **படிவ விவரங்கள்**: `Username` (பயனர் பெயர்: admin, mgr, cashier), `Password` (ரகசிய கடவுச்சொல்).
+- **முக்கிய பொத்தான்கள்**:
+  - `Sign in` : உள்நுழைந்து உங்கள் பணிக்குரிய முகப்பு திரைக்குச் செல்ல.
+  - `Super Admin` : முழு நிர்வாகி கணக்கை தானாக நிரப்ப.
+  - `Admin` : ஆலை அலுவலக நிர்வாகி கணக்கை நிரப்ப.
+  - `Manager` : ஆலை பொது மேலாளர் கணக்கை நிரப்ப.
+  - `Cashier` : விற்பனை பில்லிங் காசாளர் கணக்கை நிரப்ப.
+  - `Supervisor` : உற்பத்தி மேற்பார்வையாளர் கணக்கை நிரப்ப.
+- **வேலை செய்யும் முறை (Workflow)**:
+  1. பயனர் பெயர் மற்றும் கடவுச்சொல்லை தட்டச்சு செய்யவும்.
+  2. அல்லது உங்கள் பொறுப்புக்குரிய விரைவு பட்டனை (Admin / Cashier / Manager) அழுத்தவும்.
+  3. `Sign in` பொத்தானை அழுத்தினால் உங்கள் முகப்பு திரை திறக்கும்.
 
 ---
 
-### 3.2. Executive & Operations Dashboard (`/dashboard`)
-- **Route Path**: `/dashboard` or `/`
-- **Internal Route**: `dashboard`
-- **Purpose**: Real-time enterprise cockpit providing top-level KPI metrics, active manufacturing alerts, sales trends, and immediate shortcuts.
-- **Key Metrics Displayed**:
-  - `Today's Gross Sales` (₹): Real-time sum of all completed tax invoices and counter sales.
-  - `Cash Register Balance` (₹): Net physical cash collected across all billing counters.
-  - `Active Silo Tank Dip Levels` (Liters): Calibrated volume of bulk oil in main storage tanks.
-  - `Low Stock SKU Alerts`: Number of finished products below safety reorder threshold.
-- **Quick Action Buttons**:
-  - `+ New B2B Invoice`: Navigates immediately to `/billing` (`erp_billing`).
-  - `+ Quick POS Counter`: Navigates immediately to `/counter`.
-  - `+ Start Milling Batch`: Opens batch creation modal or navigates to `/production`.
-  - `+ Record Seed Inward`: Opens purchase intake modal or navigates to `/purchase`.
-  - `+ Delivery Gate Pass`: Navigates to `/logistics`.
-- **Interactive Data Components**:
-  - `7-Day Sales Trend Bar Chart`: Visual comparison of daily revenue over the preceding week.
-  - `Recent Vouchers Table`: Lists the 10 most recent invoices with Voucher No, Customer Name, Net Value, Payment Status badge, and `View Details` action.
-  - `Critical Inventory Alert Grid`: Highlights SKUs requiring immediate production replenishment.
+## 02 · Executive Overview (`/dashboard`)
+![Desktop Dashboard](screenshots/desktop_dashboard.png)
+- **நோக்கம்**: ஆலையின் தினசரி மொத்த விற்பனை, கையிருப்பு, உற்பத்தி அளவு மற்றும் நிலுவைத் தொகையை ஒரே பார்வையில் காட்டும் திரை.
+- **முக்கிய புள்ளிவிவரங்கள்**: Today Sales ₹ (விற்பனை ரொக்கம்), Silo Tank Stock % (தொட்டி இருப்பு சதவீதம்), Milling Output (உற்பத்தி அளவு).
+- **முக்கிய பொத்தான்கள்**:
+  - `New Invoice (+)` : புதிய விற்பனை பில் போடும் திரைக்கு உடனடியாக செல்ல.
+  - `Record Milling` : புதிய எண்ணெய் ஆலை பேட்ச் பதிவை தொடங்க.
+  - `Refresh Data` : சமீபத்திய புள்ளிவிவரங்களை உடனடியாக புதுப்பிக்க.
+  - `Export Summary` : இன்றைய விற்பனை சுருக்கத்தை எக்செல் கோப்பாக பதிவிறக்க.
+- **வேலை செய்யும் முறை (Workflow)**:
+  1. காலையில் பணி தொடங்கும் போது தொட்டிகளின் எண்ணெய் இருப்பு அளவை சரிபார்க்கவும்.
+  2. அவசர விற்பனை பில் போட மேல் வலதுபுறத்தில் உள்ள `New Invoice (+)` பொத்தானை அழுத்தவும்.
 
 ---
 
-### 3.3. Standard B2B GST Invoicing (`/billing`)
-
-| Desktop Web (1920x1080) | Mobile Touch (390x844) |
-| :---: | :---: |
-| ![Desktop Billing](screenshots/desktop_billing.png) | ![Mobile Billing](screenshots/mobile_billing.png) |
-
-- **Route Path**: `/billing` (Aliases: `/gst-billing`, `/erp-billing`)
-- **Internal Route**: `erp_billing`
-- **Purpose**: Generates statutory GST Tax Invoices compliant with Rule 46 of CGST Rules 2017 for wholesale dealers, distributors, supermarkets, and institutions.
-- **Header Form Controls**:
-  1. `Customer Selector` (Dropdown / Search): Displays registered customers with company legal name, GSTIN, and credit balance.
-  2. `Billing Route` (Dropdown): Delivery route (e.g., Dharmapuri Local, Salem Highway, Coimbatore Express).
-  3. `Godown Selector` (Dropdown): Source warehouse (`Main Godown`, `Packaging Godown`, `Mill Floor`).
-  4. `Pricing Tier` (Radio Buttons):
-     - `Retail Rate` (Single carton / standard rate)
-     - `Semi-Wholesale Rate` (Medium volume discount)
-     - `Bulk Wholesale Rate` (Large dealer distributor tier)
-  5. `Payment Mode` (Dropdown): `Cash`, `Credit / Account`, `UPI / QR`, `Bank Transfer / NEFT`, `Cheque`.
-  6. `Payment Status` (Dropdown): `Paid`, `Partial`, `Credit (Unpaid)`.
-- **Fast Line Item Entry Form**:
-  1. `Item Search Autocomplete` (Text Field): Real-time product search by name, SKU, or HSN code.
-  2. `Quantity` (Numeric Field): Number of units / packs to bill.
-  3. `Applied Unit Rate` (Numeric Field): Auto-filled from selected price tier; editable with admin permissions.
-  4. `Discount %` (Numeric Field): Line item discount percentage (e.g. 2.5%).
-  5. `Add to Voucher` (Gold Button): Appends item to active invoice table with automated tax calculation.
-- **Invoice Items Data Table**:
-  - Columns: S.No, Item Code, Product Name, Pack Volume, Quantity, Applied Rate, Discount Amt, Taxable Base, CGST %, SGST %, IGST %, Final Line Total, Actions.
-  - Row Actions:
-    - `+` (Increment Qty): Increases item count by 1.
-    - `-` (Decrement Qty): Decreases item count by 1.
-    - `Trash Icon` (Delete Line Item): Removes product from invoice table.
-- **Bottom Multi-Tab Panel**:
-  - **Tab 0: Dispatch Details**:
-    - `PO Number` & `PO Date`: Buyer's purchase order reference.
-    - `Vehicle Number`: Transport truck registration (e.g., `TN 28 BK 5521`).
-    - `Driver Name`: Authorized vehicle driver.
-    - `Delivery Note` & `Gate Pass No`: Internal dispatch tracking identifiers.
-    - `Transporter Name`: Logistics agency.
-  - **Tab 1: E-Way Bill Details**:
-    - `E-Way Bill Number`: Statutory 12-digit Government portal EWB number (required for consignments > ₹50,000).
-    - `EWB Date` & `Valid Until`: Consignment validity duration based on road distance.
-  - **Tab 2: E-Invoice Details**:
-    - `IRN (Invoice Reference Number)`: 64-character statutory hash for B2B e-invoicing.
-    - `Ack No` & `Ack Date`: Portal acknowledgement timestamp.
-  - **Tab 3: Tax Ledgers & Summary**:
-    - Displays Gross Line Total, Total Discount, Net Taxable Value, CGST (2.5%), SGST (2.5%), IGST (5.0%), Round-Off, and Grand Total Invoice Value.
-- **Footer Action Buttons**:
-  - `Save Invoice` (Primary Gold Button): Validates all fields, deducts stock from godown, posts debit to customer ledger, generates permanent voucher number (`V-2026-XXXX`), and stores record in Firestore.
-  - `Print A4 Tax Invoice` (Blue Button): Generates statutory A4 PDF invoice complete with company GSTIN, FSSAI number, bank account details, and signature blocks.
-  - `Print Thermal Receipt` (Green Button): Generates 80mm / 58mm ESC/POS thermal receipt.
-  - `Clear Form` (Outline Button): Resets all fields to blank state for next invoice.
+## 03 · B2B GST Invoicing POS (`/billing`)
+![Desktop Billing](screenshots/desktop_billing.png)
+- **நோக்கம்**: எண்ணெய் விநியோகஸ்தர்கள், மொத்த வியாபாரிகள் மற்றும் சில்லறை வாடிக்கையாளர்களுக்கு வரி பில் போட பயன்படும் முதன்மை திரை.
+- **படிவ விவரங்கள்**: `Customer Phone / GSTIN` (வாடிக்கையாளர் எண்/ஜிஎஸ்டி), `Product Selector` (எண்ணெய் வகை), `Quantity` (அளவு).
+- **முக்கிய பொத்தான்கள்**:
+  - `Save Invoice (F2)` : பில்லைச் சேமித்து, சரக்கு இருப்பு கழித்து, பில் உருவாக்க.
+  - `Print A4 Tax Invoice` : அரசு அங்கீகாரம் பெற்ற A4 ஜிஎஸ்டி வரி பில் அச்சிட.
+  - `Thermal Receipt (3-inch)` : கவுண்டர் வாடிக்கையாளருக்கு சிறிய தெர்மல் ரசீது வழங்க.
+  - `Clear Form` : படிவத்தில் உள்ள விவரங்களை நீக்கி புதிதாக்க.
+- **வேலை செய்யும் முறை (Workflow)**:
+  1. வாடிக்கையாளர் மொபைல் எண் உள்ளிடவும்; பழைய வியாபாரி எனில் பெயர் மற்றும் ஜிஎஸ்டி எண் தானாக வரும்.
+  2. எண்ணெய் வகை மற்றும் அளவை உள்ளிடவும்; 5% ஜிஎஸ்டி வரி தானாக கணக்கிடப்படும்.
+  3. பணம் செலுத்தும் முறையைத் தேர்வு செய்து `F2` அல்லது `Save Invoice` அழுத்தவும்.
 
 ---
 
-### 3.4. Billing History & Invoice Management (`/billing-history`)
-- **Route Path**: `/billing-history` (Alias: `/bills`)
-- **Internal Route**: `billing_history`
-- **Purpose**: Complete audit ledger of all issued GST tax invoices with filtering, reprinting, and inventory-restoring cancellation.
-- **Metric Cards**:
-  - `Total Invoices Generated`: Total count of active vouchers.
-  - `Gross Turnover`: Total monetary value of billed orders.
-  - `Total Cash & Bank Collected`: Realized payments.
-  - `Outstanding Credit Due`: Unpaid balances owed by credit customers.
-- **Filter Controls**:
-  - `Search Invoices` (Text Field): Real-time filtering by Voucher No (`V-2026-001`), Customer Name, or Date.
-  - `Payment Filter Chips`: `All`, `Paid`, `Credit`, `Partial`.
-- **Table / List Actions per Invoice**:
-  - `Reprint A4` (Document Icon): Re-opens A4 PDF preview dialog for instant printing or PDF file download.
-  - `Reprint Thermal` (Receipt Icon): Dispatches receipt print command directly to configured thermal printer.
-  - `Cancel Bill` (Red Warning Button):
-    - Triggers confirmation modal: *"Cancelling this voucher will restore all item quantities back to the warehouse inventory and reverse any customer credit outstanding."*
-    - Requires mandatory staff cancellation reason.
-    - Automatically credits back physical stock to godown and voids the customer ledger debit.
+## 04 · Billing Records & Reprints (`/billing-history`)
+![Desktop Billing History](screenshots/desktop_billing_history.png)
+- **நோக்கம்**: கடந்த நாட்களில் போடப்பட்ட அனைத்து ஜிஎஸ்டி பில்களையும் தேடிப் பார்க்க, திருத்த அல்லது மறுபதிப்பு எடுக்க பயன்படும் திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `Reprint (A4)` : பழைய பில்லை மீண்டும் தெளிவான A4 தாளில் அச்சிட.
+  - `Download PDF` : பில் நகலை வாடிக்கையாளர் வாட்ஸ்அப்பில் அனுப்ப PDF ஆக சேமிக்க.
+  - `Cancel Invoice` : தவறான பில்லை ரத்து செய்ய (மேலாளர் அனுமதி தேவை).
+  - `Export CSV` : அனைத்து பில் விவரங்களையும் எக்செல் கோப்பாக எடுக்க.
 
 ---
 
-### 3.5. High-Velocity POS Counter Billing (`/counter`)
-- **Route Path**: `/counter` (Alias: `/pos`)
-- **Internal Route**: `counter`
-- **Purpose**: Fast-lane retail point-of-sale for factory outlet walk-in customers purchasing individual bottles, pouches, and 15kg tins.
-- **Visual Layout**:
-  - **Left Section (Product Catalog Grid)**: High-visibility SKU buttons showing image/icon, product name, pack volume, price, and live stock indicator.
-  - **Right Section (Active Cart & Cash Register)**: Real-time itemized cart, payment tender calculator, and instant checkout button.
-- **Interactive Controls**:
-  - `Oil Type Filter Chips`: Filter grid by Groundnut, Sesame, Coconut, Mustard, or All.
-  - `Pricing Selector`: Switch cart rates between Retail, Semi-Wholesale, or Bulk Wholesale.
-  - `One-Tap Add`: Tapping any product card instantly adds 1 unit to the cart (or increments existing qty).
-  - `Cart Steppers` (`+` / `-`): Adjust unit quantity directly in the cart.
-  - `Payment Method Chips`: `Cash`, `UPI QR`, `Card`, `Account Credit`.
-  - `Tendered Cash Calculator`: Cashier types received amount; system instantly calculates `Change to Return` (₹).
-- **Action Buttons**:
-  - `Complete & Print Thermal` (Big Gold Button): Finalizes sale, updates inventory, and triggers automatic receipt cut on thermal printer.
-  - `Complete & Print A4`: Completes transaction with A4 invoice output.
-  - `Hold Cart`: Temporarily freezes cart to attend to next customer.
-  - `Clear Cart`: Empties all cart lines.
+## 05 · Master Product Catalog (`/products`)
+![Desktop Products](screenshots/desktop_products.png)
+- **நோக்கம்**: ஆலை எண்ணெய் ரகங்கள் (கடலை எண்ணெய், நல்லெண்ணெய், தேங்காய் எண்ணெய்), பேக்கிங் அளவுகள் மற்றும் HSN குறியீடுகளை நிர்வகிக்கும் திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `+ Add Product` : புதிய எண்ணெய் அல்லது பேக்கிங் அளவை பட்டியலில் சேர்க்க.
+  - `Edit (Pencil)` : பொருளின் பெயர், பேக்கிங் அளவு அல்லது எடையை திருத்த.
+  - `Toggle Active` : விற்பனையை தற்காலிகமாக நிறுத்த அல்லது மீண்டும் தொடங்க.
 
 ---
 
-### 3.6. Master Product Catalog (`/products`)
-
-![Desktop Products Master](screenshots/desktop_products.png)
-
-- **Route Path**: `/products`
-- **Internal Route**: `products`
-- **Purpose**: Master database of all manufactured oils, packaged SKUs, and oil cake byproducts with multi-tier pricing and safety stock thresholds.
-- **Filter Bar**:
-  - `Search Products` (Text): Filter by name, code, SKU, or HSN.
-  - `Brand Dropdown`: Filter by KKK Pure, Gold Harvest, etc.
-  - `Oil Type Dropdown`: Groundnut, Sesame, Coconut, Mustard, Sunflower.
-  - `Rate Tier Selector`: View Agency, Wholesale, or Retail rates.
-  - `Stock Filter`: `All`, `In Stock`, `Low Stock`, `Out of Stock`.
-- **Header Actions**:
-  - `+ Add New Product Master` (Gold Button): Opens comprehensive product creation modal.
-  - `Export Master CSV` (Outline Button): Downloads complete product list as spreadsheet.
-- **Add / Edit Product Modal (`_showAddEditDialog`)**:
-  - **Section 1: Basic Specifications**:
-    - `Product Name`: Display name (e.g. *Cold Pressed Groundnut Oil 15L Tin*).
-    - `Product Code`: Unique system SKU ID (e.g. `PRD-GN-15L`).
-    - `SKU / Barcode`: EAN/UPC barcode number for optical scanner.
-    - `Brand`: Associated factory brand name.
-    - `Oil Type`: Botanical commodity classification.
-    - `Pack Volume & Unit`: e.g., 15 Liters, 1 Liter Bottle, 500ml Pouch, 50kg Bag.
-  - **Section 2: Tiered Rates (AWR Architecture)**:
-    - `Manufacturing Cost Price` (₹): Base cost to produce.
-    - `Agency Rate` (₹): Large volume distributor price.
-    - `Wholesale Rate` (₹): Regional wholesaler price.
-    - `Retail Rate` (₹): Walk-in consumer price.
-    - `MRP` (₹): Maximum Retail Price printed on packaging.
-  - **Section 3: Inventory Thresholds & GST**:
-    - `Initial Stock Count`: Physical starting units in warehouse.
-    - `Minimum Alert Threshold`: Stock level triggering automatic reorder alerts.
-    - `GST Rate (%)`: Statutory tax bracket (Default: 5%).
-    - `HSN Code`: Harmonized System of Nomenclature (`1508` for groundnut, `1515` for sesame/others, `2306` for oil cake).
-- **Row Action Buttons**:
-  - `Edit Product` (Pencil Icon): Opens dialog pre-filled with current product specs.
-  - `Delete Product` (Trash Icon): Opens safety verification dialog to permanently remove obsolete SKU.
+## 06 · Daily Price Management (`/price-management`)
+![Desktop Price Management](screenshots/desktop_price_management.png)
+- **நோக்கம்**: சந்தை நிலவரத்திற்கு ஏற்ப எண்ணெய் மற்றும் பிண்ணாக்கு விலைகளை உடனுக்குடன் மாற்றியமைக்க உதவும் நிர்வாக திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `Update All Prices` : அனைத்து பொருட்களுக்கும் புதிய விலையை உடனடியாக நடைமுறைப்படுத்த.
+  - `Reset to Defaults` : தவறு நடந்தால் முந்தைய விலைக்கு உடனடியாக மாற்ற.
+  - `Bulk Margin %` : சதவீத அடிப்படையில் ஒரே கிளிக்கில் விலையை கூட்ட/குறைக்க.
 
 ---
 
-### 3.7. Price Management & Margin Forecaster (`/price-management`)
-- **Route Path**: `/price-management`
-- **Internal Route**: `price_management`
-- **Purpose**: Real-time commodity margin protection engine that recalculates selling price tiers based on raw seed mandi arrivals.
-- **Summary Metrics**:
-  - `Active Catalog SKUs`: Count of actively priced products.
-  - `Average Gross Margin`: Overall mill profitability percentage.
-  - `Highest Margin SKU`: Best performing retail product.
-  - `Last Revision Date`: Timestamp of most recent price list update.
-- **Margin Protection Calculator**:
-  - Formula: `Gross Profit = Selling Rate - (Seed Purchase Cost + Milling Overhead + Packaging Cost - Cake Recovery Credit)`.
-  - Calculates real-time net return per liter of oil extracted.
-- **Action Buttons**:
-  - `Bulk Price Adjustment` (Percentage Revision): Increases or decreases an entire product line by a set percentage (e.g., +₹5/L across all groundnut oils).
-  - `Save Price Changes`: Commits updated rates to database and refreshes active billing terminals.
+## 07 · Price Audit & Trends (`/price-history`)
+![Desktop Price History](screenshots/desktop_price_history.png)
+- **நோக்கம்**: கடந்த மாதங்களில் எண்ணெய் விலை எப்பொழுது, யாரால், எவ்வளவு மாற்றப்பட்டது என்பதை தணிக்கை செய்யும் திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `Filter by Product` : குறிப்பிட்ட எண்ணெய் ரகத்தின் வரலாற்றை மட்டும் பார்க்க.
+  - `Export Audit PDF` : விலை தணிக்கை அறிக்கையை அச்சு வடிவில் பெற.
 
 ---
 
-### 3.8. Historical Commodity Price Trends (`/price-history`)
-- **Route Path**: `/price-history`
-- **Internal Route**: `price_history`
-- **Purpose**: Visual analytics tracking raw oil seed market rates (mandi auction averages) versus finished packaged oil wholesale rates over time.
-- **Controls**:
-  - `Time Horizon Selector`: 7 Days, 30 Days, 90 Days, 1 Year.
-  - `Commodity Switcher`: Groundnut Seeds vs Refined Oil; Sesame Seeds vs Gingelly Oil.
-- **Components**:
-  - Trend charts depicting price divergence and margin compression.
-  - Audit log table showing date, product, previous rate, new rate, and authorized staff username.
+## 08 · Silo Tanks & Stock (`/inventory`)
+![Desktop Inventory](screenshots/desktop_inventory.png)
+- **நோக்கம்**: பெரிய சேமிப்பு தொட்டிகளில் (Silo Tanks) உள்ள எண்ணெய் மற்றும் குடோனில் உள்ள டின்/கேன் இருப்பை கண்காணிக்கும் திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `Stock Adjustment` : நேரடி ஆய்வின்படி கணினி இருப்பை சரிசெய்து திருத்த.
+  - `Transfer to Packing` : தொட்டியிலிருந்து பேக்கிங் பகுதிக்கு எண்ணெய் மாற்றத்தை பதிவு செய்ய.
+  - `Stock Audit Report` : இன்றைய முழு இருப்பு நிலவரத்தை அச்சிட.
 
 ---
 
-### 3.9. Warehouse Inventory & Tank Level Management (`/inventory`)
-- **Route Path**: `/inventory` (Alias: `/stock`)
-- **Internal Route**: `inventory`
-- **Purpose**: Monitors bulk oil storage tanks via calibrated dip charts, tracks packaged goods stock, and manages packaging materials.
-- **Bulk Storage Tanks (Visual Silo Gauges)**:
-  - Displays calibrated level for:
-    - Tank 1: Raw Cold-Pressed Groundnut Oil (Capacity: 25,000 L)
-    - Tank 2: Sesame (Gingelly) Oil (Capacity: 15,000 L)
-    - Tank 3: Coconut Pure Oil (Capacity: 10,000 L)
-    - Tank 4: Filtered Polished Oil Silo (Capacity: 30,000 L)
-  - Indicators: Dip stick height in centimeters (cm), computed volume in Liters (L), capacity percentage, and temperature.
-- **Packaged Stock Grid**:
-  - Detailed inventory counts for all finished tins, bottles, and pouches.
-  - Visual status badges: `In Stock` (Green), `Low Stock` (Orange), `Depleted` (Red).
-- **Action Buttons**:
-  - `Adjust Physical Stock` (Button per row): Opens reconciliation modal to update physical count after physical audit count.
-  - `Stock Transfer Note`: Records transfer of finished goods from factory warehouse to retail depot.
-  - `Delete Item`: Removes obsolete inventory item.
+## 09 · Seed Inward & Weighbridge (`/purchase`)
+![Desktop Purchase](screenshots/desktop_purchase.png)
+- **நோக்கம்**: விவசாயிகளிடமிருந்தும் சப்ளையர்களிடமிருந்தும் வரும் விதை மூட்டைகள் மற்றும் லாரி எடைமேடை வரவுகளை பதிவு செய்யும் திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `Read Weighbridge (F4)` : கணினியுடன் இணைக்கப்பட்ட எடைமேடையிலிருந்து எடையை தானாக பெற.
+  - `Save Purchase Inward` : விதை வரவை உறுதி செய்து கிடங்கு கணக்கில் வரவு வைக்க.
+  - `Print Inward Slip` : லாரி ஓட்டுநருக்கு அதிகாரப்பூர்வ எடை ரசீது அச்சிட.
 
 ---
 
-### 3.10. Raw Seed Procurement & Mandi Inward (`/purchase`)
-- **Route Path**: `/purchase` (Alias: `/inward`)
-- **Internal Route**: `purchase`
-- **Purpose**: Records incoming raw seed shipments from agricultural mandis, farmer groups, and brokers, including weighbridge gross/tare weights and quality checks.
-- **Summary Metrics**:
-  - `Total Seed Intake (kg)`: Cumulative raw material procured.
-  - `Procurement Expenditure (₹)`: Total purchase value.
-  - `QC Approved Volume (kg)`: Certified seed batches ready for crushing.
-  - `Average Seed Rate (₹/kg)`: Weighted average intake cost.
-- **Header Action Button**:
-  - `+ Record Seed & Raw Material Inward` (Gold Button): Opens Goods Receipt Note (GRN) dialog.
-- **Procurement Inward Dialog (`_showAddPurchaseDialog`)**:
-  - `Material Name`: Groundnut Raw Pods, Sesame Seeds, Copra, Mustard Seeds, Tin Cans, HDPE Bottles.
-  - `Supplier Dropdown`: Selected vendor from registered supplier master.
-  - `Gross / Tare / Net Weight (kg)`: Net seed weight calculated automatically from weighbridge slip.
-  - `Intake Rate (₹/kg)`: Agreed purchase rate per kilogram.
-  - `Quality Control (QC) Status`:
-    - `Passed (Graded)`: Seeds meet moisture and foreign matter specifications; ready for immediate crushing.
-    - `Pending Lab Test`: Held in quarantine for FFA or moisture verification.
-  - `Moisture Deduction (%)`: Weight deduction for excess moisture content.
-- **Procurement Ledger Table**:
-  - Columns: GRN ID (`PO-INW-XXXX`), Date, Supplier Firm, Material, Net Quantity (kg), Rate (₹), Total Amount (₹), QC Status badge.
+## 10 · Expeller Milling Batches (`/production`)
+![Desktop Production](screenshots/desktop_production.png)
+- **நோக்கம்**: செக்கு மற்றும் எக்ஸ்பெல்லர் இயந்திரங்களில் விதைகளை ஆட்டி எண்ணெய் மற்றும் புண்ணாக்கு உற்பத்தி செய்வதை பதிவு செய்யும் திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `Start Milling Batch` : இயந்திரத்தில் புதிய அரவை பேட்சை முறைப்படி தொடங்க.
+  - `Complete Milling Batch` : அரவை முடிந்ததும் எண்ணெய் மற்றும் புண்ணாக்கு அளவை சேமிக்க.
+  - `Quality Pass` : ஆய்வக தரக்கட்டுப்பாடு சான்றிதழ் அளித்து தொட்டிக்கு மாற்ற.
 
 ---
 
-### 3.11. Expeller Production & Milling Run Tracking (`/production`)
-- **Route Path**: `/production` (Alias: `/milling`)
-- **Internal Route**: `production`
-- **Purpose**: Factory-floor expeller monitoring measuring raw seed crushing input against finished oil extraction, byproduct oil cake yield, and processing loss.
-- **Summary Metrics**:
-  - `Monthly Oil Output (Liters)`: Total filtered oil produced.
-  - `Average Extraction Yield (%)`: Physical extraction efficiency.
-  - `Raw Seed Crushed (kg)`: Total seed fed into expeller batteries.
-  - `Active Expellers Running`: Operational machine count.
-- **Header Action Button**:
-  - `+ Start New Production Milling Run` (Gold Button): Launches crushing run logging dialog.
-- **Production Milling Dialog (`_showAddBatchDialog`)**:
-  - `Target Product`: Finished oil SKU being processed.
-  - `Planned Seed Input (kg)`: Weight of seeds fed into expeller hopper.
-  - `Filtered Oil Output (Liters)`: Net recovered oil pumped to settling tanks.
-  - `Oil Cake Byproduct Output (kg)`: Weight of pressed cattle feed cake bagged.
-  - `Processing Wastage / Moisture Loss (kg)`: Automatically computed mass balance discrepancy.
-  - `Total Seed Cost (₹)`: Raw material valuation.
-  - `Packaging & Consumables Cost (₹)`: Tins, labels, and cartons.
-  - `Labour & Power Cost (₹)`: Factory operational overhead.
-- **Extraction Yield Calculations**:
-  - $	ext{Oil Extraction Yield (\%)} = \left( rac{	ext{Oil Produced (kg)}}{	ext{Seed Input (kg)}} 
-ight) 	imes 100$
-  - $	ext{Oil Cake Recovery (\%)} = \left( rac{	ext{Oil Cake Produced (kg)}}{	ext{Seed Input (kg)}} 
-ight) 	imes 100$
-  - $	ext{Processing Loss (\%)} = 100\% - (	ext{Oil Yield \%} + 	ext{Cake Yield \%})$
-- **Batch Ledger Cards / Table**:
-  - Shows Batch ID (`PRD-BXXXX`), Target Product, Net Output, Yield %, Date, Expiry Date, Unit Cost per Liter, and Status (`Completed`, `In Progress`).
+## 11 · Customer Ledgers & Credit (`/customers`)
+![Desktop Customers](screenshots/desktop_customers.png)
+- **நோக்கம்**: மொத்த மற்றும் சில்லறை வியாபாரிகளின் முகவரி, தொலைபேசி எண், ஜிஎஸ்டி எண் மற்றும் கடன் நிலுவைத் தொகையை நிர்வகிக்கும் திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `+ Add Customer` : புதிய வியாபாரி அல்லது வாடிக்கையாளரை கணக்கில் பதிவு செய்ய.
+  - `Receive Payment` : பழைய பாக்கி வசூலானால் ரொக்கம்/வங்கி வழியே வரவு வைக்க.
+  - `View Full Ledger` : முழுமையான வரவு செலவு கணக்கை பார்க்க.
+  - `Print Statement` : வாடிக்கையாளருக்கு அனுப்ப கணக்கு பேரேடு நகல் அச்சிட.
 
 ---
 
-### 3.12. Customer Directory & Credit Accounts (`/customers`)
-- **Route Path**: `/customers`
-- **Internal Route**: `customers`
-- **Purpose**: Centralized customer master directory tracking retail accounts, institutional buyers, wholesale dealers, credit limits, and outstanding receivables.
-- **Segment Filters**:
-  - `ALL`: Complete customer list.
-  - `RETAIL`: Supermarkets, local grocery shops, and walk-in accounts.
-  - `DEALERS`: High-volume wholesale distributors and agency partners.
-- **Header Action Button**:
-  - `+ Add New Customer Account` (Gold Button): Opens customer master creation dialog.
-- **Add / Edit Customer Dialog (`_showAddCustomerDialog`)**:
-  - `Category Segment Toggle`: `Regular / Retail Store` vs `Dealer / Wholesaler`.
-  - `Customer / Business Name`: Registered trading name.
-  - `Contact Person`: Proprietor or purchasing manager name.
-  - `Phone Number`: WhatsApp and SMS notification number.
-  - `GSTIN`: 15-character Goods and Services Tax Identification Number (auto-validated; state code checked).
-  - `Billing & Shipping Address`: Full postal delivery address.
-  - `Delivery Route`: Assigned transport corridor.
-  - `Credit Limit (₹)`: Maximum allowable unpaid balance before billing freeze.
-  - `Default Price Tier`: Assigned price list (`RETAIL`, `WHOLESALE`, `AGENCY`).
-- **Customer List Actions**:
-  - `Edit Profile` (Pencil Icon): Updates customer contact details, address, or credit limits.
-  - `View Statement / Ledger`: Generates chronological account statement showing invoice debits, payment credits, and current net balance.
-  - `Delete Customer`: Removes inactive account (blocked if outstanding balance exists).
+## 12 · Seed Suppliers & Mandis (`/suppliers`)
+![Desktop Suppliers](screenshots/desktop_suppliers.png)
+- **நோக்கம்**: ஆலைக்கு விதை வழங்கும் சப்ளையர்கள் மற்றும் விவசாய சங்கங்களின் கொள்முதல் கணக்குகளை பராமரிக்கும் திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `+ Add Supplier` : புதிய மண்டி சப்ளையர் அல்லது வியாபாரியை பதிவு செய்ய.
+  - `Record Supplier Payment` : வங்கி மூலம் பணம் செலுத்தியதை பதிவு செய்ய.
+  - `View Purchase History` : சப்ளையரிடமிருந்து வாங்கிய அனைத்து லாரி எடை பட்டியலை பார்க்க.
 
 ---
 
-### 3.13. Supplier & Mandi Vendor Directory (`/suppliers`)
-- **Route Path**: `/suppliers`
-- **Internal Route**: `suppliers`
-- **Purpose**: Directory of agricultural seed mandis, farmer cooperatives, tin manufacturers, bottle moulders, and label printers.
-- **Summary Metrics**:
-  - `Total Active Suppliers`: Count of verified vendor accounts.
-  - `Outstanding Payable Balance (₹)`: Total money owed by mill to suppliers.
-  - `Seed Suppliers`: Agricultural mandi vendors.
-  - `Packaging Vendors`: Tin and bottle manufacturers.
-- **Header Action Button**:
-  - `+ Add New Supplier Vendor` (Gold Button): Opens vendor registration modal.
-- **Add / Edit Supplier Dialog (`_showAddSupplierDialog`)**:
-  - `Supplier Firm Name`: Legal vendor name.
-  - `Materials Supplied`: Raw Seeds, 15L Tin Cans, PET Bottles, Corrugated Boxes.
-  - `Contact Person` & `Phone`: Vendor contact details.
-  - `GSTIN` & `Address`: Statutory registration and postal address.
-  - `Opening Payable Balance (₹)`: Initial unpaid dues.
-- **Supplier Directory Table**:
-  - Displays firm name, material type, phone, GSTIN, and current balance due.
-  - Actions: `Edit Supplier`, `Record Payment Voucher`, `Delete`.
+## 13 · Tax Analytics & GSTR-1 (`/reports`)
+![Desktop Reports](screenshots/desktop_reports.png)
+- **நோக்கம்**: அரசு ஜிஎஸ்டி தாக்கல் செய்வதற்கும் (GSTR-1), மாதாந்திர நிதி அறிக்கைகளை தணிக்கையாளருக்கு அனுப்புவதற்கும் பயன்படும் திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `Generate GSTR-1 JSON` : அரசு ஜிஎஸ்டி போர்ட்டலில் நேரடியாக பதிவேற்ற கோப்பு உருவாக்க.
+  - `Download Excel Summary` : அனைத்து விற்பனை கணக்குகளையும் எக்செல் கோப்பாக எடுக்க.
+  - `Print Monthly Tax Statement` : மாதாந்திர வரி அறிக்கையை ஆடிட்டர் பார்வைக்கு அச்சிட.
 
 ---
 
-### 3.14. Logistics Fleet & Dispatch Gate Passes (`/logistics`)
-- **Route Path**: `/logistics` (Alias: `/dispatch`)
-- **Internal Route**: `logistics`
-- **Purpose**: Vehicle loading verification, delivery run-sheets, gate pass issuance, and driver Proof of Delivery (POD) confirmation.
-- **Summary Metrics**:
-  - `Dispatched Vehicles`: Trucks currently on delivery routes.
-  - `In Transit Trips`: Active delivery runs.
-  - `Pending Gate Passes`: Orders staged in loading bay.
-  - `Delivered Orders`: Successfully completed deliveries.
-- **Header Action Button**:
-  - `+ Generate Dispatch Gate Pass` (Gold Button): Opens gate pass generation dialog.
-- **Gate Pass Dialog (`_showNewDispatchDialog`)**:
-  - `Vehicle Number`: Transport truck registration (e.g. `TN 28 BK 5521`).
-  - `Driver Name`: Assigned staff driver.
-  - `Delivery Destination / Route`: Target delivery cluster (e.g. `Kangeyam -> Coimbatore`).
-  - `Linked Voucher / Bill No`: Associated B2B sales invoice number.
-- **Gate Pass Tracking Table**:
-  - Columns: Gate Pass ID (`DSP-XXXX`), Vehicle No, Driver, Route, Linked Bill, Trip Status stepper (`Dispatched` -> `In Transit` -> `Delivered`), Proof of Delivery (POD) toggle button.
+## 14 · Staff Directory & Access (`/employees`)
+![Desktop Employees](screenshots/desktop_employees.png)
+- **நோக்கம்**: ஆலை ஊழியர்களின் விபரங்கள் மற்றும் அவர்களுக்கான மென்பொருள் அனுமதி அதிகாரங்களை நிர்வகிக்கும் திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `+ Add Employee` : புதிய பணியாளருக்கு கணினி பயனர் கணக்கு உருவாக்க.
+  - `Edit Permissions` : ஊழியரின் மென்பொருள் அனுமதிகளை மாற்றியமைக்க.
+  - `Reset Password` : மறந்துபோன கடவுச்சொல்லை மாற்றி புதிய கடவுச்சொல் வழங்க.
 
 ---
 
-### 3.15. Business Analytics & GST Compliance Reports (`/reports`)
-- **Route Path**: `/reports` (Alias: `/analytics`)
-- **Internal Route**: `reports`
-- **Purpose**: Executive financial reporting, daily daybook cash balance audit, and pre-formatted GSTR-1 tax compliance summaries.
-- **Financial Metric Cards**:
-  - `Total Gross Turnover` (₹): Cumulative value of all sales orders.
-  - `Net Taxable Value` (₹): Pre-tax revenue base.
-  - `GST Tax Collected` (₹): Total statutory output tax collected.
-- **B2B vs B2C Tax Categorization**:
-  - `B2B Registered Supplies (GSTR-1 Table 4)`: Invoices issued to customers with validated GSTIN; ready for direct upload to GST portal.
-  - `B2C Consumer Supplies (GSTR-1 Table 7)`: Walk-in counter retail sales without buyer GSTIN.
-- **Tax Breakdown Summary**:
-  - `CGST (Central Tax 2.5%)`: Half of intra-state tax liability.
-  - `SGST (State Tax 2.5%)`: Half of intra-state tax liability.
-  - `IGST (Integrated Tax 5.0%)`: Full inter-state tax liability for out-of-state dispatches.
-- **HSN Summary Table (GSTR-1 Table 12)**:
-  - Itemized summary grouped by HSN Code (`1508`, `1515`, `2306`), total quantity, taxable turnover, and tax amounts.
-- **Action Buttons**:
-  - `Export GSTR-1 Excel / CSV`: Generates portal-compatible spreadsheet for monthly tax filing.
-  - `Download Daily Daybook PDF`: Comprehensive daily cash ledger report.
+## 15 · Hardware & System Setup (`/settings`)
+![Desktop Settings](screenshots/desktop_settings.png)
+- **நோக்கம்**: ஆலை பெயர், முகவரி, FSSAI உரிம எண், வங்கி விவரங்கள் மற்றும் பில் பிரிண்டர் இணைப்புகளை அமைக்கும் திரை.
+- **முக்கிய பொத்தான்கள்**:
+  - `Save All Settings` : மாற்றிய அனைத்து ஆலை அமைப்புகளையும் உறுதி செய்து சேமிக்க.
+  - `Test Print (Thermal)` : சிறிய தெர்மல் பில் பிரிண்டர் சரியாக அச்சிடுகிறதா என பார்க்க.
+  - `Test Print (A4)` : A4 லேசர் பிரிண்டர் இணைப்பு சோதிக்க.
+  - `Backup Database Now` : கணினியில் உள்ள அனைத்து கணக்குகளையும் உடனே பேக்கப் எடுக்க.
 
 ---
 
-### 3.16. Employee Administration & Role Matrix (`/employees`)
-- **Route Path**: `/employees` (Alias: `/staff`)
-- **Internal Route**: `employees`
-- **Purpose**: Staff credential management, role assignment, active/inactive status toggles, and fine-grained permissions configuration.
-- **Tabs**:
-  - **Tab 1: Staff Directory**:
-    - Header Action: `+ Add New Employee` (Opens creation modal).
-    - Search & Filter: Filter staff by name, username, phone, or active status (`All`, `Active`, `Inactive`).
-    - Employee Cards / List: User avatar, full name, username, assigned role badge (with tone color), phone, email, and active status toggle.
-    - Interactive Staff Controls:
-      - `Password Reveal Eye Icon`: Allows authorized admins to reveal plain-text credentials for staff onboarding.
-      - `Edit Staff Account`: Updates phone, email, or assigned role.
-      - `Toggle Active / Inactive`: Instantly revokes system access for terminated employees without deleting audit records.
-      - `Delete Staff`: Permanently deletes user account.
-  - **Tab 2: Roles & Permissions Matrix**:
-    - Comprehensive interactive matrix mapping all 15 ERP modules against all defined system roles.
-    - Checkbox indicators showing exact Read, Write, and Admin capabilities for each role.
+## M-01 · Mobile Login Gateway
+![Mobile Login](screenshots/mobile_login.png)
+- **நோக்கம்**: ஸ்மார்ட்போன்களில் பணியாளர்கள் எளிதாக உள்நுழைய பயன்படும் முகப்பு திரை (அடர் பிரவுன் பின்னணி & தங்க கே.கே.கே லோகோ).
+- **முக்கிய பொத்தான்கள்**: `Sign in`, `Show Password (Eye)`, `Supervisor Quick Fill`, `Cashier Quick Fill`.
+- **வேலை செய்யும் முறை**: கைபேசியில் பயனர் பெயர் மற்றும் கடவுச்சொல்லை உள்ளிட்டு `Sign in` அழுத்தவும்.
 
 ---
 
-### 3.17. Enterprise Factory Settings (`/settings`)
-- **Route Path**: `/settings`
-- **Internal Route**: `settings`
-- **Purpose**: Global enterprise configuration, statutory legal profile, printer hardware defaults, alert preferences, and database backup.
-- **Configuration Cards**:
-  - **Company Master Profile**:
-    - `Trade Name`: Display name (e.g. *KKK Oil Factory*).
-    - `Legal Entity Name`: Statutory business name registered on GST portal.
-    - `Registered Office & Mill Address`: Official factory address printed on invoice headers.
-    - `GSTIN`: 15-digit GST identification number.
-    - `State & State Code`: Default state (e.g. *Tamil Nadu*, Code: `33`).
-    - `FSSAI License Number`: Food Safety and Standards Authority of India manufacturing registration.
-    - `Official Phone & Email`: Printed on invoice contact blocks.
-    - `Banking Details`: Bank Name, Account Number, and IFSC Code for customer RTGS/NEFT payment remittances.
-    - `Save Company Profile` (Gold Button): Saves profile updates across cloud and local storage.
-  - **Hardware & Printer Settings**:
-    - `Default Invoice Format`: Radio options for `A4 Standard Laser / Deskjet`, `80mm ESC/POS Thermal`, or `58mm Portable POS`.
-    - `Auto-Print on Save`: Toggle to immediately open print dialog when an invoice is saved.
-    - `Default Copies`: Number of invoice copies (e.g. Original for Buyer, Duplicate for Transporter, Triplicate for Mill).
-  - **Automated System Alerts**:
-    - Toggles for Low Stock Alert, Pending Payment Reminders, Pending Dispatches, Production Delays, Supplier Due Dates, and Credit Limit Breaches.
-  - **Data Management & Backup**:
-    - `Export Database Backup (JSON)`: Full dump of customers, products, sales, and batches.
-    - `Reset Seed Data`: Factory reset option for demonstration environments.
+## M-02 · Mobile Operations Dashboard
+![Mobile Dashboard](screenshots/mobile_dashboard.png)
+- **நோக்கம்**: உரிமையாளர் மற்றும் மேலாளர்கள் எங்கிருந்தாலும் அன்றாட விற்பனை மற்றும் தொட்டி இருப்பை மொபைலில் உடனுக்குடன் அறிய உதவும் திரை.
+- **முக்கிய பொத்தான்கள்**: `Fast Billing POS`, `Check Silo Levels`, `Refresh View`.
 
 ---
 
-## 4. Master Button & Action Reference Index
-
-| Button Label | Screen Location | Visual Type | Action / Behavior |
-| :--- | :--- | :---: | :--- |
-| `Sign In to ERP System` | `/login` | Gold Elevated | Authenticates username & password, starts session, navigates to home route. |
-| `+ New B2B Invoice` | `/dashboard` | Outline Icon | Fast-tracks navigation to `/billing` with fresh invoice form. |
-| `+ Quick POS Counter` | `/dashboard` | Outline Icon | Opens high-speed retail checkout screen (`/counter`). |
-| `+ Start Milling Batch` | `/dashboard`, `/production` | Gold Elevated | Opens production batch logging modal to record crushing run. |
-| `+ Record Seed Inward` | `/dashboard`, `/purchase` | Gold Elevated | Opens weighbridge seed procurement modal to record incoming raw material. |
-| `+ Add to Voucher` | `/billing` | Gold Elevated | Appends line item from item entry form into active invoice table. |
-| `Save Invoice` | `/billing` | Gold Elevated | Validates form, creates sales order, deducts inventory, posts customer debit. |
-| `Print A4 Tax Invoice` | `/billing`, `/billing-history` | Blue Elevated | Renders 300 DPI statutory GST tax invoice PDF with download & print controls. |
-| `Print Thermal Receipt` | `/billing`, `/counter` | Green Elevated | Dispatches formatted 80mm / 58mm thermal receipt directly to receipt printer. |
-| `Clear Form` | `/billing` | Outline Button | Clears all customer, dispatch, and item fields for the next transaction. |
-| `Reprint A4` | `/billing-history` | Document Icon | Re-opens A4 PDF preview dialog for historical invoice. |
-| `Reprint Thermal` | `/billing-history` | Receipt Icon | Sends historical invoice to thermal printer. |
-| `Cancel Bill` | `/billing-history` | Red Warning | Prompts for cancellation reason, restores stock to godown, reverses ledger debit. |
-| `Complete & Print Thermal`| `/counter` | Gold Large | Finalizes POS transaction, records payment, cuts thermal receipt. |
-| `Hold Cart` | `/counter` | Outline Button | Temporarily parks active customer cart in local memory. |
-| `+ Add New Product Master`| `/products` | Gold Elevated | Opens modal dialog to define new SKU, tier rates, and stock thresholds. |
-| `Export Master CSV` | `/products` | Outline Button | Generates and downloads spreadsheet file containing all active products. |
-| `Save Stock` | `/inventory` | Primary Elevated| Commits audited physical stock count into inventory master. |
-| `Save Inward Entry` | `/purchase` | Gold Elevated | Saves incoming raw seed batch, records supplier payable, updates QC ledger. |
-| `Record Milling Run` | `/production` | Gold Elevated | Saves crushing batch, calculates yield %, adds finished oil to silo tank. |
-| `+ Add Customer Account` | `/customers` | Gold Elevated | Registers new customer profile with credit limit, GSTIN, and price tier. |
-| `+ Add Supplier Vendor` | `/suppliers` | Gold Elevated | Registers new vendor profile with materials, contact info, and payable balance.|
-| `Issue Gate Pass` | `/logistics` | Gold Elevated | Links vehicle, driver, and sales invoice to generate formal dispatch gate pass.|
-| `+ Add New Employee` | `/employees` | Gold Elevated | Creates new staff user account with username, password, and assigned role. |
-| `Save Company Profile` | `/settings` | Gold Elevated | Updates legal business name, address, GSTIN, FSSAI, and bank details. |
+## M-03 · Mobile Fast Billing POS
+![Mobile Billing](screenshots/mobile_billing.png)
+- **நோக்கம்**: ஆலை வாசலில் வாடிக்கையாளர்களுக்கு கைபேசி மூலமாகவே அதிவேகமாக பில் போட்டு புளூடூத் பிரிண்டரில் ரசீது தரும் திரை.
+- **முக்கிய பொத்தான்கள்**: `Generate Bill`, `Print Bluetooth Receipt`, `Share WhatsApp Bill`, `Pay: CASH / UPI`.
 
 ---
 
-## 5. End-to-End Standard Operating Procedures (SOPs)
-
-### SOP 1: Cashier Day-Start & POS Counter Billing
-1. **Morning Sign-In**: Open browser or mobile app, navigate to `/login`, enter cashier credentials (`cashier`), and click `Sign In`.
-2. **Access POS Screen**: The system automatically directs cashier to `/counter`. Verify cash drawer opening balance.
-3. **Serving Walk-in Customers**:
-   - Tap product icons (e.g. *1L Groundnut Oil Bottle*, *500ml Sesame Pouch*) to add items to cart.
-   - Adjust quantities using `+` and `-` stepper buttons.
-   - If customer purchases 5+ tins, switch price tier chip to `Semi-Wholesale Rate`.
-   - Ask for payment method: Tap `Cash` or `UPI QR`.
-   - If cash, enter amount tendered into `Cash Received` field; verify displayed `Change to Return`.
-   - Click `Complete & Print Thermal`. Hand printed receipt and packaged oil to customer.
-4. **Shift Closing**: Navigate to `/billing-history`, filter by today's date and cashier name, verify physical cash against `Total Cash Collected`, and submit day-end cash bag to Manager.
-
-### SOP 2: B2B Wholesale Tax Invoice with Delivery Dispatch
-1. **Initiate Invoice**: Navigate to `/billing` (`erp_billing`).
-2. **Select Customer**: Choose buyer from `Customer Selector` dropdown. Verify displayed credit limit and available balance.
-3. **Verify Route & Godown**: Confirm dispatch godown (`Main Godown`) and destination route.
-4. **Set Pricing Tier**: Select `Bulk Wholesale Rate` or `Semi-Wholesale Rate`.
-5. **Add Line Items**:
-   - In `Item Search`, type product code (e.g. `PRD-GN-15L`).
-   - Enter quantity (e.g., `50` tins).
-   - Verify rate and discount % (if negotiated).
-   - Click `+ Add to Voucher`. Confirm taxable value and CGST/SGST (or IGST for out-of-state buyers) in items table.
-6. **Enter Dispatch Details**:
-   - Click `Bottom Tab 0 (Dispatch Details)`.
-   - Enter Vehicle Number (`TN 28 BK 5521`), Driver Name, and Buyer PO reference.
-   - If total order exceeds ₹50,000, click `Tab 1 (E-Way Bill)` and input Government portal EWB number.
-7. **Save & Print**:
-   - Click `Save Invoice`. System records order, deducts 50 tins from inventory, and updates customer credit ledger.
-   - Click `Print A4 Tax Invoice`. Print duplicate copies (Original for Buyer, Transporter Copy).
-   - Hand documents to loading supervisor.
-
-### SOP 3: Raw Seed Inward & Weighbridge Intake
-1. **Truck Arrival**: Loaded truck arrives from agricultural mandi with raw groundnut pods.
-2. **Weighbridge Weighing**: Driver weighs loaded truck on mill weighbridge (Gross Weight).
-3. **Quarantine Inspection**: Factory QC technician takes 5 grab samples from bags to measure moisture percentage and kernel damage.
-4. **Record Inward in ERP**:
-   - Navigate to `/purchase`. Click `+ Record Seed & Raw Material Inward`.
-   - Select supplier from dropdown.
-   - Enter material: `Groundnut Raw Pods`.
-   - Enter net seed weight (Gross - Tare weight from weighbridge slip).
-   - Enter agreed mandi rate per kg (₹).
-   - Set QC Status: Select `Passed (Graded)` if moisture is ≤ 8%; select `Pending Lab Test` if excess moisture requires yard drying.
-   - Click `Save Inward Entry`. System logs Goods Receipt Note (GRN) and credits supplier payable account.
-
-### SOP 4: Expeller Milling Run & Yield Calculation
-1. **Feed Preparation**: Production supervisor allocates 5,000 kg of graded groundnut seeds from seed godown to expeller battery #1.
-2. **Crushing Run**: Machine operators run expellers, extracting raw crude oil through filter presses into settling tanks, and bagging pressed oil cake.
-3. **Record Milling Run in ERP**:
-   - Navigate to `/production`. Click `+ Start New Production Milling Run`.
-   - Select Target Product: `Cold Pressed Groundnut Oil (Bulk)`.
-   - Planned Seed Input: Enter `5000` kg.
-   - Filtered Oil Output: Enter measured tank volume (e.g., `2150` Liters / `1978` kg).
-   - Oil Cake Output: Enter total bagged cattle feed cake (e.g., `2850` kg).
-   - Wastage: System calculates moisture/sediment loss (`172` kg / 3.44%).
-   - Total Seed Cost: Enter total raw procurement cost.
-   - Click `Record Milling Run`.
-4. **System Verification**: System checks that Extraction Yield matches benchmark (40% - 43% for groundnut) and updates bulk silo tank volume in `/inventory`.
+## M-04 · Mobile Silo Tanks & Stock Gauges
+![Mobile Inventory](screenshots/mobile_inventory.png)
+- **நோக்கம்**: ஆலைக்குள் உள்ள எண்ணெய் தொட்டிகள் மற்றும் குடோன் இருப்பை ஆலைக்குள்ளேயே நடந்து சென்று மொபைலில் சரிபார்க்க உதவும் திரை.
+- **முக்கிய பொத்தான்கள்**: `Log Physical Dip`, `Alert Manager`, `Scan Barcode Stock`.
 
 ---
 
-## 6. Mobile Application User Guide
-
-The KKK Oil ERP mobile application provides complete operational freedom for factory floor managers, delivery drivers, and counter billers on Android tablets and smartphones.
-
-### Mobile Navigation Controls
-- **Bottom Navigation Bar**:
-  - `Dashboard`: View real-time factory metrics and active alerts on the go.
-  - `Billing POS`: Immediate mobile counter billing with touch-optimized product buttons.
-  - `Inventory`: Walk through warehouse aisles and enter physical stock counts directly.
-  - `History`: Check recent dispatches, search past orders, and reprint thermal slips.
-  - `More Modules`: Tap the three-dot icon to open a swipeable bottom sheet providing instant access to Products, Production, Purchases, Customers, Suppliers, Reports, and Settings.
-- **Force Desktop Mode**:
-  - When accessing complex multi-column billing tables on a tablet, tap the `Desktop View` toggle in the top app bar to display the full multi-panel desktop layout without scrolling restrictions.
-- **Bluetooth Thermal Printing**:
-  - Connect portable 58mm / 80mm Bluetooth thermal printers. Receipts can be printed directly from the loading bay or delivery truck.
-- **Digital Proof of Delivery (POD)**:
-  - In `/logistics`, drivers can tap `POD Received` upon delivery at the customer store to confirm physical receipt of goods in real time.
+## M-05 · Mobile Voucher History & Reprints
+![Mobile History](screenshots/mobile_history.png)
+- **நோக்கம்**: கைபேசி வழியாக போடப்பட்ட அனைத்து விற்பனை ரசீதுகளையும் பட்டியலாக பார்த்து, தேவைப்பட்டால் மீண்டும் அச்சிட உதவும் திரை.
+- **முக்கிய பொத்தான்கள்**: `Reprint Receipt`, `Send SMS Receipt`, `WhatsApp Share`.
 
 ---
 
-## 7. Troubleshooting & Frequently Asked Questions (FAQ)
-
-### Q1: Why is an invoice blocked from saving?
-**Answer**: Check the following:
-1. Ensure a customer is selected.
-2. Ensure at least one line item is added to the voucher table.
-3. If payment status is set to `Credit`, verify that the order value does not cause the customer's outstanding balance to exceed their defined `Credit Limit`.
-
-### Q2: How does intra-state vs. inter-state GST calculate automatically?
-**Answer**: The system inspects the first 2 digits of the customer's GSTIN against the mill's state code (Tamil Nadu: `33`). If the customer GSTIN begins with `33`, intra-state tax applies (CGST 2.5% + SGST 2.5% = 5%). If the customer GSTIN begins with any other state code (e.g. `29` for Karnataka, `32` for Kerala), inter-state tax applies (IGST 5.0%).
-
-### Q3: What happens when an invoice is cancelled?
-**Answer**: In `/billing-history`, clicking `Cancel Bill` requires entering a staff reason. Upon confirmation, the ERP:
-1. Restores the exact product quantities back to the source godown.
-2. Reverses the debit in the customer's credit ledger.
-3. Marks the voucher as `Cancelled` in audit reports while preserving the voucher number for sequential GST audit compliance.
-
-### Q4: How do I change product rates during commodity price surges?
-**Answer**: Super Admins and Admins can navigate to `/price-management`, select the target product line, enter the updated rates for Retail, Wholesale, or Agency tiers, and click `Save Price Changes`. All billing terminals immediately reflect the new prices.
+## M-06 · Mobile More Modules Navigation Hub
+![Mobile More](screenshots/mobile_more.png)
+- **நோக்கம்**: கொள்முதல், உற்பத்தி, வாடிக்கையாளர்கள் மற்றும் புளூடூத் பிரிண்டர் அமைப்புகளுக்கான மொபைல் முதன்மை மெனு திரை.
+- **முக்கிய பொத்தான்கள்**: `Connect Printer`, `Sync Offline Bills`, `Logout`.
 
 ---
-*© 2026 KKK Oil Factory. All rights reserved. Enterprise Internal Operational Manual.*
+
+## Master Button Reference Index (பொத்தான்கள் சுருக்க பட்டியல்)
+| சுருக்குவழி | பொத்தான் பெயர் | பயன்படும் திரை | செயல்முறை விளக்கம் |
+| :--- | :--- | :--- | :--- |
+| **F2** | `Save Invoice` | `/billing` | பில்லை சேமித்து, சரக்கு இருப்பு கழித்து, பில் தயார் செய்யும். |
+| **F4** | `Read Weighbridge` | `/purchase` | எடைமேடையில் உள்ள லாரியின் எடையை தானாக திரையில் கொண்டுவரும். |
+| **Ctrl + P** | `Print Invoice` | `/billing` & `/history` | A4 அல்லது தெர்மல் பில்லை உடனடியாக அச்சிடும். |
+| **Esc** | `Clear Form` | அனைத்து திரைகள் | தவறாக தட்டச்சு செய்த விவரங்களை உடனே அழித்து புதிய படிவமாக்கும். |
+
+---
+
+## Daily SOP: ஆலை தினசரி செயல்முறை வழிகாட்டி (Morning to Night)
+1. **காலை 08:00 AM**: கணினி & பிரிண்டரை ஆன் செய்து, `/inventory` சென்று எண்ணெய் தொட்டி இருப்பை சரிபார்க்கவும்.
+2. **காலை 09:00 AM**: `/price-management` சென்று இன்றைய மண்டி விலைக்கு ஏற்ப விலையை புதுப்பித்து `Update All Prices` அழுத்தவும்.
+3. **பகல் 10:00 AM - 05:00 PM**: வாடிக்கையாளர்களுக்கு `F2` மூலம் விற்பனை பில் போடுதல்; லாரிகளுக்கு `F4` மூலம் விதை வரவு பதிவு செய்தல்.
+4. **மாலை 06:00 PM**: `/production` சென்று அரவை செய்யப்பட்ட எண்ணெய் மற்றும் புண்ணாக்கு அளவை பதிவு செய்து `Complete Milling Batch` கொடுக்கவும்.
+5. **இரவு 08:00 PM**: கல்லா ரொக்கத்தை சரிபார்த்து, `/reports` மூலம் விற்பனை சுருக்கம் எடுத்து, `/settings` சென்று `Backup Database Now` கொடுத்து பேக்கப் எடுக்கவும்.
