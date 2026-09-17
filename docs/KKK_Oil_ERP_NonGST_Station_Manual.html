@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KKK Oil Factory — Dedicated Non-GST Billing Station Manual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --amber-primary: #B45309;
+      --amber-dark: #78350F;
+      --amber-light: #FDE68A;
+      --amber-bg: #FEF3C7;
+      --choco-dark: #2A1202;
+      --choco-medium: #3A1501;
+      --choco-light: #5A270B;
+      --bg-base: #FDFBF7;
+      --surface: #FFFFFF;
+      --surface-alt: #FBF8F2;
+      --border: #EADBCC;
+      --border-dark: #D4C0AD;
+      --text-main: #1C1917;
+      --text-muted: #57534E;
+      --text-light: #A8A29E;
+      --blue-accent: #2563EB;
+      --green-accent: #16A34A;
+      --red-accent: #DC2626;
+      --red-bg: #FEE2E2;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      line-height: 1.65;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Sticky Action Bar */
+    .top-action-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--choco-dark);
+      color: white;
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      border-bottom: 2px solid var(--amber-primary);
+    }
+
+    .bar-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .bar-logo-badge {
+      background: linear-gradient(135deg, #F59E0B, #B45309);
+      color: #FFFFFF;
+      font-weight: 900;
+      font-size: 15px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      letter-spacing: 1px;
+    }
+
+    .bar-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .bar-subtitle {
+      font-size: 11.5px;
+      color: #D6D3D1;
+    }
+
+    .bar-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, #F59E0B, #B45309);
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13.5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(180, 83, 9, 0.4);
+    }
+
+    .btn-download:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(180, 83, 9, 0.6);
+      background: linear-gradient(135deg, #FBBF24, #D97706);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.18);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1080px;
+      margin: 32px auto;
+      padding: 0 24px;
+    }
+
+    /* Hero Banner */
+    .hero-card {
+      background: linear-gradient(135deg, #3A1501, #5A270B);
+      color: white;
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 28px;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: 'NON-GST';
+      position: absolute;
+      right: 15px;
+      bottom: -25px;
+      font-size: 100px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.04);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.25);
+      color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.5);
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 12px;
+      color: #FFFFFF;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: #E7E5E4;
+      max-width: 820px;
+      margin-bottom: 24px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      background: rgba(0,0,0,0.3);
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .meta-item .meta-label {
+      font-size: 11.5px;
+      color: #D6D3D1;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .meta-item .meta-val {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    /* Table of Contents */
+    .toc-card {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    .toc-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--choco-dark);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 10px 24px;
+    }
+
+    .toc-link {
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      padding: 4px 0;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s;
+    }
+
+    .toc-link:hover {
+      color: var(--amber-primary);
+    }
+
+    .toc-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--amber-primary);
+      margin-right: 8px;
+      font-size: 12.5px;
+    }
+
+    /* Content Cards */
+    .section-card {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 32px;
+      margin-bottom: 28px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--choco-dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title-num {
+      background: var(--amber-bg);
+      color: var(--amber-dark);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    h3 {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: var(--choco-medium);
+      margin: 24px 0 10px 0;
+    }
+
+    h4 {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 16px 0 8px 0;
+    }
+
+    p {
+      margin-bottom: 14px;
+      color: var(--text-main);
+    }
+
+    ul, ol {
+      margin-bottom: 16px;
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    /* Path Badge */
+    .path-callout {
+      background: #FFFBEB;
+      border-left: 4px solid var(--amber-primary);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      border: 1px solid #FDE68A;
+      border-left-width: 4px;
+    }
+
+    .path-url {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #78350F;
+    }
+
+    .path-role-tag {
+      background: #FEF3C7;
+      color: #92400E;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid #FCD34D;
+    }
+
+    /* Button Chips */
+    .btn-chip {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin: 0 2px;
+    }
+
+    .btn-chip-amber {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FCD34D;
+    }
+
+    .btn-chip-blue {
+      background: #DBEAFE;
+      color: #1E40AF;
+      border: 1px solid #93C5FD;
+    }
+
+    .btn-chip-green {
+      background: #DCFCE7;
+      color: #166534;
+      border: 1px solid #86EFAC;
+    }
+
+    .btn-chip-red {
+      background: #FEE2E2;
+      color: #991B1B;
+      border: 1px solid #FCA5A5;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      margin: 18px 0;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th {
+      background: var(--surface-alt);
+      color: var(--choco-dark);
+      font-weight: 700;
+      padding: 10px 14px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #FDFBF7;
+    }
+
+    /* Alert Boxes */
+    .alert-amber {
+      background-color: #FFFBEB;
+      border: 1px solid #FCD34D;
+      border-left: 5px solid var(--amber-primary);
+      color: #92400E;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 18px 0;
+    }
+
+    .alert-amber strong {
+      color: #78350F;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge-amber { background: #FEF3C7; color: #92400E; }
+    .badge-green { background: #DCFCE7; color: #166534; }
+    .badge-red { background: #FEE2E2; color: #991B1B; }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: #F5EBE1;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #442205;
+    }
+
+    /* Print Stylesheet */
+    @media print {
+      body {
+        background: white;
+        color: black;
+        font-size: 11pt;
+      }
+
+      .top-action-bar {
+        display: none;
+      }
+
+      .container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .hero-card {
+        background: none !important;
+        color: black !important;
+        border: 2px solid #000;
+        padding: 20px;
+        page-break-after: avoid;
+      }
+
+      .hero-card * {
+        color: black !important;
+      }
+
+      .section-card {
+        border: 1px solid #ccc;
+        box-shadow: none;
+        margin-bottom: 20px;
+        padding: 16px;
+      }
+
+      .page-break {
+        page-break-before: always;
+      }
+
+      a {
+        text-decoration: none;
+        color: black;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Bar -->
+  <header class="top-action-bar">
+    <div class="bar-brand">
+      <div class="bar-logo-badge">NON-GST</div>
+      <div>
+        <div class="bar-title">KKK Oil Factory — Station Manual</div>
+        <div class="bar-subtitle">Dedicated Non-GST Commercial Billing Station · v2.5.0</div>
+      </div>
+    </div>
+    <div class="bar-actions">
+      <a href="KKK_Oil_ERP_NonGST_Station_Manual.pdf" class="btn-secondary" download>
+        <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>
+        Download PDF File
+      </a>
+      <button class="btn-download" onclick="window.print()">
+        <svg width="15" height="15" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></svg>
+        Download as PDF / Print
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Hero Card -->
+    <section class="hero-card">
+      <span class="hero-badge">Dedicated Subsystem Release</span>
+      <h1 class="hero-title">KKK Oil Factory — Non-GST Billing Station Manual</h1>
+      <p class="hero-desc">
+        Comprehensive Operational Manual for Non-Tax Regional Trade, Mandi Cash Settlements, Private Godown Stock Control, and Segregated Customer Ledgers.
+      </p>
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <div class="meta-label">Station Identifier</div>
+          <div class="meta-val">Dedicated Non-GST Subsystem</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Tax Rate</div>
+          <div class="meta-val">Locked strictly at 0.0% GST</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Voucher Prefix</div>
+          <div class="meta-val">NG-2026-XXXX</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Authorized Roles</div>
+          <div class="meta-val">Super Admin &amp; Super Admin Non-GST</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Table of Contents -->
+    <nav class="toc-card">
+      <h2 class="toc-title">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
+        Non-GST Station Manual Contents
+      </h2>
+      <div class="toc-grid">
+        <a href="#sec-why" class="toc-link"><span class="toc-num">01.</span> Executive Overview &amp; Statutory Firewall</a>
+        <a href="#sec-access" class="toc-link"><span class="toc-num">02.</span> Access Control &amp; Visual Theme</a>
+        <a href="#sec-billing" class="toc-link"><span class="toc-num">03.</span> /nongst-billing — Non-GST Voucher Generator</a>
+        <a href="#sec-history" class="toc-link"><span class="toc-num">04.</span> /nongst-history — History &amp; Cancel</a>
+        <a href="#sec-counter" class="toc-link"><span class="toc-num">05.</span> /nongst-counter — Fast Cash POS Counter</a>
+        <a href="#sec-ledger" class="toc-link"><span class="toc-num">06.</span> Dual Customer Credit Architecture</a>
+        <a href="#sec-godown" class="toc-link"><span class="toc-num">07.</span> Private Godown Stock Isolation</a>
+        <a href="#sec-sops" class="toc-link"><span class="toc-num">08.</span> Step-by-Step Non-GST Workflows</a>
+        <a href="#sec-mobile" class="toc-link"><span class="toc-num">09.</span> Mobile App Field Workflows</a>
+        <a href="#sec-compliance" class="toc-link"><span class="toc-num">10.</span> Audit Compliance &amp; Safeguards</a>
+      </div>
+    </nav>
+
+    <!-- SECTION 1: WHY -->
+    <article id="sec-why" class="section-card">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-title-num">01</span> Executive Overview &amp; Statutory Firewall</h2>
+        <span class="badge badge-amber">Operational Rationale</span>
+      </div>
+      <p>
+        The <strong>Dedicated Non-GST Billing Station</strong> provides an isolated environment for managing physical trade transactions that operate outside the statutory GST tax regime under Indian agricultural marketing guidelines.
+      </p>
+      <h3>Core Use Cases</h3>
+      <ul>
+        <li><strong>Agricultural Mandi Procurement</strong>: Small, unregistered farmers selling raw groundnut pods, sesame seeds, and copra directly to the mill are legally exempt from GST registration. The Non-GST station records physical net weights and cash disbursements accurately without generating tax invoices.</li>
+        <li><strong>Unbranded Loose Oil Counter Sales</strong>: Local customers purchasing oil in their own containers or unbranded cans at factory mill gates require fast cash receipts without buyer GSTIN entry.</li>
+        <li><strong>Private Holding Warehouse Stock</strong>: Unprocessed seed lots held in private godowns prior to formal cleaning and commercial grading are tracked independently of statutory inventory.</li>
+        <li><strong>Absolute Statutory Isolation</strong>: All transactions in this station carry the <code>NG-</code> prefix, lock the tax rate strictly to <strong>0.0%</strong>, and are completely quarantined from GSTR-1, GSTR-3B, and statutory audited financials.</li>
+      </ul>
+    </article>
+
+    <!-- SECTION 2: ACCESS & THEME -->
+    <article id="sec-access" class="section-card page-break">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-title-num">02</span> Access Control &amp; Visual Theme</h2>
+        <span class="badge badge-amber">Station Security</span>
+      </div>
+      <p>
+        To prevent accidental cross-billing and maintain strict segregation, the Non-GST station enforces dedicated security gates and visual styling:
+      </p>
+      <ul>
+        <li><strong>Restricted Personnel</strong>: Accessible exclusively by accounts with role <code>super_admin</code> or <code>super_admin_nongst</code>. Standard billing cashiers and supervisors cannot access these routes.</li>
+        <li><strong>Warm Amber / Chocolate Palette</strong>: Navigation items, buttons, and alert headers use amber/chocolate tones (<code>#B45309</code>, <code>#3A1501</code>) clearly distinguishing them from standard forest-green GST screens.</li>
+        <li><strong>Sidebar Drawer Integration</strong>: Displays a distinct amber section titled <code>NON-GST BILLING STATION</code> with shortcuts to <code>Non-GST Billing Voucher</code> and <code>Non-GST History</code>.</li>
+      </ul>
+      <div class="alert-amber">
+        <strong>STATION NOTICE:</strong> Whenever operating in Non-GST mode, all transactions automatically deduct stock from <code>Private Godown</code> and post to the customer's private Non-GST ledger.
+      </div>
+    </article>
+
+    <!-- SECTION 3: NONGST BILLING -->
+    <article id="sec-billing" class="section-card page-break">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-title-num">03</span> /nongst-billing — Non-GST Voucher Generator</h2>
+        <span class="badge badge-amber">Voucher Generator</span>
+      </div>
+      <div class="path-callout">
+        <span class="path-url">Path: /nongst-billing · Route: nongst_billing</span>
+        <span class="path-role-tag">Super Admin Only</span>
+      </div>
+      <p>
+        The primary voucher creation interface for non-tax commercial trade, cash sales, and mandi farmer settlements.
+      </p>
+      <h3>Header Form Controls</h3>
+      <ul>
+        <li><code>Customer Selector</code>: Searchable dropdown displaying buyer name and their specific <strong>Non-GST Outstanding Balance</strong>.</li>
+        <li><code>Billing Route</code>: Target delivery corridor (e.g., Dharmapuri Local, Salem Highway, Namakkal Mandi).</li>
+        <li><code>Godown Selector</code>: Defaults to <code>Private Godown</code> (or <code>Local Mandi Yard</code>). Protects statutory tax-audited inventory.</li>
+        <li><code>Pricing Tier</code>: Radio buttons for <code>Retail Rate</code>, <code>Semi-Wholesale Rate</code>, or <code>Bulk Wholesale Rate</code>.</li>
+        <li><code>Payment Mode</code>: <code>Cash</code>, <code>Credit / Account</code>, <code>UPI / QR</code>.</li>
+        <li><code>Payment Status</code>: <code>Paid</code>, <code>Partial</code>, or <code>Credit (Unpaid)</code>.</li>
+      </ul>
+      <h3>Line Item Entry &amp; Strict 0.0% GST Engine</h3>
+      <ul>
+        <li><code>Item Search Autocomplete</code>: Fast SKU search by code or name.</li>
+        <li><code>Quantity &amp; Rate</code>: Enter units and rate per unit (₹).</li>
+        <li><code>Discount %</code>: Line discount percentage (if negotiated).</li>
+        <li><span class="btn-chip btn-chip-amber">+ Add to Voucher</span>: Inserts product into table with zero-tax calculation.</li>
+      </ul>
+      <h3>Calculation Rules</h3>
+      <ul>
+        <li>$	ext{Net Line Amount} = (	ext{Qty} 	imes 	ext{Rate}) - 	ext{Discount}$</li>
+        <li>$	ext{GST Rate} = 0.0\%$ (Strictly locked)</li>
+        <li>$	ext{GST Amount} = ₹0.00$</li>
+        <li>$	ext{Taxable Amount} = 	ext{Net Line Amount}$</li>
+      </ul>
+      <h3>Action Buttons</h3>
+      <ul>
+        <li><span class="btn-chip btn-chip-amber">Save Voucher</span>: Validates inputs, creates voucher with permanent prefix <code>NG-2026-XXXX</code>, deducts stock from Private Godown, and updates customer Non-GST ledger.</li>
+        <li><span class="btn-chip btn-chip-blue">Print A4 Delivery Voucher</span>: Generates formal A4 delivery memo / estimate PDF without GSTIN or statutory tax declarations.</li>
+        <li><span class="btn-chip btn-chip-green">Print Thermal Receipt</span>: Emits 80mm / 58mm ESC/POS receipt for immediate handover.</li>
+        <li><span class="btn-chip btn-chip-red">Clear Form</span>: Wipes form fields for next transaction.</li>
+      </ul>
+    </article>
+
+    <!-- SECTION 4: NONGST HISTORY -->
+    <article id="sec-history" class="section-card page-break">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-title-num">04</span> /nongst-history — History &amp; Cancel</h2>
+        <span class="badge badge-amber">Non-GST Audit</span>
+      </div>
+      <div class="path-callout">
+        <span class="path-url">Path: /nongst-history · Route: nongst_history</span>
+        <span class="path-role-tag">Super Admin Only</span>
+      </div>
+      <p>
+        Audit repository containing all historical Non-GST vouchers. Provides live searching, reprinting, and stock-restoring cancellation.
+      </p>
+      <h3>Metric KPI Cards</h3>
+      <ul>
+        <li><strong>Total Non-GST Vouchers</strong>: Count of issued <code>NG-</code> vouchers.</li>
+        <li><strong>Non-Tax Turnover (₹)</strong>: Gross monetary value of non-tax sales.</li>
+        <li><strong>Cash Collections (₹)</strong>: Realized cash receipts.</li>
+        <li><strong>Outstanding Non-GST Credit (₹)</strong>: Unpaid balance owed across non-tax accounts.</li>
+      </ul>
+      <h3>Table Row Action Buttons</h3>
+      <ul>
+        <li><span class="btn-chip btn-chip-blue">Reprint A4</span>: Re-opens PDF delivery memo preview for printing or download.</li>
+        <li><span class="btn-chip btn-chip-green">Reprint Thermal</span>: Sends voucher copy to thermal printer.</li>
+        <li><span class="btn-chip btn-chip-red">Cancel Voucher</span>:
+          <ul>
+            <li>Prompts for staff cancellation reason.</li>
+            <li><strong>Immediately restores quantities back into Private Godown inventory</strong>.</li>
+            <li><strong>Reverses the debit in the customer's Non-GST ledger</strong>.</li>
+            <li>Marks voucher as <code>Cancelled</code> in non-tax audit records.</li>
+          </ul>
+        </li>
+      </ul>
+    </article>
+
+    <!-- SECTION 5: NONGST COUNTER -->
+    <article id="sec-counter" class="section-card page-break">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-title-num">05</span> /nongst-counter — Fast Cash POS Counter</h2>
+        <span class="badge badge-amber">Retail POS</span>
+      </div>
+      <div class="path-callout">
+        <span class="path-url">Path: /nongst-counter · Route: nongst_counter</span>
+        <span class="path-role-tag">Super Admin Only</span>
+      </div>
+      <p>
+        High-velocity touch-screen cash register for walk-in retail customers purchasing unbranded loose oil or bulk tins without statutory tax invoicing.
+      </p>
+      <ul>
+        <li>One-tap product grid with category filter chips.</li>
+        <li>Cart steppers (<code>+</code> / <code>-</code>) and price tier switcher.</li>
+        <li>Automatic cash tendered calculator and change return computation.</li>
+        <li>Prints thermal POS receipt with 0% tax.</li>
+      </ul>
+    </article>
+
+    <!-- SECTION 6: DUAL LEDGER -->
+    <article id="sec-ledger" class="section-card page-break">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-title-num">06</span> Dual Customer Credit Architecture</h2>
+        <span class="badge badge-amber">Financial Segregation</span>
+      </div>
+      <p>
+        To prevent statutory audit contamination, customer accounts maintain two distinct, isolated ledger accounts:
+      </p>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Statutory GST Ledger</th>
+              <th>Private Non-GST Ledger</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Screen Origin</strong></td>
+              <td><code>/billing</code>, <code>/counter</code></td>
+              <td><code>/nongst-billing</code>, <code>/nongst-counter</code></td>
+            </tr>
+            <tr>
+              <td><strong>Voucher Prefix</strong></td>
+              <td><code>V-2026-XXXX</code></td>
+              <td><code>NG-2026-XXXX</code></td>
+            </tr>
+            <tr>
+              <td><strong>Tax Bracket</strong></td>
+              <td>5.0% (CGST 2.5% + SGST 2.5% or IGST 5%)</td>
+              <td><strong>0.0% (Locked)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Government Portal Filing</strong></td>
+              <td>Exported to GSTR-1 &amp; GSTR-3B</td>
+              <td><strong>Strictly Excluded (Internal Only)</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Customer Statement</strong></td>
+              <td>Official Tax Debit Note / Statement</td>
+              <td>Private Delivery Memo Ledger</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <!-- SECTION 7: PRIVATE GODOWN -->
+    <article id="sec-godown" class="section-card page-break">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-title-num">07</span> Private Godown Stock Isolation</h2>
+        <span class="badge badge-amber">Inventory Segregation</span>
+      </div>
+      <p>
+        Physical inventory is separated between statutory tax-audited stock and private operational stock:
+      </p>
+      <ul>
+        <li><strong>Main Godown &amp; Packaging Godown</strong>: Official inventory tracked in statutory tax registers and audited in balance sheets. Deducted exclusively by standard <code>/billing</code> invoices.</li>
+        <li><strong>Private Godown &amp; Mandi Yard</strong>: Dedicated storage for uncleaned seed intake from local farmers and loose oil tanks. Deducted exclusively by <code>/nongst-billing</code> vouchers.</li>
+        <li><strong>Cancellation Restoration</strong>: Cancelling an <code>NG-</code> voucher returns items strictly to <code>Private Godown</code>, ensuring official inventory numbers are never altered.</li>
+      </ul>
+    </article>
+
+    <!-- SECTION 8: SOPS -->
+    <article id="sec-sops" class="section-card page-break">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-title-num">08</span> Step-by-Step Non-GST Workflows</h2>
+        <span class="badge badge-amber">Standard Operating Procedures</span>
+      </div>
+      <h3>SOP 1: Issuing a Non-GST Delivery Voucher</h3>
+      <ol>
+        <li>Sign in as <code>admin</code> (Super Admin). Navigate to <code>/nongst-billing</code>.</li>
+        <li>Verify the top amber alert banner: *"NON-GST BILLING STATION — All tax rates are locked to 0.0%..."*</li>
+        <li>Select buyer from <code>Customer Selector</code>. Confirm their displayed Non-GST credit balance.</li>
+        <li>Ensure Godown is set to <code>Private Godown</code>.</li>
+        <li>In <code>Item Search</code>, type SKU name; enter quantity and rate; click <span class="btn-chip btn-chip-amber">+ Add to Voucher</span>.</li>
+        <li>Confirm in items table: GST Rate is <code>0.0%</code> and GST Amount is <code>₹0.00</code>.</li>
+        <li>Click bottom tab <strong>Dispatch Details</strong>; enter vehicle number and driver name.</li>
+        <li>Click <span class="btn-chip btn-chip-amber">Save Voucher</span>. System creates <code>NG-2026-XXXX</code> and deducts Private Godown stock.</li>
+        <li>Click <span class="btn-chip btn-chip-blue">Print A4 Delivery Voucher</span> or <span class="btn-chip btn-chip-green">Print Thermal Receipt</span>.</li>
+      </ol>
+
+      <h3>SOP 2: Cancelling a Non-GST Voucher</h3>
+      <ol>
+        <li>Navigate to <code>/nongst-history</code>.</li>
+        <li>Search for voucher number (e.g. <code>NG-2026-0015</code>).</li>
+        <li>Click red <span class="btn-chip btn-chip-red">Cancel Voucher</span> button.</li>
+        <li>Enter staff cancellation reason in dialog.</li>
+        <li>Click <code>Confirm Cancellation</code>. System restores quantities to Private Godown and reverses customer debit.</li>
+      </ol>
+    </article>
+
+    <!-- SECTION 9: MOBILE APP -->
+    <article id="sec-mobile" class="section-card page-break">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-title-num">09</span> Mobile App Field Workflows</h2>
+        <span class="badge badge-amber">Handheld Operations</span>
+      </div>
+      <p>
+        Mobile tablet and smartphone workflows for field procurement agents and mandi operations:
+      </p>
+      <ul>
+        <li><strong>Bottom Navigation Integration</strong>: The mobile app switches the primary billing tab to Non-GST mode when logged in under a Non-GST session.</li>
+        <li><strong>More Modules Sheet</strong>: Tapping the three dots displays amber-styled Non-GST billing shortcuts.</li>
+        <li><strong>Bluetooth Thermal Printing</strong>: Pair with 58mm portable Bluetooth printers to issue delivery slips directly at rural collection yards.</li>
+      </ul>
+    </article>
+
+    <!-- SECTION 10: COMPLIANCE -->
+    <article id="sec-compliance" class="section-card page-break">
+      <div class="section-header">
+        <h2 class="section-title"><span class="section-title-num">10</span> Audit Compliance &amp; Safeguards</h2>
+        <span class="badge badge-amber">Statutory Protection</span>
+      </div>
+      <div class="alert-amber">
+        <strong>CRITICAL COMPLIANCE RULES:</strong>
+        <ol style="margin-top: 8px; padding-left: 18px;">
+          <li>Never use the Non-GST station for registered B2B dealers who require statutory GST input tax credit (ITC).</li>
+          <li>Official monthly tax filings at <code>/reports</code> automatically exclude <code>NG-</code> vouchers. Never manually merge non-tax registers into statutory accounting files.</li>
+          <li>Reconcile physical cash from Non-GST counter sales into a dedicated, separate cash drawer box.</li>
+          <li>Conduct periodic physical stock audits of Private Godowns separately from Main Warehouse audits.</li>
+        </ol>
+      </div>
+    </article>
+
+  </main>
+
+  <footer style="text-align: center; padding: 24px; color: #78350F; font-size: 12px; border-top: 1px solid #EADBCC; margin-top: 40px;">
+    KKK Oil Factory Enterprise ERP · Dedicated Non-GST Operational Manual · Version 2.5.0 · © 2026 KKK Oils
+  </footer>
+
+</body>
+</html>

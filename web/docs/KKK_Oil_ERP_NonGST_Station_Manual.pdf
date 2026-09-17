@@ -1,0 +1,164 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+3 0 obj
+<< /Length 3296 >>
+stream
+BT /F2 26 Tf 0.70 0.32 0.04 rg 44 731.89 Td (KKK OIL FACTORY) Tj ET
+BT /F2 16 Tf 0.20 0.10 0.02 rg 44 705.89 Td (Dedicated Non-GST Billing Station Manual) Tj ET
+BT /F1 12 Tf 0.45 0.35 0.25 rg 44 685.89 Td (Operational Guide for Non-Tax Regional Trade, Mandi Cash Settlements & Private Godowns) Tj ET
+q 0.70 0.32 0.04 RG 3 w 44 661.89 m 550 661.89 l S Q
+q 0.996 0.965 0.918 rg 0.961 0.729 0.0 RG 1 w 44 510.89 507.28 116 re B Q
+BT /F2 10 Tf 0.70 0.32 0.04 rg 56 611.89 Td (NON-GST SUBSYSTEM SPECIFICATION) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 596.89 Td (System Subsystem: Dedicated Non-GST Billing Station) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 583.39 Td (Statutory Classification: Exempt Farm-Gate Procurement, Unbranded Loose Oil & Private Godowns) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 569.89 Td (Tax Rate: Strictly 0.0% GST \(CGST 0.0, SGST 0.0, IGST 0.0\)) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 556.39 Td (Voucher Identifier: Permanent Prefix 'NG-2026-XXXX') Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 542.89 Td (Authorized Access: Super Admin & Super Admin Non-GST) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 529.39 Td (Audited in GSTR-1: No \(Completely Segregated from Statutory Tax Returns\)) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 487.89 Td (Station Executive Summary & Statutory Firewall) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 469.89 Td (The Non-GST Billing Station is a specialized operational subsystem within the KKK Oil) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 456.39 Td (Factory ERP. It is engineered specifically to handle agricultural mandi farm-gate seed) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 442.89 Td (purchases directly from unregistered farmers, unbranded loose oil sales at factory gates,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 429.39 Td (and private holding godown inventory without generating statutory GST tax invoices.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 411.89 Td (Key Operational Safeguards) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 393.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 393.89 Td (Restricted Authorization: Accessible exclusively by Super Admin accounts; hidden from) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 380.39 Td (standard billing cashiers.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 364.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 364.89 Td (Distinct Amber Theme: Color-coded UI \(#B45309\) and explicit warning banners prevent) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 351.39 Td (accidental cross-billing.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 335.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 335.89 Td (Dual Ledger Architecture: Maintains completely separate customer credit balances for) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 322.39 Td (Non-GST trade.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 306.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 306.89 Td (Private Godown Stock Isolation: Deducts inventory exclusively from Private Godown,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 293.39 Td (preserving Main Godown audit integrity.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 277.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 277.89 Td (Zero-Tax Calculation: Tax rate is permanently locked to 0.0%; CGST, SGST, and IGST) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 264.39 Td (are strictly zero.) Tj ET
+
+endstream
+endobj
+4 0 obj
+<< /Type /Page /Parent 9 0 R /MediaBox [0 0 595.28 841.89] /Contents 3 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+5 0 obj
+<< /Length 3944 >>
+stream
+BT /F2 8.5 Tf 0.35 0.45 0.40 rg 44 813.89 Td (KKK Oil Factory ERP � Dedicated Non-GST Billing Station Manual) Tj ET
+q 0.8 0.85 0.82 RG 0.75 w 44 808.89 m 551.28 808.89 l S Q
+BT /F2 15 Tf 0.08 0.20 0.14 rg 44 789.89 Td (1. Non-GST Paths, Screens & Buttons) Tj ET
+q 0.961 0.729 0.0 RG 2 w 44 784.89 m 174 784.89 l S Q
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 763.89 Td (Non-GST Voucher Creation: /nongst-billing) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 745.89 Td (The primary non-tax billing interface. Features persistent amber alert banner confirming) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 732.39 Td (zero-tax status. Header controls include Customer Selector \(shows dedicated Non-GST) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 718.89 Td (balance\), Route, Godown \(defaults to Private Godown\), Pricing Tier radio \(Retail,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 705.39 Td (Semi-Wholesale, Bulk Wholesale\), Payment Mode \(Cash, Credit, UPI\), and Payment Status.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 687.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 687.89 Td (Item Search: Real-time SKU autocomplete; automatically fetches product) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 674.39 Td (specifications.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 658.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 658.89 Td (Zero-Tax Engine: Gross minus discount equals net amount; GST rate is locked at 0.0%;) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 645.39 Td (GST amount is Rs. 0.00.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 629.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 629.89 Td (Bottom Tabs: Tab 0 captures internal Dispatch Memo, Vehicle Number, and Driver Name.) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 616.39 Td (E-Way Bill and E-Invoice tabs are suppressed.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 600.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 600.89 Td (Action Buttons: 'Save Voucher' \(saves NG- voucher, deducts Private Godown, updates) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 587.39 Td (non-tax credit\), 'Print A4 Delivery Voucher', 'Print Thermal Receipt', 'Clear Form'.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 571.89 Td (Non-GST Billing History: /nongst-history) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 553.89 Td (Audit ledger of all issued NG- vouchers. Displays Total Vouchers, Non-Tax Turnover, Cash) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 540.39 Td (Collections, and Outstanding Non-GST Credit. Features live search and payment status) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 526.89 Td (filter chips \(All, Paid, Credit, Partial\).) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 509.39 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 509.39 Td (Reprint A4: Re-opens PDF delivery memo preview for printing or digital download.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 493.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 493.89 Td (Reprint Thermal: Emits duplicate receipt directly to thermal printer.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 478.39 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 478.39 Td (Cancel Voucher: Prompts for cancellation reason, restores stock directly to Private) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 464.89 Td (Godown, and reverses customer debit.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 449.39 Td (Non-GST Quick POS Counter: /nongst-counter) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 431.39 Td (High-velocity cash register for walk-in retail buyers purchasing unbranded loose oil or) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 417.89 Td (bulk tins without tax invoicing. Features one-tap product buttons, cart quantity steppers,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 404.39 Td (cash tendered calculator, and instant thermal receipt printing.) Tj ET
+q 0.8 0.85 0.82 RG 0.75 w 44 40 m 551.28 40 l S Q
+BT /F1 8 Tf 0.45 0.5 0.48 rg 44 28 Td (KKK Oil Factory Enterprise ERP � Operational Specification) Tj ET
+BT /F2 8.5 Tf 0.2 0.25 0.22 rg 506.28 28 Td (Page 2) Tj ET
+
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 9 0 R /MediaBox [0 0 595.28 841.89] /Contents 5 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+7 0 obj
+<< /Length 3716 >>
+stream
+BT /F2 8.5 Tf 0.35 0.45 0.40 rg 44 813.89 Td (KKK Oil Factory ERP � Dedicated Non-GST Billing Station Manual) Tj ET
+q 0.8 0.85 0.82 RG 0.75 w 44 808.89 m 551.28 808.89 l S Q
+BT /F2 15 Tf 0.08 0.20 0.14 rg 44 789.89 Td (2. Financial Architecture & Daily SOPs) Tj ET
+q 0.961 0.729 0.0 RG 2 w 44 784.89 m 174 784.89 l S Q
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 763.89 Td (Dual Customer Ledger Architecture) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 745.89 Td (To prevent statutory tax audit contamination, every customer profile maintains two) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 732.39 Td (completely isolated ledgers: the Statutory GST Ledger \(invoices V-2026-XX, 5% tax,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 718.89 Td (exported to GSTR-1\) and the Private Non-GST Ledger \(vouchers NG-2026-XX, 0% tax, internal) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 705.39 Td (audit only\). Payments received against Non-GST vouchers cannot be cross-settled against) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 691.89 Td (GST invoices.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 674.39 Td (Private Godown Inventory Segregation) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 656.39 Td (Physical inventory is partitioned between Main Godown \(tax-audited stock\) and Private) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 642.89 Td (Godown \(unprocessed mandi seeds and loose oil\). Saving an NG- voucher deducts stock) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 629.39 Td (strictly from Private Godown. Cancelling an NG- voucher returns stock strictly to Private) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 615.89 Td (Godown.) Tj ET
+q 0.996 0.965 0.918 rg 0.961 0.729 0.0 RG 1 w 44 454.39 507.28 144 re B Q
+BT /F2 10 Tf 0.70 0.32 0.04 rg 56 583.39 Td (NON-GST DELIVERY VOUCHER ISSUANCE SOP) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 568.39 Td (1. Access Station: Sign in as Super Admin; navigate to /nongst-billing.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 554.89 Td (2. Verify Banner: Confirm amber warning banner is visible at top.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 541.39 Td (3. Select Buyer: Choose customer; review displayed Non-GST credit balance.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 527.89 Td (4. Verify Godown: Confirm Godown is set to Private Godown.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 514.39 Td (5. Add Line Items: Search SKU, enter qty and rate; click '+ Add to Voucher'.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 500.89 Td (6. Verify Zero Tax: Confirm GST Rate = 0.0% and GST Amount = Rs. 0.00.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 487.39 Td (7. Dispatch Details: Enter vehicle registration and driver name in bottom tab.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 473.89 Td (8. Save & Print: Click 'Save Voucher' \(generates NG-2026-XXXX\); click 'Print A4 Delivery Voucher'.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 446.39 Td (Mobile App Field Operations & Audit Safeguards) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 428.39 Td (On Android tablets and mobile devices, Super Admins can access /nongst-billing directly) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 414.89 Td (via the bottom navigation. Mandi purchasing agents can pair portable 58mm Bluetooth) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 401.39 Td (thermal printers to issue delivery receipts in rural collection yards. Mandatory) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 387.89 Td (compliance: Never use the Non-GST station for registered B2B dealers claiming GST Input) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 374.39 Td (Tax Credit \(ITC\).) Tj ET
+q 0.8 0.85 0.82 RG 0.75 w 44 40 m 551.28 40 l S Q
+BT /F1 8 Tf 0.45 0.5 0.48 rg 44 28 Td (KKK Oil Factory Enterprise ERP � Operational Specification) Tj ET
+BT /F2 8.5 Tf 0.2 0.25 0.22 rg 506.28 28 Td (Page 3) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 9 0 R /MediaBox [0 0 595.28 841.89] /Contents 7 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+9 0 obj
+<< /Type /Pages /Kids [4 0 R 6 0 R 8 0 R] /Count 3 >>
+endobj
+10 0 obj
+<< /Type /Catalog /Pages 9 0 R >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000000154 00000 n 
+0000003502 00000 n 
+0000003644 00000 n 
+0000007640 00000 n 
+0000007782 00000 n 
+0000011550 00000 n 
+0000011692 00000 n 
+0000011761 00000 n 
+trailer
+<< /Size 11 /Root 10 0 R >>
+startxref
+11811
+%%EOF

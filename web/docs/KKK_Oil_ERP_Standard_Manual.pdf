@@ -1,0 +1,202 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+3 0 obj
+<< /Length 3604 >>
+stream
+BT /F2 26 Tf 0.961 0.729 0.000 rg 44 731.89 Td (KKK OIL FACTORY) Tj ET
+BT /F2 16 Tf 0.10 0.22 0.18 rg 44 705.89 Td (Enterprise ERP & GST Billing Suite) Tj ET
+BT /F1 12 Tf 0.40 0.45 0.42 rg 44 685.89 Td (Standard GST Operations, RBAC & Path-by-Path Manual) Tj ET
+q 0.961 0.729 0.0 RG 3 w 44 661.89 m 550 661.89 l S Q
+q 0.996 0.965 0.918 rg 0.961 0.729 0.0 RG 1 w 44 524.89 507.28 102 re B Q
+BT /F2 10 Tf 0.70 0.32 0.04 rg 56 611.89 Td (OPERATIONAL DOCUMENT SPECIFICATION) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 596.89 Td (System Version: 2.5.0 Production Release) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 583.39 Td (Enterprise: KKK Oil Factory, Tamil Nadu, India) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 569.89 Td (Target Roles: Super Admin, Admin, Manager, Cashier, Supervisor, Driver) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 556.39 Td (Supported Environments: Web Browser \(Clean URL\), Android Tablet/Phone, iOS, Desktop) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 542.89 Td (Classification: Industrial ERP, Expeller Manufacturing, Statutory GST Billing) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 501.89 Td (Manual Scope & Architecture) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 483.89 Td (This manual provides complete operational and technical documentation for the KKK Oil) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 470.39 Td (Factory Enterprise ERP. It details every system path \(/login, /dashboard, /billing,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 456.89 Td (/counter, /products, /inventory, /production, /purchase, /logistics, /reports, /employees,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 443.39 Td (/settings\), every form field, every button action, and step-by-step operating workflows) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 429.89 Td (for factory floor and billing staff.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 412.39 Td (Role-Based Security Model) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 394.39 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 394.39 Td (Super Admin: Full system executive oversight, pricing approval, and user) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 380.89 Td (administration.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 365.39 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 365.39 Td (ERP Administrator: 15 core modules, master catalog, customer accounts, and company) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 351.89 Td (settings.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 336.39 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 336.39 Td (Plant / Shift Manager: Cashier monitoring, expeller yield approval, customer credit,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 322.89 Td (and purchase orders.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 307.39 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 307.39 Td (Billing Cashier: High-speed POS counter billing, B2B tax invoices, and thermal) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 293.89 Td (receipt printing.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 278.39 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 278.39 Td (Production Supervisor: Machine run logging, seed input, oil recovery, and byproduct) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 264.89 Td (cake bagging.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 249.39 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 249.39 Td (Logistics Driver: Dispatch gate passes, delivery routes, and digital Proof of) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 235.89 Td (Delivery \(POD\).) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 220.39 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 220.39 Td (Warehouse Incharge: Silo dip stick measurements, packaged stock, and transfer notes.) Tj ET
+
+endstream
+endobj
+4 0 obj
+<< /Type /Page /Parent 11 0 R /MediaBox [0 0 595.28 841.89] /Contents 3 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+5 0 obj
+<< /Length 3730 >>
+stream
+BT /F2 8.5 Tf 0.35 0.45 0.40 rg 44 813.89 Td (KKK Oil Factory ERP � Standard GST & All Roles Operational Manual) Tj ET
+q 0.8 0.85 0.82 RG 0.75 w 44 808.89 m 551.28 808.89 l S Q
+BT /F2 15 Tf 0.08 0.20 0.14 rg 44 789.89 Td (1. Complete Path-by-Path System Manual) Tj ET
+q 0.961 0.729 0.0 RG 2 w 44 784.89 m 174 784.89 l S Q
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 763.89 Td (Authentication Gate: /login) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 745.89 Td (Authenticates staff members, decrypts authorization tokens, and initializes reactive) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 732.39 Td (state. Features Username and Password fields with an eye visibility toggle, 'Sign In to) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 718.89 Td (ERP System' button, and quick demo switchers for Super Admin, Admin, Manager, and Cashier.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 701.39 Td (Executive Dashboard: /dashboard) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 683.39 Td (Real-time operational cockpit providing Today's Gross Sales, Cash Balance, Silo Dip) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 669.89 Td (Levels, and Low Stock alerts. Action buttons include '+ New B2B Invoice', '+ Quick POS) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 656.39 Td (Counter', '+ Start Milling Batch', '+ Record Seed Inward', and '+ Delivery Gate Pass'.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 638.89 Td (Standard B2B GST Invoicing: /billing \(erp_billing\)) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 620.89 Td (Generates formal tax invoices compliant with Rule 46 of CGST Rules 2017. Header controls) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 607.39 Td (include Customer Selector \(shows credit balance\), Route dropdown, Godown selector, Pricing) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 593.89 Td (tier radio \(Retail, Semi-Wholesale, Bulk Wholesale\), Payment Mode, and Payment Status.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 576.39 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 576.39 Td (Item Search: Real-time product search by code or name; auto-fills HSN and rate.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 560.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 560.89 Td (Tax Calculation: Compares customer GSTIN with state 33. Intra-state: CGST 2.5% + SGST) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 547.39 Td (2.5% = 5%. Inter-state: IGST 5%.) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 531.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 531.89 Td (Bottom Tabs: Tab 0 \(Dispatch details, PO, Vehicle No\), Tab 1 \(E-Way Bill No\), Tab 2) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 518.39 Td (\(E-Invoice IRN\), Tab 3 \(Tax ledgers\).) Tj ET
+BT /F2 9.5 Tf 0.85 0.55 0.08 rg 50 502.89 Td (-) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 502.89 Td (Actions: 'Save Invoice' \(deducts stock, updates ledger\), 'Print A4 Tax Invoice',) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 62 489.39 Td ('Print Thermal Receipt', 'Clear Form'.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 473.89 Td (Billing History & Cancellation: /billing-history) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 455.89 Td (Audit repository of all issued GST tax invoices. Features search by invoice number or) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 442.39 Td (customer, payment filter chips \(All, Paid, Credit, Partial\), 'Reprint A4' button, 'Reprint) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 428.89 Td (Thermal' button, and 'Cancel Bill' button \(prompts for reason, restores stock to godown,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 415.39 Td (and reverses customer debit\).) Tj ET
+q 0.8 0.85 0.82 RG 0.75 w 44 40 m 551.28 40 l S Q
+BT /F1 8 Tf 0.45 0.5 0.48 rg 44 28 Td (KKK Oil Factory Enterprise ERP � Operational Specification) Tj ET
+BT /F2 8.5 Tf 0.2 0.25 0.22 rg 506.28 28 Td (Page 2) Tj ET
+
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 11 0 R /MediaBox [0 0 595.28 841.89] /Contents 5 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+7 0 obj
+<< /Length 3177 >>
+stream
+BT /F2 8.5 Tf 0.35 0.45 0.40 rg 44 813.89 Td (KKK Oil Factory ERP � Standard GST & All Roles Operational Manual) Tj ET
+q 0.8 0.85 0.82 RG 0.75 w 44 808.89 m 551.28 808.89 l S Q
+BT /F2 15 Tf 0.08 0.20 0.14 rg 44 789.89 Td (2. Manufacturing, Procurement & Stock) Tj ET
+q 0.961 0.729 0.0 RG 2 w 44 784.89 m 174 784.89 l S Q
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 763.89 Td (High-Velocity POS Counter Billing: /counter) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 745.89 Td (Designed for walk-in retail factory outlets. Features one-tap product catalog grid, oil) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 732.39 Td (category filter chips, pricing tier selector, active cart steppers \(+/-\), cash tendered) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 718.89 Td (calculator with change return, and 'Complete & Print Thermal' button.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 701.39 Td (Master Product Catalog: /products) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 683.39 Td (Master registry for all oils and byproducts. Header buttons: '+ Add New Product Master') Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 669.89 Td (and 'Export Master CSV'. Add/Edit modal configures basic specs, tier rates \(Agency,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 656.39 Td (Wholesale, Retail, MRP\), initial stock, reorder thresholds, and HSN codes) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 642.89 Td (\(1508/1515/2306\).) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 625.39 Td (Warehouse Inventory & Silo Tanks: /inventory) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 607.39 Td (Monitors bulk crude and filtered oil tanks using calibrated dip stick measurements \(cm to) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 593.89 Td (Liters\). Packaged stock grid shows finished tins, bottles, and pouches with color-coded) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 580.39 Td (stock alerts. Actions include 'Adjust Physical Stock' reconciliation and 'Stock Transfer) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 566.89 Td (Note'.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 549.39 Td (Seed Procurement & Weighbridge: /purchase) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 531.39 Td (Records raw seed intake from mandis. '+ Record Seed & Raw Material Inward' opens Goods) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 517.89 Td (Receipt Note \(GRN\) dialog capturing supplier, weighbridge net weight, intake rate) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 504.39 Td (\(Rs./kg\), moisture deduction, and QC Status \('Passed' or 'Pending Lab Test'\).) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 486.89 Td (Expeller Production Milling: /production) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 468.89 Td (Tracks expeller crushing batches. '+ Start New Production Milling Run' records planned) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 455.39 Td (seed input \(kg\), filtered oil output \(Liters\), oil cake byproduct \(kg\), and wastage.) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 441.89 Td (Automatically computes extraction yield percentage.) Tj ET
+q 0.8 0.85 0.82 RG 0.75 w 44 40 m 551.28 40 l S Q
+BT /F1 8 Tf 0.45 0.5 0.48 rg 44 28 Td (KKK Oil Factory Enterprise ERP � Operational Specification) Tj ET
+BT /F2 8.5 Tf 0.2 0.25 0.22 rg 506.28 28 Td (Page 3) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 11 0 R /MediaBox [0 0 595.28 841.89] /Contents 7 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+9 0 obj
+<< /Length 3393 >>
+stream
+BT /F2 8.5 Tf 0.35 0.45 0.40 rg 44 813.89 Td (KKK Oil Factory ERP � Standard GST & All Roles Operational Manual) Tj ET
+q 0.8 0.85 0.82 RG 0.75 w 44 808.89 m 551.28 808.89 l S Q
+BT /F2 15 Tf 0.08 0.20 0.14 rg 44 789.89 Td (3. Accounts, Logistics & Daily SOPs) Tj ET
+q 0.961 0.729 0.0 RG 2 w 44 784.89 m 174 784.89 l S Q
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 763.89 Td (Customer & Supplier Masters: /customers & /suppliers) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 745.89 Td (Customer screen manages Regular/Retail vs Dealer categories, GSTIN validation, credit) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 732.39 Td (limits, and ledger statements. Supplier screen tracks mandi vendors, packaging suppliers,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 718.89 Td (and accounts payable.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 701.39 Td (Logistics Fleet & Gate Passes: /logistics) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 683.39 Td ('+ Generate Dispatch Gate Pass' links vehicle registration \(e.g. TN 28 BK 5521\), driver,) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 669.89 Td (route, and invoice. Provides trip status stepper \('Dispatched' -> 'In Transit' ->) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 656.39 Td ('Delivered'\) and mobile Proof of Delivery \(POD\) confirmation.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 638.89 Td (Tax Analytics & Compliance: /reports) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 620.89 Td (Displays total gross turnover, taxable base, and output GST. Breaks down B2B supplies) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 607.39 Td (\(Table 4\) vs B2C supplies \(Table 7\), CGST/SGST/IGST splits, and HSN Table 12 summary.) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 593.89 Td (Actions: 'Export GSTR-1 Excel/CSV' and 'Download Daily Daybook PDF'.) Tj ET
+BT /F2 12 Tf 0.12 0.24 0.18 rg 44 576.39 Td (Employee Administration & Settings: /employees & /settings) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 558.39 Td (Employee screen manages staff accounts, role assignment, active/inactive switches, and) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 544.89 Td (the 15-module RBAC matrix. Settings screen configures company trade name, registered) Tj ET
+BT /F1 9.5 Tf 0.18 0.22 0.20 rg 44 531.39 Td (address, GSTIN, FSSAI number, bank account/IFSC, and default printer formats.) Tj ET
+q 0.937 0.976 0.949 rg 0.22 0.60 0.38 RG 1 w 44 397.89 507.28 116 re B Q
+BT /F2 10 Tf 0.08 0.35 0.20 rg 56 498.89 Td (CORE CASHIER BILLING SOP) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 483.89 Td (1. Morning Sign-In: Sign in at /login with cashier credentials.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 470.39 Td (2. Access /counter: Verify opening cash drawer balance.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 456.89 Td (3. Ring Up Items: Tap product cards; adjust quantities using steppers.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 443.39 Td (4. Collect Payment: Select Cash or UPI; enter tendered cash to calculate change.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 429.89 Td (5. Print & Handover: Click 'Complete & Print Thermal'; hand receipt and pack to buyer.) Tj ET
+BT /F1 9 Tf 0.22 0.26 0.24 rg 56 416.39 Td (6. Shift Closing: Check /billing-history and submit physical cash to Manager.) Tj ET
+q 0.8 0.85 0.82 RG 0.75 w 44 40 m 551.28 40 l S Q
+BT /F1 8 Tf 0.45 0.5 0.48 rg 44 28 Td (KKK Oil Factory Enterprise ERP � Operational Specification) Tj ET
+BT /F2 8.5 Tf 0.2 0.25 0.22 rg 506.28 28 Td (Page 4) Tj ET
+
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 11 0 R /MediaBox [0 0 595.28 841.89] /Contents 9 0 R /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> >>
+endobj
+11 0 obj
+<< /Type /Pages /Kids [4 0 R 6 0 R 8 0 R 10 0 R] /Count 4 >>
+endobj
+12 0 obj
+<< /Type /Catalog /Pages 11 0 R >>
+endobj
+xref
+0 13
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000000154 00000 n 
+0000003810 00000 n 
+0000003953 00000 n 
+0000007735 00000 n 
+0000007878 00000 n 
+0000011107 00000 n 
+0000011250 00000 n 
+0000014695 00000 n 
+0000014839 00000 n 
+0000014916 00000 n 
+trailer
+<< /Size 13 /Root 12 0 R >>
+startxref
+14967
+%%EOF
