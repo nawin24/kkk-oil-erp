@@ -12,30 +12,55 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _usernameCtrl = TextEditingController(text: 'admin');
-  final _passwordCtrl = TextEditingController(text: 'ERP@2026G');
+  final _passwordCtrl = TextEditingController(text: 'admin123');
   bool _obscure = true;
   bool _busy = false;
   String? _error;
 
+  @override
+  void dispose() {
+    _usernameCtrl.dispose();
+    _passwordCtrl.dispose();
+    super.dispose();
+  }
+
   Future<void> _handleLogin({String? overrideUser, String? overridePass}) async {
-    final user = overrideUser ?? _usernameCtrl.text;
-    final pass = overridePass ?? _passwordCtrl.text;
+    final user = (overrideUser ?? _usernameCtrl.text).trim();
+    final pass = (overridePass ?? _passwordCtrl.text).trim();
+
+    if (user.isEmpty) {
+      setState(() => _error = 'Please enter your username.');
+      return;
+    }
+    if (pass.isEmpty) {
+      setState(() => _error = 'Please enter your password.');
+      return;
+    }
 
     setState(() {
       _busy = true;
       _error = null;
     });
 
-    final auth = context.read<AuthProvider>();
-    final res = await auth.login(user, pass);
+    try {
+      final auth = context.read<AuthProvider>();
+      final res = await auth.login(user, pass);
 
-    if (mounted) {
-      setState(() {
-        _busy = false;
-        if (res['ok'] != true) {
-          _error = res['error'] ?? 'Login failed.';
-        }
-      });
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          if (res['ok'] != true) {
+            _error = res['error'] ?? 'Login failed. Please check your credentials.';
+          }
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          _error = 'Login error. Please try again.';
+        });
+      }
     }
   }
 
@@ -276,6 +301,7 @@ class _LoginScreenState extends State<LoginScreen> {
         TextField(
           controller: _usernameCtrl,
           textInputAction: TextInputAction.next,
+          onSubmitted: (_) => _handleLogin(),
           decoration: const InputDecoration(
             hintText: 'e.g. admin',
             prefixIcon: Icon(Icons.person_outline, size: 19, color: AppColors.text3),
@@ -309,46 +335,45 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         const SizedBox(height: 22),
 
-        // Sign In Button (btn-gold)
-        Container(
-          height: 44,
-          decoration: BoxDecoration(
-            gradient: AppColors.goldGradient,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [AppColors.goldButtonShadow],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(10),
-              onTap: _busy ? null : () => _handleLogin(),
-              child: Center(
-                child: _busy
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.2,
-                          color: AppColors.forest,
-                        ),
-                      )
-                    : const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.login, size: 17, color: AppColors.forest),
-                          SizedBox(width: 8),
-                          Text(
-                            'Sign in',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.forest,
-                            ),
-                          ),
-                        ],
-                      ),
+        // Sign In Button
+        SizedBox(
+          height: 46,
+          child: ElevatedButton(
+            onPressed: _busy ? null : _handleLogin,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFF5BA00),
+              foregroundColor: AppColors.forest,
+              disabledBackgroundColor: const Color(0xFFF5BA00).withValues(alpha: 0.6),
+              elevation: 2,
+              shadowColor: const Color(0x33F5BA00),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
             ),
+            child: _busy
+                ? const SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.2,
+                      color: AppColors.forest,
+                    ),
+                  )
+                : const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.login, size: 18, color: AppColors.forest),
+                      SizedBox(width: 8),
+                      Text(
+                        'Sign in',
+                        style: TextStyle(
+                          fontSize: 14.5,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.forest,
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ),
 
