@@ -3,23 +3,12 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class FirebaseService {
-  static const String _rawApiKey = String.fromEnvironment('FIREBASE_API_KEY', defaultValue: String.fromEnvironment('VITE_FIREBASE_API_KEY', defaultValue: 'AIzaSyC6674SxdJIGOlmyIdZZK0PTS3VK55Srks'));
-  static const String apiKey = _rawApiKey.isEmpty ? 'AIzaSyC6674SxdJIGOlmyIdZZK0PTS3VK55Srks' : _rawApiKey;
-
-  static const String _rawProjectId = String.fromEnvironment('FIREBASE_PROJECT_ID', defaultValue: String.fromEnvironment('VITE_FIREBASE_PROJECT_ID', defaultValue: 'kkk-oil-erp'));
-  static const String projectId = _rawProjectId.isEmpty ? 'kkk-oil-erp' : _rawProjectId;
-
-  static const String _rawAuthDomain = String.fromEnvironment('FIREBASE_AUTH_DOMAIN', defaultValue: String.fromEnvironment('VITE_FIREBASE_AUTH_DOMAIN', defaultValue: 'kkk-oil-erp.firebaseapp.com'));
-  static const String authDomain = _rawAuthDomain.isEmpty ? 'kkk-oil-erp.firebaseapp.com' : _rawAuthDomain;
-
-  static const String _rawStorageBucket = String.fromEnvironment('FIREBASE_STORAGE_BUCKET', defaultValue: String.fromEnvironment('VITE_FIREBASE_STORAGE_BUCKET', defaultValue: 'kkk-oil-erp.firebasestorage.app'));
-  static const String storageBucket = _rawStorageBucket.isEmpty ? 'kkk-oil-erp.firebasestorage.app' : _rawStorageBucket;
-
-  static const String _rawMessagingSenderId = String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID', defaultValue: String.fromEnvironment('VITE_FIREBASE_MESSAGING_SENDER_ID', defaultValue: '959332742121'));
-  static const String messagingSenderId = _rawMessagingSenderId.isEmpty ? '959332742121' : _rawMessagingSenderId;
-
-  static const String _rawAppId = String.fromEnvironment('FIREBASE_APP_ID', defaultValue: String.fromEnvironment('VITE_FIREBASE_APP_ID', defaultValue: '1:959332742121:web:87fe3420e13815b28b1178'));
-  static const String appId = _rawAppId.isEmpty ? '1:959332742121:web:87fe3420e13815b28b1178' : _rawAppId;
+  static const String apiKey = String.fromEnvironment('FIREBASE_API_KEY', defaultValue: String.fromEnvironment('VITE_FIREBASE_API_KEY', defaultValue: 'AIzaSyC6674SxdJIGOlmyIdZZK0PTS3VK55Srks'));
+  static const String projectId = String.fromEnvironment('FIREBASE_PROJECT_ID', defaultValue: String.fromEnvironment('VITE_FIREBASE_PROJECT_ID', defaultValue: 'kkk-oil-erp'));
+  static const String authDomain = String.fromEnvironment('FIREBASE_AUTH_DOMAIN', defaultValue: String.fromEnvironment('VITE_FIREBASE_AUTH_DOMAIN', defaultValue: 'kkk-oil-erp.firebaseapp.com'));
+  static const String storageBucket = String.fromEnvironment('FIREBASE_STORAGE_BUCKET', defaultValue: String.fromEnvironment('VITE_FIREBASE_STORAGE_BUCKET', defaultValue: 'kkk-oil-erp.firebasestorage.app'));
+  static const String messagingSenderId = String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID', defaultValue: String.fromEnvironment('VITE_FIREBASE_MESSAGING_SENDER_ID', defaultValue: '959332742121'));
+  static const String appId = String.fromEnvironment('FIREBASE_APP_ID', defaultValue: String.fromEnvironment('VITE_FIREBASE_APP_ID', defaultValue: '1:959332742121:web:87fe3420e13815b28b1178'));
   static const String webAppId = appId;
   static const String androidAppId = '1:959332742121:android:b80060a3c5f9dcd68b1178';
   static const String iosAppId = '1:959332742121:ios:8f37b66a90af28968b1178';
